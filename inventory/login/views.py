@@ -97,4 +97,4 @@ def Signin(request):
 def b(request, n):
     if User.objects.get(pk=n).delete():
         return HttpResponse("Ho gaya")
-    return HttpResponse("Kuch v nai hoya")
+    return HttpResponse("Nai Hoya")
