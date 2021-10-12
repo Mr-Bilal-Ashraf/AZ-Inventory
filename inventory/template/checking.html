@@ -7,7 +7,12 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>Home Page</h1>
-    <h2>Hello {{request.user}}</h2>
+    <form method="POST" action="/accounts/sign/details/" enctype="multipart/form-data">
+        {% csrf_token %}
+        <table>
+            {{form.as_table}}
+        </table>
+        <button type="submit">Submit</button>
+    </form>
 </body>
 </html>

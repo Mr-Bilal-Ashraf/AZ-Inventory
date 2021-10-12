@@ -4,11 +4,9 @@ from django.urls import reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.models import User
 from django.contrib import messages, auth
-from django.contrib.auth.decorators import login_required
 
-from .forms import SignUp, SignIn
-from .models import UserDetails
-
+from .forms import SignUp, SignIn, userform
+from .models import userDetail
 
 
 def accounts(request):
@@ -18,7 +16,7 @@ def accounts(request):
         'Upform' : Upform,
         'Inform' : Inform
     }
-    return render(request, 'index.html', context)
+    return render(request, 'SignUp.html', context)
 
 def Signup(request):
     if request.method == 'POST':
@@ -48,19 +46,46 @@ def Signup(request):
                 messages.error(request, "Passwords Should Be 8 letters Minimum")
             
             if check != 1:
-                User.objects.create_user(username=name, email=mail, password=pass1)
-                messages.success(request, "Login To Proceed")
+                user = User.objects.create_user(username=name, email=mail, password=pass1)
+                user.save()
+                auth.login(request, user)
+                return HttpResponseRedirect(reverse('SignUpDetails'))
 
             Inform = SignIn()
             context = {
                 'Upform' : form,
                 'Inform' : Inform,
             }
-            return render(request, 'index.html', context)            
+            return render(request, 'SignUp.html', context)            
         else:
             return HttpResponseRedirect(reverse('accounts'))
     else:
         return HttpResponseRedirect(reverse('accounts'))
+
+def Userdetails(request):
+    if request.method == 'POST':
+        form = userform(data=request.POST, files=request.FILES)
+        if form.is_valid():
+            if request.user.is_authenticated:
+                fn = form.cleaned_data["firstname"]
+                ln = form.cleaned_data["lastname"]
+                cnt = form.cleaned_data["contact"]
+                adrs = form.cleaned_data["address"]
+                User.objects.filter(username=request.user).update(first_name=fn, last_name= ln)
+                id = User.objects.get(username=request.user).id
+                userDetail.objects.update_or_create(user_id=id, defaults={'contact':cnt, 'address': adrs, 'image':request.FILES["pic"]})
+                return HttpResponseRedirect(reverse('homepage'))
+            else:
+                return HttpResponseRedirect(reverse('accounts'))
+        else:
+            messages.error(request, "There is some problem.\nTry Again")
+            return render(request, 'AfterSignUp.html', {'form': form})
+    else:
+        if(request.user.is_authenticated):
+            form = userform()
+            return render(request, 'AfterSignUp.html', {'form': form})
+        else:
+            return HttpResponseRedirect(reverse('accounts'))
 
 def Signin(request):
     if request.method == 'POST':
@@ -79,7 +104,7 @@ def Signin(request):
                 user = auth.authenticate(request, username= name, password= passw)
                 if user is not None:
                     auth.login(request, user)
-                    return HttpResponse("Logged In")
+                    return HttpResponseRedirect(reverse('homepage'))
                 else:
                     messages.error(request, "Password Incorrect")
 
@@ -88,11 +113,14 @@ def Signin(request):
                 'Upform' : Upform,
                 'Inform' : form,
             }
-            return render(request, 'index.html', context)
+            return render(request, 'SignUp.html', context)
         else:
             return HttpResponseRedirect(reverse('accounts'))
     else:
         return HttpResponseRedirect(reverse('accounts'))
+
+def home(request):
+    return render(request, 'Index.html')
 
 def b(request, n):
     if User.objects.get(pk=n).delete():

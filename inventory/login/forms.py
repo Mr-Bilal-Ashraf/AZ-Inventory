@@ -1,16 +1,19 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
+from django.forms.fields import ImageField
 from django.forms.models import ModelForm
-from django.forms.widgets import EmailInput, PasswordInput, TextInput
+from django.forms.widgets import EmailInput, FileInput, PasswordInput, TextInput, Textarea
 
 from .models import UserDetails
 from django.contrib.auth.models import User
 
 
-class userform(forms.ModelForm):
-    class Meta:
-        model = UserDetails
-        fields = ('user','contact', 'city')
+class userform(forms.Form):
+    pic = forms.ImageField(widget=FileInput(attrs={'id':'taking_image', 'onchange':"change_profile(event,this,'profile_pic')", 'style': "display: none;"}))
+    firstname = forms.CharField(widget= TextInput(attrs={'class': 'form-style', 'placeholder': 'Enter First Name'}))
+    lastname = forms.CharField(widget= TextInput(attrs={'class': 'form-style', 'placeholder': 'Enter Last Name'}))
+    contact = forms.CharField(widget= TextInput(attrs={'class': 'form-style', 'placeholder': 'Enter Contact Number'}))
+    address = forms.CharField(widget= Textarea(attrs={'class': 'form-style', 'placeholder': 'Enter Your Address'}))
 
 
 class SignUp(forms.Form):

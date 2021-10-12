@@ -1,18 +1,97 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Inventory Sign In</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel='stylesheet' href="{% static 'css/bootstrap.min.css'%}">
+    <link rel='stylesheet' href="{% static 'css/unicons.css'%}">
+    <link rel="stylesheet" href="{% static 'css/AfterSignUp.css'%}">
 </head>
+
 <body>
-    <form method="POST" action="/accounts/a/">
-        {% csrf_token %}
-        <table>
-            {{form.as_table}}
-        </table>
-        <button type="submit">Submit</button>
-    </form>
+    <!-- partial:index.partial.html -->
+    <a href="#" class="logo">
+        <img src="{% static 'images/logo.png'%}" alt="">
+    </a>
+
+    <div class="section">
+        <div class="container">
+            <div class="row full-height justify-content-center">
+                <div class="col-12 text-center align-self-center py-5">
+                    <div class="section pb-5 pt-5 pt-sm-2 text-center">
+                        <h6 class="mb-0 pb-3"><span>Log In </span><span>Sign Up</span></h6>
+                        <input class="checkbox" type="checkbox" id="reg-log" name="reg-log" />
+                        <label for="reg-log"></label>
+                        <div class="card-3d-wrap mx-auto">
+                            <div class="card-3d-wrapper">
+                                <div class="card-front">
+                                    <div class="center-wrap">
+                                        <div class="section text-center">
+                                            <h4 class="mb-4 pb-3">LOG IN</h4>
+                                            <form method="POST" action="/accounts/sign/in/">
+                                                {% csrf_token %}
+                                                
+                                                <div class="form-group">
+                                                    {{Inform.username}}
+                                                    <i class="input-icon uil uil-at"></i>
+                                                </div>
+                                                <div class="form-group mt-2">
+                                                    {{Inform.password}}
+                                                    <i class="input-icon uil uil-lock-alt"></i>
+                                                </div>
+                                                <br>
+                                                
+                                                {% if messages %}
+                                                    {% for msg in messages %}
+                                                        <div {% if msg.tags %} class="{{msg.tags}}" {% endif %}>{{msg}}</div>
+                                                    {% endfor %}
+                                                {% endif %}
+
+                                                <button type="submit" class="btn mt-4">Login</button>
+                                                <p class="mb-0 mt-4 text-center"><a href="#0" class="link">Forgot your password?</a></p>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-back">
+                                    <div class="center-wrap">
+                                        <div class="section text-center">
+                                            <h4 class="mb-4 pb-3">NEW USER</h4>
+                                            <form method="POST" action="/accounts/sign/up/">
+                                                {% csrf_token %}
+                                                <div class="form-group mt-2">
+                                                    {{Upform.username}}
+                                                    <i class="input-icon uil uil-at"></i>
+                                                </div>
+                                                <div class="form-group mt-2">
+                                                    {{Upform.email}}
+                                                    <i class="input-icon uil uil-at"></i>
+                                                </div>
+                                                <div class="form-group mt-2">
+                                                    {{Upform.password1}}
+                                                    <i class="input-icon uil uil-lock-alt"></i>
+                                                </div>
+                                                <div class="form-group mt-2">
+                                                    {{Upform.password2}}
+                                                    <i class="input-icon uil uil-lock-alt"></i>
+                                                </div>
+                                                <button type="submit" class="btn mt-4">Create</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- partial -->
+
 </body>
+
 </html>
