@@ -1,16 +1,16 @@
 from django import forms
-from django.forms import fields, models
-from django.forms import widgets
-from django.forms.widgets import EmailInput, FileInput, PasswordInput, TextInput, Textarea, DateInput
+
+from django.forms.widgets import DateInput
 from .models import employees
 
 class addEmployee(forms.ModelForm):
     class Meta:
         model = employees
-        exclude = ("employee_of",)
+        exclude = ("employee_of","salary_paid","salary_left")
 
         widgets={
-            'reg_date': DateInput(attrs={'type':'date'})
+            'reg_date': DateInput(attrs={'type':'date'}),
+            'address' : forms.Textarea()
         }
     # profile = forms.ImageField(required=False)
     # reg_date = forms.CharField(widget=DateInput(attrs={'type': 'date'}))

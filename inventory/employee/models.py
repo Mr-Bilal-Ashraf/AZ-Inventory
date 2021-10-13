@@ -1,10 +1,13 @@
 from django.db import models
 
 class employees(models.Model):
+
+    choice = (('monthly','Monthly'),('weekly', 'Weekly'),('daily', 'Daily'))
+
     profile = models.ImageField(upload_to="emp/", blank=True, null=True)
     reg_date = models.CharField(max_length=11, blank=True, null=True)
     designation = models.CharField(max_length=30, blank=True, null=True)
-    salary_type = models.CharField(max_length=7, blank=True, null=True)
+    salary_type = models.CharField(max_length=7, blank=True, null=True, choices= choice)
     salary = models.IntegerField(blank=True, null=True)
     salary_paid = models.IntegerField(blank=True, null=True)
     salary_left = models.IntegerField(blank=True, null=True)
