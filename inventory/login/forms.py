@@ -1,11 +1,5 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
-from django.forms.fields import ImageField
-from django.forms.models import ModelForm
 from django.forms.widgets import EmailInput, FileInput, PasswordInput, TextInput, Textarea
-
-from .models import UserDetails
-from django.contrib.auth.models import User
 
 
 class userform(forms.Form):
