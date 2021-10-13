@@ -7,9 +7,11 @@ from .models import employees
 class addEmployee(forms.ModelForm):
     class Meta:
         model = employees
-        fields="__all__"
+        exclude = ("employee_of",)
 
-        widgets={'reg_date': DateInput(attrs={'type':'date'})}
+        widgets={
+            'reg_date': DateInput(attrs={'type':'date'})
+        }
     # profile = forms.ImageField(required=False)
     # reg_date = forms.CharField(widget=DateInput(attrs={'type': 'date'}))
     # designation = forms.CharField()
