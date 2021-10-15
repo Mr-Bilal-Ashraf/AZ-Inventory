@@ -7,11 +7,19 @@
     <title>Document</title>
 </head>
 <body>
-    <form method="POST" action="/emp/check/" enctype="multipart/form-data">
+    <h1>{{request.user}}</h1>
+
+    <form method="POST" action="/emp/pay/" enctype="multipart/form-data">
         {% csrf_token %}
         <table>
             {{form.as_table}}
         </table>
+        
+        {% if emp %} 
+            {% for a in emp%}
+                {{a.cnic}}
+            {% endfor%}
+        {%endif%}
         <button type="submit">Submit</button>
     </form>
 </body>

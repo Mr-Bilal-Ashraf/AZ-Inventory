@@ -26,3 +26,11 @@ class addEmployee(forms.ModelForm):
     # account_num = forms.CharField(max_length=30)
 
 
+class pay(forms.Form):
+    id = forms.IntegerField()
+    name = forms.CharField(max_length=50, required=False)
+    name.disabled = True
+    t_salary = forms.IntegerField(required=False)
+    t_salary.disabled = True
+    p_salary = forms.IntegerField(required=False)
+    l_salary = forms.IntegerField(required=False)

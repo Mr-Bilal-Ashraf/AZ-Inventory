@@ -5,6 +5,7 @@ class employees(models.Model):
     choice = (('monthly','Monthly'),('weekly', 'Weekly'),('daily', 'Daily'))
 
     profile = models.ImageField(upload_to="emp/", blank=True, null=True)
+    name = models.CharField(max_length=70, blank=True, null=True)
     reg_date = models.CharField(max_length=11, blank=True, null=True)
     designation = models.CharField(max_length=30, blank=True, null=True)
     salary_type = models.CharField(max_length=7, blank=True, null=True, choices= choice)
