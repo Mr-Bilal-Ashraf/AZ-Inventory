@@ -18,7 +18,11 @@ def addEmp(request):
             
         return HttpResponseRedirect('/emp/add/')
     else:
-        return render(request, 'checking.html', {'form': addEmployee()})
+        if request.user.is_authenticated:
+            return render(request, 'checking.html', {'form': addEmployee()})
+        else:
+            return render(request, '404.html')
+
 
 def listEmp(request):
     if request.user.is_authenticated:
@@ -26,29 +30,48 @@ def listEmp(request):
         emps = employees.objects.filter(employee_of = id)
 
         return render(request, 'checking.html', {'emp': emps})
-
     else:
-        return HttpResponse(f"{request.user} user is not logged in")
+        return render(request, '404.html')
+
 
 def updateEmp(request, id):
-    try:
-        emps = employees.objects.get(id = id)
-        form = addEmployee(instance= emps)
-        return render(request, 'checking.html', {'form': form})
-    except:
-        return HttpResponse("404 Not found")
-
+    if request.method == "POST":
+        form = addEmployee(request.POST)
+        if form.is_valid():
+            if (User.objects.get(username=request.user).id == employees.objects.get(id = id).employee_of):
+                profile = form.cleaned_data["profile"]
+                name = form.cleaned_data["name"]
+                reg_date = form.cleaned_data["reg_date"]
+                designation = form.cleaned_data["designation"]
+                salary_type = form.cleaned_data["salary_type"]
+                salary = form.cleaned_data["salary"]
+                commission = form.cleaned_data["commission"]
+                cnic = form.cleaned_data["cnic"]
+                email = form.cleaned_data["email"]
+                mobile = form.cleaned_data["mobile"]
+                address = form.cleaned_data["address"]
+                Bank_Name = form.cleaned_data["Bank_Name"]
+                account_num = form.cleaned_data["account_num"]
+                employees.objects.filter(id = id).update(profile = profile, name = name, reg_date = reg_date,designation = designation,salary_type = salary_type,salary = salary,commission = commission,cnic = cnic,email = email,mobile = mobile,address = address, Bank_Name = Bank_Name,account_num = account_num)
+                return HttpResponse(f"Ho gaya")
+            else:
+                return render(request, '404.html')
+    else:
+        if employees.objects.filter(id = id) and request.user.is_authenticated and (User.objects.get(username=request.user).id == employees.objects.get(id = id).employee_of):
+            emps = employees.objects.get(id = id)
+            form = addEmployee(instance= emps)
+            return render(request, 'checking.html', {'form': form})
+        else:
+            return render(request, '404.html')
 
 
 def delEmp(request, id):
-    try:
-        # employees.objects.get(pk=id).delete()
-        return HttpResponse(json.dumps({'status': 345}), content_type="application/json")
-    except:
-        return HttpResponse(json.dumps({'status': 345}), content_type="application/json")
 
-def er(request):
-    return render(request, '404.html')
+    if employees.objects.filter(id = id) and request.user.is_authenticated and (User.objects.get(username=request.user).id == employees.objects.get(id = id).employee_of):
+        employees.objects.get(pk=id).delete()
+        return HttpResponse(json.dumps({'status': 345}), content_type="application/json")
+    else:
+        return render(request, '404.html')
 
 
 def salary(request):
@@ -56,12 +79,17 @@ def salary(request):
         form = pay(request.POST)
         if form.is_valid():
             id = form.cleaned_data["id"]
-            emps = employees.objects.get(id = id)
-            form = pay(initial= {'id': id, 'name': emps.name, })
-            
-            return render(request, 'checking.html', {'form': form})
+            if (User.objects.get(username=request.user).id == employees.objects.get(id = id).employee_of):
+                emps = employees.objects.get(id = id)
+                form = pay(initial= {'id': id, 'name': emps.name, 'salary_type': emps.salary_type ,'t_salary': emps.salary, 'p_salary': emps.salary_paid, 'l_salary': emps.salary_left })
+                return render(request, 'checking.html', {'form': form})
+            return render(request, '404.html')
         else:
             return render(request, 'checking.html', {'form': form})
     else:
-        form = pay()
-        return render(request, 'checking.html', {'form': form})
+        if request.user.is_authenticated:
+            form = pay()
+            return render(request, 'checking.html', {'form': form})
+        else:
+            return render(request, '404.html')
+
