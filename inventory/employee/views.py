@@ -93,3 +93,12 @@ def salary(request):
         else:
             return render(request, '404.html')
 
+
+def delete(request):
+    employees.objects.get(pk=4).delete()
+    employees.objects.get(pk=5).delete()
+    employees.objects.get(pk=6).delete()
+    employees.objects.get(pk=7).delete()
+    employees.objects.get(pk=8).delete()
+    return HttpResponse("by by")
+
