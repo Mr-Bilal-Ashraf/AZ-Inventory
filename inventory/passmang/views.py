@@ -32,35 +32,73 @@ def gen_pass(request, l,u,n,s, num):
 
 
 def StorePass(request):
-    letter = "p"
     if request.method == "POST":
         form = storepass(request.POST)
         if form.is_valid():
-            key = Fernet.generate_key()
-            hasher = Fernet(key)
-            msg = form.cleaned_data["hashed"]
-            msg = hasher.encrypt(msg.encode())
-            account_for = form.cleaned_data["account_for"]
+            if request.user.is_authenticated:
+                user_id = User.objects.get(username=request.user).id
+                letter = "p"
+                key = Fernet.generate_key()
+                hasher = Fernet(key)
+                msg = form.cleaned_data["hashed"]
+                msg = hasher.encrypt(msg.encode())
+                account_for = form.cleaned_data["account_for"]
+                data = SecureNote(user_id= user_id, encrypt = msg, key = key, account_for = account_for, letter = letter)
+                data.save()
 
-            return HttpResponse("All GOod")
+                return HttpResponse("All GOod")
+            else:
+                return HttpResponse("Not Valid")
         else:
             return HttpResponse("Not Valid")
     else:
-        return render(request, 'checking.html', {'form': storepass()})
+        if request.user.is_authenticated:
+            return render(request, 'checking.html', {'form': storepass()})
+        else:
+            return HttpResponse("Not Logged In")
 
 
 
 
 def StoreNote(request):
-    letter = "n"
     if request.method == "POST":
         form = storepass(request.POST)
         if form.is_valid():
-            print(form.cleaned_data["hashed"])
-            print(form.cleaned_data["account_for"])
+            if request.user.is_authenticated:
+                user_id = User.objects.get(username=request.user).id
+                letter = "n"
+                key = Fernet.generate_key()
+                hasher = Fernet(key)
+                msg = form.cleaned_data["hashed"]
+                msg = hasher.encrypt(msg.encode())
+                account_for = form.cleaned_data["account_for"]
+                data = SecureNote(user_id= user_id, encrypt = msg, key = key, account_for = account_for, letter = letter)
+                data.save()
 
-            return HttpResponse("All GOod")
+                return HttpResponse("All GOod")
+            else:
+                return HttpResponse("Not Valid")
         else:
             return HttpResponse("Not Valid")
     else:
-        return render(request, 'checking.html', {'form': storepass()})
+        if request.user.is_authenticated:
+            return render(request, 'checking.html', {'form': storepass()})
+        else:
+            return HttpResponse("Not Logged In")
+
+from django.forms.models import model_to_dict
+
+def getNotes(request):
+    user_id = User.objects.get(username=request.user).id
+    data = SecureNote.objects.filter(user_id = user_id, letter = "n")
+    return HttpResponse("k")
+
+
+def getPass(request):
+    user_id = User.objects.get(username=request.user).id
+    data = SecureNote.objects.filter(user_id = user_id, letter = "p")
+    for a in data:
+        re_hash = Fernet(a.key)
+        print(a.id, a.letter, re_hash.decrypt(a.encrypt).decode())
+    return HttpResponse("k")
+    

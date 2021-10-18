@@ -31,7 +31,7 @@
                                     <div class="center-wrap">
                                         <div class="section text-center">
                                             <h4 class="mb-4 pb-3">LOG IN</h4>
-                                            <form method="POST" action="/accounts/sign/in/">
+                                            <form method="POST" action="/acc/sign/in/">
                                                 {% csrf_token %}
                                                 
                                                 <div class="form-group">
@@ -60,7 +60,7 @@
                                     <div class="center-wrap">
                                         <div class="section text-center">
                                             <h4 class="mb-4 pb-3">NEW USER</h4>
-                                            <form method="POST" action="/accounts/sign/up/">
+                                            <form method="POST" action="/acc/sign/up/">
                                                 {% csrf_token %}
                                                 <div class="form-group mt-2">
                                                     {{Upform.username}}
