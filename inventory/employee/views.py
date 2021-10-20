@@ -14,7 +14,7 @@ def addEmp(request):
             form.save()
             cnic = form.cleaned_data['cnic']
             id = User.objects.get(username=request.user).id
-            employees.objects.update_or_create(cnic=cnic, defaults={'employee_of':id})
+            employees.objects.update_or_create(cnic=cnic, defaults={'employee_of':id, 'salary_left': form.cleaned_data['salary']})
             
         return HttpResponseRedirect('/emp/add/')
     else:

@@ -3,7 +3,7 @@ from cryptography.fernet import Fernet
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from .models import SecureNote
-from .forms import storepass
+from .forms import storepass, storenote
 import random
 
 
@@ -58,11 +58,9 @@ def StorePass(request):
             return HttpResponse("Not Logged In")
 
 
-
-
 def StoreNote(request):
     if request.method == "POST":
-        form = storepass(request.POST)
+        form = storenote(request.POST)
         if form.is_valid():
             if request.user.is_authenticated:
                 user_id = User.objects.get(username=request.user).id
@@ -82,16 +80,18 @@ def StoreNote(request):
             return HttpResponse("Not Valid")
     else:
         if request.user.is_authenticated:
-            return render(request, 'checking.html', {'form': storepass()})
+            return render(request, 'checking.html', {'form': storenote()})
         else:
             return HttpResponse("Not Logged In")
 
-from django.forms.models import model_to_dict
 
 def getNotes(request):
     user_id = User.objects.get(username=request.user).id
     data = SecureNote.objects.filter(user_id = user_id, letter = "n")
-    return HttpResponse("k")
+    for a in data:
+        re_hash = Fernet(a.key)
+        a.encrypt =re_hash.decrypt(a.encrypt).decode()
+    return render(request, 'checking.html', {'data': data})
 
 
 def getPass(request):
@@ -99,6 +99,6 @@ def getPass(request):
     data = SecureNote.objects.filter(user_id = user_id, letter = "p")
     for a in data:
         re_hash = Fernet(a.key)
-        print(a.id, a.letter, re_hash.decrypt(a.encrypt).decode())
-    return HttpResponse("k")
+        a.encrypt =re_hash.decrypt(a.encrypt).decode()
+    return render(request, 'checking.html', {'data': data})
     
