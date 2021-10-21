@@ -86,19 +86,37 @@ def StoreNote(request):
 
 
 def getNotes(request):
-    user_id = User.objects.get(username=request.user).id
-    data = SecureNote.objects.filter(user_id = user_id, letter = "n")
-    for a in data:
-        re_hash = Fernet(a.key)
-        a.encrypt =re_hash.decrypt(a.encrypt).decode()
-    return render(request, 'checking.html', {'data': data})
+    try:
+        user_id = User.objects.get(username=request.user).id
+        data = SecureNote.objects.filter(user_id = user_id, letter = "n")
+        for a in data:
+            re_hash = Fernet(a.key)
+            a.encrypt =re_hash.decrypt(a.encrypt).decode()
+        return render(request, 'checking.html', {'data': data})
+    except:
+        return render(request, '404.html')
 
 
 def getPass(request):
-    user_id = User.objects.get(username=request.user).id
-    data = SecureNote.objects.filter(user_id = user_id, letter = "p")
-    for a in data:
-        re_hash = Fernet(a.key)
-        a.encrypt =re_hash.decrypt(a.encrypt).decode()
-    return render(request, 'checking.html', {'data': data})
-    
+    try:
+        user_id = User.objects.get(username=request.user).id
+        data = SecureNote.objects.filter(user_id = user_id, letter = "p")
+        for a in data:
+            re_hash = Fernet(a.key)
+            a.encrypt =re_hash.decrypt(a.encrypt).decode()
+        return render(request, 'checking.html', {'data': data})
+    except:
+        return render(request, '404.html')
+
+
+def delete(request, n):
+    if request.user.is_authenticated:
+        user_id = User.objects.get(username=request.user).id
+        SecureNote.objects.filter(id = n,user_id = user_id).delete()
+        return HttpResponse("Ho gaya")
+    else:
+        return HttpResponse("Invalid Query")
+
+
+def storeContact(request):
+    pass
