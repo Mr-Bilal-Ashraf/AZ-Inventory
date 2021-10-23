@@ -24,6 +24,7 @@ def addEmp(request):
             return render(request, '404.html')
 
 
+
 def listEmp(request):
     if request.user.is_authenticated:
         id = User.objects.get(username=request.user).id

@@ -19,6 +19,7 @@ class abcd(APIView):
     def post(self, request, format = None):
         da = firstse(data = request.data)
         if da.is_valid():
+            da.save()
             return Response({'a': "data valid"})
         return Response(da.data)
 
