@@ -8,9 +8,12 @@ from .models import employees
 
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.parsers import MultiPartParser, FormParser
 from .serializer import addEmployee
 
 class employee(APIView):
+    # parser_classes = (MultiPartParser)
+
     def get(self, request):
         if request.user.is_authenticated:
             id = User.objects.get(username=request.user).id
@@ -21,13 +24,16 @@ class employee(APIView):
             return HttpResponse("Not Logged in")
 
 
-    def post(self, request):
+    def post(self, request, *args, **kwargs):
         
         if request.user.is_authenticated:
-            newEmp = addEmployee(request.data, request.FILES)
+            newEmp = addEmployee(data = request.data)
             if newEmp.is_valid():
+                print(newEmp.validated_data['cnic'])
+                newEmp.save()
                 return HttpResponse("valid")
             else:
+                print(newEmp.errors)
                 return HttpResponse("Not valid")
         else:
             return HttpResponse("Not Logged in")
