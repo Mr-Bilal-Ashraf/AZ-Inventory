@@ -3,8 +3,34 @@ from django.shortcuts import render
 from django.contrib.auth.models import User
 import json
 
-from .forms import addEmployee, pay
+# from .forms import addEmployee, pay
 from .models import employees
+
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from .serializer import addEmployee
+
+class employee(APIView):
+    def get(self, request):
+        if request.user.is_authenticated:
+            id = User.objects.get(username=request.user).id
+            emps = employees.objects.filter(employee_of = id)
+            data = addEmployee(emps, many=True)
+            return Response(data.data)
+        else:
+            return HttpResponse("Not Logged in")
+
+
+    def post(self, request):
+        
+        if request.user.is_authenticated:
+            newEmp = addEmployee(request.data, request.FILES)
+            if newEmp.is_valid():
+                return HttpResponse("valid")
+            else:
+                return HttpResponse("Not valid")
+        else:
+            return HttpResponse("Not Logged in")
 
 
 def addEmp(request):
@@ -25,14 +51,14 @@ def addEmp(request):
 
 
 
-def listEmp(request):
-    if request.user.is_authenticated:
-        id = User.objects.get(username=request.user).id
-        emps = employees.objects.filter(employee_of = id)
+# def listEmp(request):
+#     if request.user.is_authenticated:
+#         id = User.objects.get(username=request.user).id
+#         emps = employees.objects.filter(employee_of = id)
 
-        return render(request, 'checking.html', {'emp': emps})
-    else:
-        return render(request, '404.html')
+#         return render(request, 'checking.html', {'emp': emps})
+#     else:
+#         return render(request, '404.html')
 
 
 def updateEmp(request, id):
