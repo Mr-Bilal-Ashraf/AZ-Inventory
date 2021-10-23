@@ -11,4 +11,5 @@ urlpatterns = [
     path('store/contact', views.storeContact, name="store_contact"),
     path('update/contact', views.storeContact, name="update_contact"),
     path('del/contact/<int:n>', views.storeContact, name="delete_contact"),
+    path('ser/', views.abcd.as_view()),
 ]

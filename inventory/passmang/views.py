@@ -6,6 +6,23 @@ from .models import SecureNote
 from .forms import storepass, storenote
 import random
 
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from .serializers import firstse
+
+class abcd(APIView):
+    def get(self, request):
+        a = SecureNote.objects.all()
+        serialized_data = firstse(a, many=True)
+        return Response(serialized_data.data)
+
+    def post(self, request, format = None):
+        da = firstse(data = request.data)
+        if da.is_valid():
+            return Response({'a': "data valid"})
+        return Response(da.data)
+
+        
 
 def gen_pass(request, l,u,n,s, num):
 
