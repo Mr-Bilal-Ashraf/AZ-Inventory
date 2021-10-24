@@ -9,7 +9,21 @@ from .models import employees
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser, FormParser
-from .serializer import addEmployee
+from .serializer import addEmployee, nemp
+
+def qwe(request):
+    return render(request, 'a.html')
+
+class ch(APIView):
+    parser_classes = (MultiPartParser, FormParser)
+    def post(self, request):
+        qw = nemp(data = request.data)
+        if qw.is_valid():
+            qw.save()
+            return Response({"detail": "Done"})
+        else:
+            return Response({"detail": qw.errors})
+
 
 class employee(APIView):
     # parser_classes = (MultiPartParser)

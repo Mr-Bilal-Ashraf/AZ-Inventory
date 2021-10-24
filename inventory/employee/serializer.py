@@ -6,3 +6,10 @@ class addEmployee(serializers.ModelSerializer):
         model = employees
         exclude = ("employee_of","salary_paid","salary_left")
 
+
+
+
+class nemp(serializers.ModelSerializer):
+    class Meta:
+        model = employees
+        fields = ['profile', 'cnic']
