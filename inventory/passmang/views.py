@@ -10,6 +10,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializers import firstse
 
+
 class abcd(APIView):
     def get(self, request):
         a = SecureNote.objects.all()

@@ -16,7 +16,7 @@ def accounts(request):
         'Upform' : Upform,
         'Inform' : Inform
     }
-    return render(request, 'SignUp.html', context)
+    return render(request, 'LogIn/SignUp.html', context)
 
 def Signup(request):
     if request.method == 'POST':
@@ -56,7 +56,7 @@ def Signup(request):
                 'Upform' : form,
                 'Inform' : Inform,
             }
-            return render(request, 'SignUp.html', context)            
+            return render(request, 'LogIn/SignUp.html', context)            
         else:
             return HttpResponseRedirect(reverse('accounts'))
     else:
@@ -79,11 +79,11 @@ def Userdetails(request):
                 return HttpResponseRedirect(reverse('accounts'))
         else:
             messages.error(request, "There is some problem.\nTry Again")
-            return render(request, 'AfterSignUp.html', {'form': form})
+            return render(request, 'LogIn/AfterSignUp.html', {'form': form})
     else:
         if(request.user.is_authenticated):
             form = userform()
-            return render(request, 'AfterSignUp.html', {'form': form})
+            return render(request, 'LogIn/AfterSignUp.html', {'form': form})
         else:
             return HttpResponseRedirect(reverse('accounts'))
 
@@ -113,7 +113,7 @@ def Signin(request):
                 'Upform' : Upform,
                 'Inform' : form,
             }
-            return render(request, 'SignUp.html', context)
+            return render(request, 'LogIn/SignUp.html', context)
         else:
             return HttpResponseRedirect(reverse('accounts'))
     else:
