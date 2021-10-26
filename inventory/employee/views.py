@@ -12,7 +12,7 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from .serializer import addEmployee, nemp
 
 def qwe(request):
-    return render(request, 'a.html')
+    return render(request, 'employee/employee.html')
 
 class ch(APIView):
     parser_classes = (MultiPartParser, FormParser)
