@@ -122,7 +122,33 @@ $(document).on('click', '#subscribe', function(e) {
 
 var detailed = document.getElementById("detail")
 
-function full_screen() {
+function full_screen(id) {
+
+    url = "/emp/" + id;
+    fetch(url).
+    then(function (response) {
+        return response.json();
+    })
+    .then(function (received) {
+        document.getElementById("update_profile").src = received.profile;
+        document.getElementById("head_name").innerHTML = received.name;
+        document.getElementById("head_designation").innerHTML = "Designation: " + received.designation;
+        document.getElementById("update_id").value = received.id;
+        document.getElementById("update_name").value = received.name;
+        document.getElementById("update_fa_name").value = received.father_name;
+        document.getElementById("update_cnic").value = received.cnic;
+        document.getElementById("update_blood").value = received.blood;
+        document.getElementById("update_religion").value = received.religion;
+        document.getElementById("update_gender").value = received.gender;
+        document.getElementById("update_address").value = received.address;
+        document.getElementById("update_department").value = received.department;
+        document.getElementById("update_designation").value = received.designation;
+        document.getElementById("update_salary").value = received.salary;
+        document.getElementById("update_salary_type").value = received.salary_type;
+        document.getElementById("update_num").value = received.mobile;
+        document.getElementById("update_other_num").value = received.other_mobile;
+        document.getElementById("update_bank_num").value = received.account_num;
+    })
 
     detailed.style.height = "100vh"
     stop()
@@ -144,7 +170,7 @@ document.getElementById("inputer_baap").style.display = "none"
 
 
 
-/* Running Function of Everone */
+/* Running Function of Everyone */
 
 function everyone() {
     if (merjan == "add_new_employee") {

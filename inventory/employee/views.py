@@ -8,11 +8,19 @@ from .models import employees
 
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.decorators import api_view
 from rest_framework.parsers import MultiPartParser, FormParser
 from .serializer import addEmployee, nemp
 
 def qwe(request):
     return render(request, 'employee/employee.html')
+
+@api_view(['GET'])
+def get_emp(request, pk):
+    emps = employees.objects.get(id = pk)
+    data = addEmployee(emps)
+    return Response(data.data)
+
 
 class ch(APIView):
     parser_classes = (MultiPartParser, FormParser)
@@ -26,16 +34,17 @@ class ch(APIView):
 
 
 class employee(APIView):
-    # parser_classes = (MultiPartParser)
+    parser_classes = (MultiPartParser, FormParser)
 
     def get(self, request):
-        if request.user.is_authenticated:
-            id = User.objects.get(username=request.user).id
-            emps = employees.objects.filter(employee_of = id)
-            data = addEmployee(emps, many=True)
-            return Response(data.data)
-        else:
-            return HttpResponse("Not Logged in")
+        # if request.user.is_authenticated:
+        # id = User.objects.get(username=request.user).id
+        id = 1
+        emps = employees.objects.filter(employee_of = id)
+        data = addEmployee(emps, many=True)
+        return render(request, 'employee/employee.html', {'list': data.data})
+        # else:
+            # return render(request, '404.html')
 
 
     def post(self, request, *args, **kwargs):
