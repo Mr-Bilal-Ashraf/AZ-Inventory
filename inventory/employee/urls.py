@@ -11,5 +11,6 @@ urlpatterns = [
     path('pay/', views.salary, name="pay"),
     path('del/', views.delete, name="pay"),
     path('asdf/', views.ch.as_view(), name="pay"),
+    path('a/', views.aa),
 
 ]

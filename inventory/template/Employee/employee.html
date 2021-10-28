@@ -279,42 +279,42 @@
                                                 <tr>
                                                     <th width="30%">Name</th>
                                                     <td width="2%">:</td>
-                                                    <td><input type="text" value="Muhammad Farooq" id="update_name"></td>
+                                                    <td><input type="text" maxlength="70" id="update_name"></td>
                                                 </tr>
                                                 <tr>
                                                     <th width="30%">Father Name</th>
                                                     <td width="2%">:</td>
-                                                    <td><input type="text" value="Muhammad Ashraf" id="update_fa_name"></td>
+                                                    <td><input type="text" maxlength="70" id="update_fa_name"></td>
                                                 </tr>
                                                 <tr>
                                                     <th width="30%">CNIC</th>
                                                     <td width="2%">:</td>
-                                                    <td><input type="text" value="33102-123001-1233" id="update_cnic"></td>
+                                                    <td><input type="text" maxlength="15" id="update_cnic"></td>
                                                 </tr>
                                                 <tr>
                                                     <th width="30%">Email</th>
                                                     <td width="2%">:</td>
-                                                    <td><input type="text" value="33102-123001-1233" id="update_email"></td>
+                                                    <td><input type="text" maxlength="30"  id="update_email"></td>
                                                 </tr>
                                                 <tr>
                                                     <th width="30%">Blood Group</th>
                                                     <td width="2%">:</td>
-                                                    <td><input type="text" value="O+" id="update_blood"></td>
+                                                    <td><input type="text" value="O+" id="update_blood" maxlength="4"></td>
                                                 </tr>
                                                 <tr>
                                                     <th width="30%">Religion</th>
                                                     <td width="2%">:</td>
-                                                    <td><input type="text" value="Muslim" id="update_religion"></td>
+                                                    <td><input type="text" maxlength="15" id="update_religion"></td>
                                                 </tr>
                                                 <tr>
                                                     <th width="30%">Gender</th>
                                                     <td width="2%">:</td>
-                                                    <td><input type="text" value="Male" id="update_gender"></td>
+                                                    <td><input type="text" maxlength="10"  id="update_gender"></td>
                                                 </tr>
                                                 <tr>
                                                     <th width="30%">Address</th>
                                                     <td width="2%">:</td>
-                                                    <td><input type="text" value="St#17 Razaabad Faisalabad" id="update_address"></td>
+                                                    <td><input type="text" value="From Mars" id="update_address"></td>
                                                 </tr>
                                             </table>
 
@@ -325,12 +325,12 @@
                                                 <tr>
                                                     <th width="30%">Department</th>
                                                     <td width="2%">:</td>
-                                                    <td><input type="text" value="Student" id="update_department"></td>
+                                                    <td><input type="text" maxlength="60" id="update_department"></td>
                                                 </tr>
                                                 <tr>
                                                     <th width="30%">Designation</th>
                                                     <td width="2%">:</td>
-                                                    <td><input type="text" value="Fun Gun" id="update_designation"></td>
+                                                    <td><input type="text" maxlength="30" id="update_designation"></td>
                                                 </tr>
                                                 <tr>
                                                     <th width="30%">Registration Date</th>
@@ -355,17 +355,17 @@
                                                 <tr>
                                                     <th width="30%">Phone Number</th>
                                                     <td width="2%">:</td>
-                                                    <td><input type="text" value="03016070981" id="update_num"></td>
+                                                    <td><input type="text" maxlength="12" id="update_num"></td>
                                                 </tr>
                                                 <tr>
                                                     <th width="30%">Other Number</th>
                                                     <td width="2%">:</td>
-                                                    <td><input type="text" value="03027091808" id="update_other_num"></td>
+                                                    <td><input type="text" maxlength="12" id="update_other_num"></td>
                                                 </tr>
                                                 <tr>
                                                     <th width="30%">Bank Account Number</th>
                                                     <td width="2%">:</td>
-                                                    <td><input type="text" value="328-534256-4325243" id="update_bank_num"></td>
+                                                    <td><input type="text" maxlength="30" id="update_bank_num"></td>
                                                 </tr>
                                             </table>
 
@@ -777,19 +777,19 @@
                             </tr>
                             {% if list%}
                             {% for data in list%}
-                            <tr class="table_properties">
-                                <td>{{data.name}}</td>
-                                <td>{{data.designation}}</td>
-                                <td>{{data.salary}}</td>
-                                <td>{{data.salary_paid}}</td>
-                                <td>{{data.salary_left}}</td>
+                            <tr class="table_properties" id="d{{data.id}}">
+                                <td id="name{{data.id}}">{{data.name}}</td>
+                                <td id="desi{{data.id}}">{{data.designation}}</td>
+                                <td id="sala{{data.id}}">{{data.salary}}</td>
+                                <td id="sa_pa{{data.id}}">{{data.salary_paid}}</td>
+                                <td id="sa_la{{data.id}}">{{data.salary_left}}</td>
                                 <td>
-                                    <div class="monthly">
+                                    <div class="monthly" id="sa_ty{{data.id}}">
                                         {{data.salary_type}}
                                     </div>
                                 </td>
                                 <td>
-                                    <div class="leaves">
+                                    <div class="leaves" id="leav{{data.id}}">
                                         Not Found
                                     </div>
                                 </td>

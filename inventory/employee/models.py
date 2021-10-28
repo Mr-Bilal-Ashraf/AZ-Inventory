@@ -11,7 +11,7 @@ class employees(models.Model):
     commission = models.IntegerField(blank=True, null=True)
     department = models.CharField(max_length=60, blank=True, null=True)
     designation = models.CharField(max_length=30, blank=True, null=True)
-    email = models.EmailField(blank=True, null=True)
+    email = models.CharField(max_length=30 ,blank=True, null=True)
     employee_of = models.IntegerField(blank=True, null=True)
     father_name = models.CharField(max_length=70, blank=True, null=True)
     gender = models.CharField(max_length=10, blank=True, null=True)

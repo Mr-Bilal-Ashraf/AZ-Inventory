@@ -46,21 +46,22 @@ document.getElementById("subscribe").addEventListener('click', () =>{
     url = `/emp/${up_id}/`
 
     d_to_u = {}
-    d_to_u
-    fetch(url, {
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        method: 'PATCH',
-        body: JSON.stringify({
-            'name': "mig", 'age': "24"
-        })
-    }).then(function (response) {
-        return response.json();
-    }).then(function (received) {
-        console.log(received)
-    })
+    d_to_u.name = document.getElementById("update_name").value[0] == "-" ? null : document.getElementById("update_name").value;
+    d_to_u.father_name = document.getElementById("update_fa_name").value[0] == "-" ? null : document.getElementById("update_fa_name").value;
+    d_to_u.cnic = document.getElementById("update_cnic").value[0] == "-" ? null : document.getElementById("update_cnic").value;
+    d_to_u.email = document.getElementById("update_email").value[0] == "-" ? null : document.getElementById("update_email").value;
+    d_to_u.blood = document.getElementById("update_blood").value[0] == "-" ? null : document.getElementById("update_blood").value;
+    d_to_u.religion = document.getElementById("update_religion").value[0] == "-" ? null : document.getElementById("update_religion").value;
+    d_to_u.gender = document.getElementById("update_gender").value[0] == "-" ? null : document.getElementById("update_gender").value;
+    d_to_u.address = document.getElementById("update_address").value[0] == "-" ? null : document.getElementById("update_address").value;
+    d_to_u.department = document.getElementById("update_department").value[0] == "-" ? null : document.getElementById("update_department").value;
+    d_to_u.designation = document.getElementById("update_designation").value[0] == "-" ? null : document.getElementById("update_designation").value;
+    d_to_u.commission = document.getElementById("update_commission").value[0] == "-" ? null : parseInt(document.getElementById("update_commission").value);
+    d_to_u.mobile = document.getElementById("update_num").value[0] == "-" ? null : document.getElementById("update_num").value;
+    d_to_u.other_mobile = document.getElementById("update_other_num").value[0] == "-" ? null : document.getElementById("update_other_num").value;
+    d_to_u.account_num = document.getElementById("update_bank_num").value[0] == "-" ? null : document.getElementById("update_bank_num").value;
     
+
     swal({
         title: 'Password is Required',
         input: 'password',
@@ -68,27 +69,37 @@ document.getElementById("subscribe").addEventListener('click', () =>{
         showCancelButton: true,
         confirmButtonText: 'Update',
         showLoaderOnConfirm: true,
-        preConfirm: (email) => {
-            return new Promise((resolve) => {
-                setTimeout(() => {
-                    if (email === '12345') {
-                        swal.showValidationError(
-                            'Your Password is Wrong.'
-                        )
-                    }
-                    resolve()
-                }, 2000)
+        preConfirm: (pwd) => {
+            fetch(url, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                method: 'PATCH',
+                body: JSON.stringify(d_to_u)
+            }).then(function (response) {
+                return response.json();
+            }).then(function (received) {
+                if(received.x){
+                    swal(
+                        'Updated!',
+                        'Information has been updated!',
+                        'success'
+                    );
+                    document.getElementById("name"+up_id).innerHTML = received.name  ? `${received.name}` : `None`;
+                    document.getElementById("desi"+up_id).innerHTML = received.designation  ? `${received.designation}` : `None`;
+                    p_stop();
+                }
+                else{
+                    swal(
+                        'Sorry!',
+                        'Server Error! Please Try Later!',
+                        'error'
+                    );
+                    p_stop();
+                }
             })
         },
         allowOutsideClick: true
-    }).then( (result) => {
-        if (result.value) {
-            swal({
-                type: 'success',
-                title: 'Information has been updated  !',
-                html: 'User Information: Updated'
-            })
-        }
     })
 });
 
@@ -96,7 +107,9 @@ document.getElementById("subscribe").addEventListener('click', () =>{
 /* Popup ...Asking for permission to delete employee */
 
 function deleting(del_id) {
+
     url = `/emp/${del_id}/`
+    del_id = "d" + del_id;
     // url = "/emp/17/"
     swal({
         title: 'Are you sure?',
@@ -107,7 +120,7 @@ function deleting(del_id) {
         cancelButtonColor: '#d33',
         confirmButtonText: 'Yes, delete it!',
         allowOutsideClick: true,
-        preConfirm:(del_id)=>{
+        preConfirm:()=>{
             fetch(url, {
                 headers: {
                     'Content-Type': 'application/json',
@@ -117,6 +130,7 @@ function deleting(del_id) {
                 return response.json();
             }).then(function (received) {
                 if(received.x){
+                    document.getElementById(del_id).remove();
                     swal(
                         'Deleted!',
                         'Employee Removed',

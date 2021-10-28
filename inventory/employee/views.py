@@ -9,11 +9,13 @@ from .models import employees
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
-from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from rest_framework.authentication import BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
 from .serializer import addEmployee, nemp, updateEmployee, a
 
+def aa(request):
+    return render(request, 'a.html')
 
 class ch(APIView):
     parser_classes = (MultiPartParser, FormParser)
@@ -27,7 +29,7 @@ class ch(APIView):
 
 
 class employee(APIView):
-    parser_classes = (MultiPartParser, FormParser)
+    parser_classes = (MultiPartParser, FormParser, JSONParser)
     authentication_classes = [BasicAuthentication]
     permission_classes = [IsAuthenticated]
 
@@ -45,28 +47,19 @@ class employee(APIView):
 
     def post(self, request, format=None):
         pass
-
-    def put(self, request, pk, format=None):
-        emp = employees.objects.get(id=pk)
-        ser_emp = updateEmployee(emp, data=request.data)
-        if ser_emp.is_valid():
-            print(ser_emp.validated_data.get("name"))
-            # ser_emp.save()
-        else:
-            print("no")
-        return Response(ser_emp.data)
-
         
     def patch(self, request, pk, format=None):
         emp = employees.objects.get(id=pk)
         ser_emp = a(emp, data=request.data, partial=True)
         if ser_emp.is_valid():
-            print("yes")
-            print(ser_emp.data)
             ser_emp.save()
+            data = ser_emp.data
+            data["x"] = True
+            return Response(data)
         else:
-            print("no")
-        return Response(ser_emp.errors)
+            print(ser_emp.errors)
+            return Response({"x": False})
+
 
     def delete(self, request, pk, format=None):
         try:
