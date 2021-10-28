@@ -156,6 +156,28 @@
             color: white;
             background-color: #191C24;
         }
+
+        #subscribe{
+            background-color: #8ca6b641;
+            border: 2px solid rgba(0, 0, 0, 0.125);
+            padding: 10px;
+            font-weight: 600;
+            cursor:pointer;
+            padding: 8px 20px 8px 20px;
+            border-radius: 5px;
+            margin-right: 4px;
+        }
+        #close_detail
+        {
+            background-color: #fc424b44; 
+            border: 2px solid rgba(0, 0, 0, 0.125);
+            padding: 10px;
+            font-weight: 600;
+            cursor:pointer;
+            padding: 8px 20px 8px 20px;
+            border-radius: 5px;
+            margin-left: 4px;
+        }
     </style>
 
 </head>
@@ -168,10 +190,11 @@
 
     <script>
         function notif() {
-            Push.create("Get Notified", {
-                body: "You Just Update the information of {USER NAME}",
-                icon: 'https://i.ytimg.com/vi/wu8F1bP5Wcg/hqdefault.jpg?sqp=-oaymwEiCKgBEF5IWvKriqkDFQgBFQAAAAAYASUAAMhCPQCAokN4AQ==&rs=AOn4CLANAfL5ZzH3bLGdNmeu7_M9aXcBfw'
-            })
+            
+            // Push.create("Get Notified", {
+            //     body: "You Just Update the information of {USER NAME}",
+            //     icon: 'https://i.ytimg.com/vi/wu8F1bP5Wcg/hqdefault.jpg?sqp=-oaymwEiCKgBEF5IWvKriqkDFQgBFQAAAAAYASUAAMhCPQCAokN4AQ==&rs=AOn4CLANAfL5ZzH3bLGdNmeu7_M9aXcBfw'
+            // })
         }
     </script>
     <!-- Top Bar -->
@@ -235,8 +258,7 @@
                                             <h3 id="head_name"></h3>
                                         </div>
                                         <div class="card-body">
-                                            <p class="mb-0"><strong class="pr-1"
-                                                    id="head_designation">Designation:</strong></p>
+                                            <p class="mb-0" id="head_designation"></p>
                                             <!-- <p class="mb-0"><strong class="pr-1" id="head_id">ID:</strong></p> -->
                                         </div>
                                     </div>
@@ -268,6 +290,11 @@
                                                     <th width="30%">CNIC</th>
                                                     <td width="2%">:</td>
                                                     <td><input type="text" value="33102-123001-1233" id="update_cnic"></td>
+                                                </tr>
+                                                <tr>
+                                                    <th width="30%">Email</th>
+                                                    <td width="2%">:</td>
+                                                    <td><input type="text" value="33102-123001-1233" id="update_email"></td>
                                                 </tr>
                                                 <tr>
                                                     <th width="30%">Blood Group</th>
@@ -306,14 +333,24 @@
                                                     <td><input type="text" value="Fun Gun" id="update_designation"></td>
                                                 </tr>
                                                 <tr>
-                                                    <th width="30%">Salary</th>
+                                                    <th width="30%">Registration Date</th>
                                                     <td width="2%">:</td>
-                                                    <td><input type="text" value="125,000" id="update_salary"></td>
+                                                    <td id="update_reg_date"></td>
                                                 </tr>
                                                 <tr>
                                                     <th width="30%">Salary Type</th>
                                                     <td width="2%">:</td>
-                                                    <td><input type="text" value="Weekly" id="update_salary_type"></td>
+                                                    <td id="update_salary_type"></td>
+                                                </tr>
+                                                <tr>
+                                                    <th width="30%">Salary</th>
+                                                    <td width="2%">:</td>
+                                                    <td id="update_salary"></td>
+                                                </tr>
+                                                <tr>
+                                                    <th width="30%">Comission</th>
+                                                    <td width="2%">:</td>
+                                                    <td><input type="text" value="125,000" id="update_commission"></td>
                                                 </tr>
                                                 <tr>
                                                     <th width="30%">Phone Number</th>
@@ -335,10 +372,8 @@
                                         </div>
                                         <div style="height: 55px;">
                                             <div style="display: flex;justify-content: center;">
-                                                <span onclick="notif()" id="subscribe"
-                                                    style="background-color: #008ee741; border: 2px solid rgba(0, 0, 0, 0.125);padding: 10px;font-weight: 600;cursor:pointer;padding: 8px 20px 8px 20px;border-radius: 5px;margin-right: 4px;">UPDATE</span>
-                                                <span onclick="p_stop()"
-                                                    style="background-color: #fc424b44; border: 2px solid rgba(0, 0, 0, 0.125);padding: 10px;font-weight: 600;cursor:pointer;padding: 8px 20px 8px 20px;border-radius: 5px;margin-left: 4px;">CLOSE</span>
+                                                <span onclick="notif()" id="subscribe">UPDATE</span>
+                                                <span onclick="p_stop()" id="close_detail">CLOSE</span>
                                             </div>
                                         </div>
 
@@ -761,15 +796,16 @@
                                 <td><span class="actions_border">
                                         <i class="far fa-edit" id="action_edit"
                                             onclick="full_screen({{data.id}}); everyone();"></i>
-                                        <i class="fas fa-trash" id="action_delete" onclick="deleting()"></i>
+                                        <i class="fas fa-trash" id="action_delete" onclick="deleting({{data.id}})"></i>
                                     </span></td>
                             </tr>
                             {% endfor %}
                             {% endif %}
 
                             <script>
-                                function deleting() {
-
+                                function deleting(del_id) {
+                                    url = `/emp/${del_id}/`
+                                    // url = "/emp/17/"
                                     swal({
                                         title: 'Are you sure?',
                                         text: "It will permanently deleted !",
@@ -777,15 +813,34 @@
                                         showCancelButton: true,
                                         confirmButtonColor: '#3085d6',
                                         cancelButtonColor: '#d33',
-                                        confirmButtonText: 'Yes, delete it!'
-                                    }).then(function () {
-                                        swal(
-                                            'Deleted!',
-                                            'Your file has been deleted.',
-                                            'success'
-                                        );
+                                        confirmButtonText: 'Yes, delete it!',
+                                        allowOutsideClick: true,
+                                        preConfirm:(del_id)=>{
+                                            fetch(url, {
+                                                headers: {
+                                                    'Content-Type': 'application/json',
+                                                },
+                                                method: 'DELETE',
+                                            }).then(function (response) {
+                                                return response.json();
+                                            }).then(function (received) {
+                                                if(received.x){
+                                                    swal(
+                                                        'Deleted!',
+                                                        'Employee Removed',
+                                                        'success'
+                                                    );
+                                                }
+                                                else{
+                                                    swal(
+                                                        'Sorry!',
+                                                        'Server Error! Please Try Later!',
+                                                        'error'
+                                                    );
+                                                }
+                                            })
+                                        }
                                     })
-
                                 }
                             </script>
 
@@ -1021,6 +1076,8 @@
         function myFunction() {
             preloader.style.display = 'none';
         };
+        user = "{{request.user}}"
+        
     </script>
 
 

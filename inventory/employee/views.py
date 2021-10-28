@@ -10,10 +10,11 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.authentication import BasicAuthentication
+from rest_framework.permissions import IsAuthenticated
 from .serializer import addEmployee, nemp
 
-def qwe(request):
-    return render(request, 'employee/employee.html')
+
 
 @api_view(['GET'])
 def get_emp(request, pk):
@@ -35,31 +36,29 @@ class ch(APIView):
 
 class employee(APIView):
     parser_classes = (MultiPartParser, FormParser)
+    authentication_classes = [BasicAuthentication]
+    permission_classes = [IsAuthenticated]
 
-    def get(self, request):
-        # if request.user.is_authenticated:
-        # id = User.objects.get(username=request.user).id
-        id = 1
-        emps = employees.objects.filter(employee_of = id)
+    def get(self, request, pk = None, format=None):
+        emps = employees.objects.filter(employee_of = request.user.id)
         data = addEmployee(emps, many=True)
         return render(request, 'employee/employee.html', {'list': data.data})
-        # else:
-            # return render(request, '404.html')
 
 
-    def post(self, request, *args, **kwargs):
-        
-        if request.user.is_authenticated:
-            newEmp = addEmployee(data = request.data)
-            if newEmp.is_valid():
-                print(newEmp.validated_data['cnic'])
-                newEmp.save()
-                return HttpResponse("valid")
-            else:
-                print(newEmp.errors)
-                return HttpResponse("Not valid")
-        else:
-            return HttpResponse("Not Logged in")
+    def post(self, request, format=None):
+        pass
+
+    def put(self, request, pk, format=None):
+        return Response({"detail": "Done"})
+
+    def delete(self, request, pk, format=None):
+        try:
+            employees.objects.get(pk=pk).delete()
+            return Response({"x": True})
+        except:
+            return Response({"x": False})
+
+
 
 
 def addEmp(request):

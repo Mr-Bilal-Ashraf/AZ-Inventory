@@ -40,8 +40,7 @@ $("#show-sidebar").click(function() {
 
 /* Popup ...Asking for permission in update employee */
 
-
-$(document).on('click', '#subscribe', function(e) {
+document.getElementById("subscribe").addEventListener('click', () =>{
     swal({
         title: 'Password is Required',
         input: 'password',
@@ -62,7 +61,7 @@ $(document).on('click', '#subscribe', function(e) {
             })
         },
         allowOutsideClick: true
-    }).then((result) => {
+    }).then( (result) => {
         if (result.value) {
             swal({
                 type: 'success',
@@ -72,11 +71,6 @@ $(document).on('click', '#subscribe', function(e) {
         }
     })
 });
-
-
-
-
-
 
 
 
@@ -130,24 +124,27 @@ function full_screen(id) {
         return response.json();
     })
     .then(function (received) {
-        document.getElementById("update_profile").src = received.profile;
-        document.getElementById("head_name").innerHTML = received.name;
-        document.getElementById("head_designation").innerHTML = "Designation: " + received.designation;
-        document.getElementById("update_id").value = received.id;
-        document.getElementById("update_name").value = received.name;
-        document.getElementById("update_fa_name").value = received.father_name;
-        document.getElementById("update_cnic").value = received.cnic;
-        document.getElementById("update_blood").value = received.blood;
-        document.getElementById("update_religion").value = received.religion;
-        document.getElementById("update_gender").value = received.gender;
-        document.getElementById("update_address").value = received.address;
-        document.getElementById("update_department").value = received.department;
-        document.getElementById("update_designation").value = received.designation;
-        document.getElementById("update_salary").value = received.salary;
-        document.getElementById("update_salary_type").value = received.salary_type;
-        document.getElementById("update_num").value = received.mobile;
-        document.getElementById("update_other_num").value = received.other_mobile;
-        document.getElementById("update_bank_num").value = received.account_num;
+        document.getElementById("update_profile").src = received.profile  ? `${received.profile}` : `---------`;
+        document.getElementById("head_name").innerHTML = received.name  ? `${received.name}` : `---------`;
+        document.getElementById("head_designation").innerHTML = received.designation  ? `<strong class="pr-1">Designation:</strong> ${received.designation}` : `---------`;
+        document.getElementById("update_id").innerHTML = received.id  ? `${received.id}` : `---------`;
+        document.getElementById("update_name").value = received.name  ? `${received.name}` : `---------`;
+        document.getElementById("update_fa_name").value = received.father_name  ? `${received.father_name}` : `---------`;
+        document.getElementById("update_cnic").value = received.cnic  ? `${received.cnic}` : `---------`;
+        document.getElementById("update_blood").value = received.blood  ? `${received.blood}` : `---------`;
+        document.getElementById("update_religion").value = received.religion  ? `${received.religion}` : `---------`;
+        document.getElementById("update_gender").value = received.gender ? `${received.gender}` : `---------`;
+        document.getElementById("update_address").value = received.address  ? `${received.address}` : `---------`;
+        document.getElementById("update_department").value = received.department  ? `${received.department}` : `---------`;
+        document.getElementById("update_designation").value = received.designation  ? `${received.designation}` : `---------`;
+        document.getElementById("update_salary").innerHTML = received.salary  ? `${received.salary}` : `---------`;
+        document.getElementById("update_salary_type").innerHTML = received.salary_type  ? `${received.salary_type}` : `---------`;
+        document.getElementById("update_num").value = received.mobile  ? `${received.mobile}` : `---------`;
+        document.getElementById("update_other_num").value = received.other_mobile  ? `${received.other_mobile}` : `---------`;
+        document.getElementById("update_bank_num").value = received.account_num  ? `${received.account_num}` : `---------`;
+        document.getElementById("update_reg_date").innerHTML = received.reg_date  ? `${received.reg_date}` : `---------`;
+        document.getElementById("update_email").value = received.email  ? `${received.email}` : `---------`;
+        document.getElementById("update_commission").value = received.commission  ? `${received.commission}` : `---------`;
     })
 
     detailed.style.height = "100vh"
