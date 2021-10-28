@@ -38,9 +38,29 @@ $("#show-sidebar").click(function() {
 
 
 
-/* Popup ...Asking for permission in update employee */
+/* Popup ...Asking for permission to update employee */
+
 
 document.getElementById("subscribe").addEventListener('click', () =>{
+    up_id = document.getElementById("update_id").innerHTML;
+    url = `/emp/${up_id}/`
+
+    d_to_u = {}
+    d_to_u
+    fetch(url, {
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        method: 'PATCH',
+        body: JSON.stringify({
+            'name': "mig", 'age': "24"
+        })
+    }).then(function (response) {
+        return response.json();
+    }).then(function (received) {
+        console.log(received)
+    })
+    
     swal({
         title: 'Password is Required',
         input: 'password',
@@ -71,6 +91,49 @@ document.getElementById("subscribe").addEventListener('click', () =>{
         }
     })
 });
+
+
+/* Popup ...Asking for permission to delete employee */
+
+function deleting(del_id) {
+    url = `/emp/${del_id}/`
+    // url = "/emp/17/"
+    swal({
+        title: 'Are you sure?',
+        text: "It will permanently deleted !",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!',
+        allowOutsideClick: true,
+        preConfirm:(del_id)=>{
+            fetch(url, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                method: 'DELETE',
+            }).then(function (response) {
+                return response.json();
+            }).then(function (received) {
+                if(received.x){
+                    swal(
+                        'Deleted!',
+                        'Employee Removed',
+                        'success'
+                    );
+                }
+                else{
+                    swal(
+                        'Sorry!',
+                        'Server Error! Please Try Later!',
+                        'error'
+                    );
+                }
+            })
+        }
+    })
+}
 
 
 
@@ -118,13 +181,12 @@ var detailed = document.getElementById("detail")
 
 function full_screen(id) {
 
-    url = "/emp/" + id;
-    fetch(url).
+    fetch(`/emp/${id}`).
     then(function (response) {
         return response.json();
     })
     .then(function (received) {
-        document.getElementById("update_profile").src = received.profile  ? `${received.profile}` : `---------`;
+        document.getElementById("update_profile").src = received.profile  ? `${received.profile}` : `/static/images/male.jpg`;
         document.getElementById("head_name").innerHTML = received.name  ? `${received.name}` : `---------`;
         document.getElementById("head_designation").innerHTML = received.designation  ? `<strong class="pr-1">Designation:</strong> ${received.designation}` : `---------`;
         document.getElementById("update_id").innerHTML = received.id  ? `${received.id}` : `---------`;

@@ -12,15 +12,7 @@ from rest_framework.decorators import api_view
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.authentication import BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
-from .serializer import addEmployee, nemp
-
-
-
-@api_view(['GET'])
-def get_emp(request, pk):
-    emps = employees.objects.get(id = pk)
-    data = addEmployee(emps)
-    return Response(data.data)
+from .serializer import addEmployee, nemp, updateEmployee, a
 
 
 class ch(APIView):
@@ -40,16 +32,41 @@ class employee(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, pk = None, format=None):
-        emps = employees.objects.filter(employee_of = request.user.id)
-        data = addEmployee(emps, many=True)
-        return render(request, 'employee/employee.html', {'list': data.data})
+        if pk == None:
+            emps = employees.objects.filter(employee_of = request.user.id)
+            data = addEmployee(emps, many=True)
+            # return Response(data.data)
+            return render(request, 'employee/employee.html', {'list': data.data})
+        else:
+            emps = employees.objects.get(id = pk)
+            data = addEmployee(emps)
+            return Response(data.data)
 
 
     def post(self, request, format=None):
         pass
 
     def put(self, request, pk, format=None):
-        return Response({"detail": "Done"})
+        emp = employees.objects.get(id=pk)
+        ser_emp = updateEmployee(emp, data=request.data)
+        if ser_emp.is_valid():
+            print(ser_emp.validated_data.get("name"))
+            # ser_emp.save()
+        else:
+            print("no")
+        return Response(ser_emp.data)
+
+        
+    def patch(self, request, pk, format=None):
+        emp = employees.objects.get(id=pk)
+        ser_emp = a(emp, data=request.data, partial=True)
+        if ser_emp.is_valid():
+            print("yes")
+            print(ser_emp.data)
+            ser_emp.save()
+        else:
+            print("no")
+        return Response(ser_emp.errors)
 
     def delete(self, request, pk, format=None):
         try:
