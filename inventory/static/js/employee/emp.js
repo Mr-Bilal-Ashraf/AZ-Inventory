@@ -63,9 +63,9 @@ document.getElementById("subscribe").addEventListener('click', () =>{
     
 
     swal({
-        title: 'Password is Required',
-        input: 'password',
-        inputPlaceholder: 'Password',
+        title: 'Confirm',
+        text: "Confirm To Update Employee Data !",
+        type: 'info',
         showCancelButton: true,
         confirmButtonText: 'Update',
         showLoaderOnConfirm: true,

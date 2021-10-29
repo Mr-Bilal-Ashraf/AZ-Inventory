@@ -12,7 +12,7 @@ from rest_framework.decorators import api_view
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from rest_framework.authentication import BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
-from .serializer import addEmployee, nemp, updateEmployee, a
+from .serializer import SerEmp, nemp
 
 def aa(request):
     return render(request, 'a.html')
@@ -36,12 +36,12 @@ class employee(APIView):
     def get(self, request, pk = None, format=None):
         if pk == None:
             emps = employees.objects.filter(employee_of = request.user.id)
-            data = addEmployee(emps, many=True)
+            data = SerEmp(emps, many=True)
             # return Response(data.data)
             return render(request, 'employee/employee.html', {'list': data.data})
         else:
             emps = employees.objects.get(id = pk)
-            data = addEmployee(emps)
+            data = SerEmp(emps)
             return Response(data.data)
 
 
@@ -50,7 +50,7 @@ class employee(APIView):
         
     def patch(self, request, pk, format=None):
         emp = employees.objects.get(id=pk)
-        ser_emp = a(emp, data=request.data, partial=True)
+        ser_emp = SerEmp(emp, data=request.data, partial=True)
         if ser_emp.is_valid():
             ser_emp.save()
             data = ser_emp.data
