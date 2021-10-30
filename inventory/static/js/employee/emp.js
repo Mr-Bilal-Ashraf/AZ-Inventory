@@ -37,6 +37,59 @@ $("#show-sidebar").click(function() {
 
 
 
+// Adding new employee
+
+document.getElementById("addEmp").addEventListener('click', ()=>{
+
+    let formdata = new FormData();
+    add_profile = document.getElementById("taking_image").files[0] ? document.getElementById("taking_image").files[0] : null;
+    add_name = document.getElementById("add_name").value ? document.getElementById("add_name").value : null;
+    add_father = document.getElementById("add_father").value ? document.getElementById("add_father").value : null;
+    add_cnic = document.getElementById("add_cnic").value ?  document.getElementById("add_cnic").value : null;
+    add_blood = document.getElementById("add_blood").value ?  document.getElementById("add_blood").value : null;
+    add_religion = document.getElementById("add_religion").value ?  document.getElementById("add_religion").value : null;
+    add_gender = document.getElementById("add_gender").value ?  document.getElementById("add_gender").value : null;
+    add_address = document.getElementById("add_address").value ?  document.getElementById("add_address").value : null;
+    add_department = document.getElementById("add_department").value ? document.getElementById("add_department").value : null ;
+    add_designation = document.getElementById("add_designation").value ? document.getElementById("add_designation").value : null ;
+    add_salary = document.getElementById("add_salary").value ? document.getElementById("add_salary").value : null ;
+    add_salary_type = document.getElementById("add_salary_type").value ? document.getElementById("add_salary_type").value : null ;
+    add_number = document.getElementById("add_number").value ? document.getElementById("add_number").value : null ;
+    add_other_number = document.getElementById("add_other_number").value ? document.getElementById("add_other_number").value : null ;
+    add_acc_no = document.getElementById("add_acc_no").value ? document.getElementById("add_acc_no").value : null ;
+
+    formdata.append('profile',add_profile);
+    formdata.append('name',add_name);
+    formdata.append('father_name',add_father);
+    formdata.append('cnic',add_cnic);
+    formdata.append('blood',add_blood);
+    formdata.append('religion',add_religion);
+    formdata.append('gender',add_gender);
+    formdata.append('address',add_address);
+    formdata.append('department',add_department);
+    formdata.append('designation',add_designation);
+    formdata.append('salary',add_salary);
+    formdata.append('salary_type',add_salary_type);
+    formdata.append('mobile',add_number);
+    formdata.append('other_mobile',add_other_number);
+    formdata.append('account_num',add_acc_no);
+
+    console.log(formdata.get("profile"))
+
+
+    // fetch('/emp/', {
+    //     headers: {},
+    //     method: 'POST',
+    //     body: formdata
+    // }).then(function (response) {
+    //     return response.json();
+    // }).then(function (received) {
+    //     console.log(received)
+    // })
+})
+
+
+
 
 /* Popup ...Asking for permission to update employee */
 
@@ -56,7 +109,7 @@ document.getElementById("subscribe").addEventListener('click', () =>{
     d_to_u.address = document.getElementById("update_address").value[0] == "-" ? null : document.getElementById("update_address").value;
     d_to_u.department = document.getElementById("update_department").value[0] == "-" ? null : document.getElementById("update_department").value;
     d_to_u.designation = document.getElementById("update_designation").value[0] == "-" ? null : document.getElementById("update_designation").value;
-    d_to_u.commission = document.getElementById("update_commission").value[0] == "-" ? null : parseInt(document.getElementById("update_commission").value);
+    d_to_u.commission = document.getElementById("update_commission").value[0] == "-" ? null : parseFloat(document.getElementById("update_commission").value);
     d_to_u.mobile = document.getElementById("update_num").value[0] == "-" ? null : document.getElementById("update_num").value;
     d_to_u.other_mobile = document.getElementById("update_other_num").value[0] == "-" ? null : document.getElementById("update_other_num").value;
     d_to_u.account_num = document.getElementById("update_bank_num").value[0] == "-" ? null : document.getElementById("update_bank_num").value;
@@ -153,36 +206,49 @@ function deleting(del_id) {
 
 /* Getting and Setting Image in Add new Employee Option */
 
-(function() {
-    var uploader = document.createElement('input'),
-        image = document.getElementById('img-result');
+// (function() {
+//     var uploader = document.createElement('input'),
+//         image = document.getElementById('img-result');
 
-    uploader.type = 'file';
-    uploader.accept = 'image/*';
+//     uploader.type = 'file';
+//     uploader.accept = 'image/*';
 
-    image.onclick = function() {
-        uploader.click();
-    }
+//     image.onclick = function() {
+//         uploader.click();
+//     }
 
-    uploader.onchange = function() {
-        var reader = new FileReader();
-        reader.onload = function(evt) {
-            image.classList.remove('no-image');
-            image.style.backgroundImage = 'url(' + evt.target.result + ')';
-            var request = {
-                itemtype: 'test 1',
-                brand: 'test 2',
-                images: [{
-                    data: evt.target.result
-                }]
-            };
+//     uploader.onchange = function() {
+//         var reader = new FileReader();
+//         reader.onload = function(evt) {
+//             image.classList.remove('no-image');
+//             image.style.backgroundImage = 'url(' + evt.target.result + ')';
+//             var request = {
+//                 itemtype: 'test 1',
+//                 brand: 'test 2',
+//                 images: [{
+//                     data: evt.target.result
+//                 }]
+//             };
+//         }
+//         reader.readAsDataURL(uploader.files[0]);
+//     }
+// })();
+
+
+function change_profile(event, element, img_id) {
+
+    var ele_id = element.id;
+
+    prf_pic = document.getElementById(img_id);
+    var file = document.getElementById(ele_id).files;
+    if (file.length > 0) {
+        var filereader = new FileReader()
+        filereader.onload = function(event) {
+            prf_pic.setAttribute("src", event.target.result);
         }
-        reader.readAsDataURL(uploader.files[0]);
+        filereader.readAsDataURL(file[0]);
     }
-})();
-
-
-
+} 
 
 
 

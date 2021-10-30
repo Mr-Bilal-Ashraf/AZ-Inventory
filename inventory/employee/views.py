@@ -46,7 +46,13 @@ class employee(APIView):
 
 
     def post(self, request, format=None):
-        pass
+        ser_emp = SerEmp(data=request.data)
+        if ser_emp.is_valid():
+            ser_emp.save()
+            return Response({"x": True})
+        else:
+            print(ser_emp.errors)
+            return Response({"x": False})
         
     def patch(self, request, pk, format=None):
         emp = employees.objects.get(id=pk)

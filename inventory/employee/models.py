@@ -8,7 +8,7 @@ class employees(models.Model):
     address = models.CharField(max_length=150, blank=True, null=True)
     blood = models.CharField(max_length=4, blank=True, null=True)
     cnic = models.CharField(max_length=15)
-    commission = models.IntegerField(blank=True, null=True)
+    commission = models.FloatField(blank=True, null=True)
     department = models.CharField(max_length=60, blank=True, null=True)
     designation = models.CharField(max_length=30, blank=True, null=True)
     email = models.CharField(max_length=30 ,blank=True, null=True)

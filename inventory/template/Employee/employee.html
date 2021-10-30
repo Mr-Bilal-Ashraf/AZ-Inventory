@@ -157,7 +157,7 @@
             background-color: #191C24;
         }
 
-        #subscribe{
+        #subscribe, .btn{
             background-color: #8ca6b641;
             border: 2px solid rgba(0, 0, 0, 0.125);
             padding: 10px;
@@ -567,9 +567,14 @@
                     <div style="height: 250px;">
                         <!-- Image Rounder -->
 
-                        <div class="wrapper">
+                        <!-- <div class="wrapper">
                             <button class="no-image" id="img-result">Upload Image</button>
+                        </div> -->
+                        <div id="round_image" style="display: flex;justify-content: center;">
+                            <img src="{% static 'images/male.jpg'%}" alt="" height="120" id="add_profile">
                         </div>
+                        <input type="file" name="pic" id="taking_image" onchange="change_profile(event,this,'add_profile')" style="display: none;" accept="image/*" required="">
+                        <label for="taking_image" class="btn" style="display: flex;justify-content: center;">Select Picture</label>
 
                         <!-- partial -->
 
@@ -587,7 +592,7 @@
                             <p>
                                 <label>
                                     NAME<br>
-                                    <input type="text" placeholder="Name" s>
+                                    <input type="text" placeholder="Name" id="add_name" maxlength="70">
                                 </label>
                             </p>
 
@@ -595,7 +600,7 @@
                             <p>
                                 <label>
                                     Father Name<br>
-                                    <input type="text" placeholder="Father Name" s>
+                                    <input type="text" placeholder="Father Name" id="add_father" maxlength="70">
                                 </label>
                             </p>
 
@@ -603,7 +608,7 @@
                             <p>
                                 <label>
                                     CNIC<br>
-                                    <input type="text" placeholder="CNIC">
+                                    <input type="text" placeholder="CNIC" id="add_cnic" maxlength="15">
                                 </label>
                             </p>
 
@@ -613,7 +618,7 @@
                             <p>
                                 <label>
                                     Blood Group<br>
-                                    <input type="text" list="blood" placeholder="Blood Group">
+                                    <input type="text" list="blood" placeholder="Blood Group" id="add_blood" maxlength="4">
                                     <datalist id="blood">
                                         <option>A+</option>
                                         <option>A-</option>
@@ -632,7 +637,7 @@
                             <p>
                                 <label>
                                     Religion<br>
-                                    <input type="text" list="religion" placeholder="Religion">
+                                    <input type="text" list="religion" placeholder="Religion" id="add_religion" maxlength="15">
                                     <datalist id="religion">
                                         <option>Muslim</option>
                                         <option>Christian</option>
@@ -646,7 +651,7 @@
                             <p>
                                 <label>
                                     Gender<br>
-                                    <input type="text" list="gender" placeholder="Gender">
+                                    <input type="text" list="gender" placeholder="Gender" id="add_gender" maxlength="10">
                                     <datalist id="gender">
                                         <option>Male</option>
                                         <option>Female</option>
@@ -657,14 +662,14 @@
                             <p>
                                 <label>
                                     Address<br>
-                                    <input type="text" placeholder="Home Address">
+                                    <input type="text" placeholder="Home Address" id="add_address" maxlength="150">
                                 </label>
                             </p>
                             <h2 style="width: 100%;margin: 40px 20px 20px 20px;">Employee Information</h2>
                             <p>
                                 <label>
                                     Department<br>
-                                    <input type="text" placeholder="Department" s>
+                                    <input type="text" placeholder="Department" id="add_department" maxlength="60">
                                 </label>
                             </p>
 
@@ -672,7 +677,7 @@
                             <p>
                                 <label>
                                     Designation<br>
-                                    <input type="text" placeholder="Designation" s>
+                                    <input type="text" placeholder="Designation" id="add_designation" maxlength="30">
                                 </label>
                             </p>
 
@@ -680,7 +685,7 @@
                             <p>
                                 <label>
                                     Salary<br>
-                                    <input type="text" placeholder="Salary" s>
+                                    <input type="text" placeholder="Salary" id="add_salary" >
                                 </label>
                             </p>
 
@@ -688,13 +693,11 @@
                             <p>
                                 <label>
                                     Salary Type<br>
-                                    <input type="text" list="salary_type" placeholder="Salary Type">
+                                    <input type="text" list="salary_type" placeholder="Salary Type" id="add_salary_type">
                                     <datalist id="salary_type">
-                                        <option>Yearly</option>
                                         <option>Monthly</option>
                                         <option>Weekly</option>
                                         <option>Daily</option>
-                                        <option>Hourly</option>
                                     </datalist>
                                 </label>
                             </p>
@@ -703,20 +706,20 @@
                             <p>
                                 <label>
                                     Phone Number<br>
-                                    <input type="text" placeholder="Phone Number" s>
+                                    <input type="text" placeholder="Phone Number" id="add_number" maxlength="12">
                                 </label>
                             </p>
 
                             <p>
                                 <label>
                                     Other Number<br>
-                                    <input type="text" placeholder="Other Number" s>
+                                    <input type="text" placeholder="Other Number" id="add_other_number" maxlength="12">
                                 </label>
                             </p>
                             <p>
                                 <label>
                                     Bank Account NO:<br>
-                                    <input type="text" placeholder="Other Number" s>
+                                    <input type="text" placeholder="Other Number" id="add_acc_no" maxlength="30">
                                 </label>
                             </p>
 
@@ -728,8 +731,8 @@
 
 
 
-                            <a href="#" class="boton">
-                                ADD IT
+                            <a href="#" class="boton" id="addEmp">
+                                ADD Employee
                             </a>
                             <!-- partial -->
 
