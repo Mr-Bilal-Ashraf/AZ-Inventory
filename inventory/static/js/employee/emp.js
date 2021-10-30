@@ -35,7 +35,16 @@ $("#show-sidebar").click(function() {
 
 
 
+/// get today date
 
+function today(){
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+
+    return(dd + '/' + mm + '/' + yyyy);
+}
 
 // Adding new employee
 
@@ -52,12 +61,13 @@ document.getElementById("addEmp").addEventListener('click', ()=>{
     add_address = document.getElementById("add_address").value ?  document.getElementById("add_address").value : null;
     add_department = document.getElementById("add_department").value ? document.getElementById("add_department").value : null ;
     add_designation = document.getElementById("add_designation").value ? document.getElementById("add_designation").value : null ;
-    add_salary = document.getElementById("add_salary").value ? document.getElementById("add_salary").value : null ;
+    add_salary = document.getElementById("add_salary").value ? document.getElementById("add_salary").value : 0 ;
     add_salary_type = document.getElementById("add_salary_type").value ? document.getElementById("add_salary_type").value : null ;
     add_number = document.getElementById("add_number").value ? document.getElementById("add_number").value : null ;
     add_other_number = document.getElementById("add_other_number").value ? document.getElementById("add_other_number").value : null ;
     add_acc_no = document.getElementById("add_acc_no").value ? document.getElementById("add_acc_no").value : null ;
 
+    
     formdata.append('profile',add_profile);
     formdata.append('name',add_name);
     formdata.append('father_name',add_father);
@@ -65,30 +75,85 @@ document.getElementById("addEmp").addEventListener('click', ()=>{
     formdata.append('blood',add_blood);
     formdata.append('religion',add_religion);
     formdata.append('gender',add_gender);
+    formdata.append('employee_of',usua);
+    formdata.append('email',null);
+    formdata.append('commission',0);
     formdata.append('address',add_address);
     formdata.append('department',add_department);
     formdata.append('designation',add_designation);
     formdata.append('salary',add_salary);
+    formdata.append('salary_left',add_salary);
+    formdata.append('salary_paid', 0);
     formdata.append('salary_type',add_salary_type);
     formdata.append('mobile',add_number);
     formdata.append('other_mobile',add_other_number);
     formdata.append('account_num',add_acc_no);
+    formdata.append('reg_date',today());    
 
-    console.log(formdata.get("profile"))
+    fetch('/emp/', {
+        headers: {},
+        method: 'POST',
+        body: formdata
+    }).then(function (response) {
+        return response.json();
+    }).then(function (received) {
+        if(received.x){
 
+            tr = document.createElement("tr");
+            tr.id = "d"+received.id;
+            tr.classList.add("table_properties");
 
-    // fetch('/emp/', {
-    //     headers: {},
-    //     method: 'POST',
-    //     body: formdata
-    // }).then(function (response) {
-    //     return response.json();
-    // }).then(function (received) {
-    //     console.log(received)
-    // })
+            td1 = document.createElement("td");
+            td1.innerText= add_name;
+            td1.id = "name"+received.id;
+            td2 = document.createElement("td");
+            td2.innerText = add_designation;
+            td2.id = "desi"+received.id;
+            td3 = document.createElement("td");
+            td3.innerText = add_salary;
+            td3.id= "sala"+received.id;
+            td4 = document.createElement("td");
+            td4.innerText = 0;
+            td4.id= "sa_pa"+received.id;
+            td5 = document.createElement("td");
+            td5.innerText = add_salary;
+            td5.id= "sa_la"+received.id;
+
+            td6 = document.createElement("td");
+            div6 = document.createElement("div");
+            div6.classList.add("monthly");
+            div6.id = "sa_ty"+received.id;
+            div6.innerText = add_salary_type;
+            td6.append(div6);
+
+            td7 = document.createElement("td");
+            div7 = document.createElement("div");
+            div7.classList.add("leaves");
+            div7.id = "leav"+received.id;
+            div7.innerText = 0;
+            td7.append(div7);
+            
+            td8 = document.createElement("td");
+            td8.innerHTML = `<span class="actions_border"><i class="far fa-edit" id="action_edit" onclick="full_screen(${received.id}); everyone();"></i><i class="fas fa-trash" id="action_delete" onclick="deleting(${received.id})"></i></span>`;
+            tr.append(td1,td2,td3,td4,td5,td6,td7,td8);
+            document.getElementById("order_table").append(tr);
+            swal(
+                'Employee Added!',
+                'New Employee Has Been Added !',
+                'success'
+            )
+            stop();
+        }
+        else{
+            swal(
+                'Sorry!',
+                'Server Error! Please Try Later!',
+                'error'
+            )
+            stop();
+        }
+    })
 })
-
-
 
 
 /* Popup ...Asking for permission to update employee */
@@ -159,6 +224,7 @@ document.getElementById("subscribe").addEventListener('click', () =>{
 
 /* Popup ...Asking for permission to delete employee */
 
+
 function deleting(del_id) {
 
     url = `/emp/${del_id}/`
@@ -206,34 +272,6 @@ function deleting(del_id) {
 
 /* Getting and Setting Image in Add new Employee Option */
 
-// (function() {
-//     var uploader = document.createElement('input'),
-//         image = document.getElementById('img-result');
-
-//     uploader.type = 'file';
-//     uploader.accept = 'image/*';
-
-//     image.onclick = function() {
-//         uploader.click();
-//     }
-
-//     uploader.onchange = function() {
-//         var reader = new FileReader();
-//         reader.onload = function(evt) {
-//             image.classList.remove('no-image');
-//             image.style.backgroundImage = 'url(' + evt.target.result + ')';
-//             var request = {
-//                 itemtype: 'test 1',
-//                 brand: 'test 2',
-//                 images: [{
-//                     data: evt.target.result
-//                 }]
-//             };
-//         }
-//         reader.readAsDataURL(uploader.files[0]);
-//     }
-// })();
-
 
 function change_profile(event, element, img_id) {
 
@@ -253,11 +291,9 @@ function change_profile(event, element, img_id) {
 
 
 
-
-
 /* All Option Expander and hider */
 
-var detailed = document.getElementById("detail")
+var detailed = document.getElementById("detail");
 
 function full_screen(id) {
 

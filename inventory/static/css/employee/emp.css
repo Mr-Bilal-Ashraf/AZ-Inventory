@@ -6,6 +6,24 @@
     margin-bottom: 25px;
 }
 
+.monthly {
+    text-align: center;
+    width: 85px;
+    padding: 2px;
+    border-radius: 5px;
+    border: 2px solid #00d25b;
+    color: #00d25b;
+}
+
+.leaves {
+    text-align: center;
+    border-radius: 5px;
+    width: 40px;
+    padding: 2px;
+    border: 2px solid #fc424a;
+    color: #fc424a;
+}
+
 #az_dev {
     color: white;
     float: left;

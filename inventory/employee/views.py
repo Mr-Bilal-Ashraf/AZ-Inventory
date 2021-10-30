@@ -48,8 +48,8 @@ class employee(APIView):
     def post(self, request, format=None):
         ser_emp = SerEmp(data=request.data)
         if ser_emp.is_valid():
-            ser_emp.save()
-            return Response({"x": True})
+            obj = ser_emp.save()
+            return Response({"x": True, "id": obj.id})
         else:
             print(ser_emp.errors)
             return Response({"x": False})

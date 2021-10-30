@@ -2,8 +2,6 @@ from django.db import models
 
 class employees(models.Model):
 
-    choice = (('monthly','Monthly'),('weekly', 'Weekly'),('daily', 'Daily'))
-
     account_num = models.CharField(max_length=30, blank=True, null=True)
     address = models.CharField(max_length=150, blank=True, null=True)
     blood = models.CharField(max_length=4, blank=True, null=True)
@@ -21,7 +19,7 @@ class employees(models.Model):
     profile = models.ImageField(upload_to="emp/", blank=True, null=True)
     religion = models.CharField(max_length=15, blank=True, null=True)
     reg_date = models.CharField(max_length=11, blank=True, null=True)
-    salary_type = models.CharField(max_length=7, blank=True, null=True, choices= choice)
+    salary_type = models.CharField(max_length=7, blank=True, null=True)
     salary = models.IntegerField(blank=True, null=True)
     salary_paid = models.IntegerField(blank=True, null=True)
     salary_left = models.IntegerField(blank=True, null=True)
