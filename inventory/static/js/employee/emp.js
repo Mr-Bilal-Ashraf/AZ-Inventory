@@ -33,7 +33,9 @@ $("#show-sidebar").click(function() {
     $(".page-wrapper").addClass("toggled");
 });
 
-
+function haa(){
+    document.getElementById("taking_image").click();
+}
 
 /// get today date
 
@@ -67,6 +69,22 @@ document.getElementById("addEmp").addEventListener('click', ()=>{
     add_other_number = document.getElementById("add_other_number").value ? document.getElementById("add_other_number").value : null ;
     add_acc_no = document.getElementById("add_acc_no").value ? document.getElementById("add_acc_no").value : null ;
 
+    document.getElementById("taking_image").value = null;
+    document.getElementById("add_profile").src = "/static/images/male.jpg";
+    document.getElementById("add_name").value = null;
+    document.getElementById("add_father").value = null;
+    document.getElementById("add_cnic").value = null;
+    document.getElementById("add_blood").value = null;
+    document.getElementById("add_religion").value = null;
+    document.getElementById("add_gender").value = null;
+    document.getElementById("add_address").value = null;
+    document.getElementById("add_department").value = null;
+    document.getElementById("add_designation").value = null;
+    document.getElementById("add_salary").value = null;
+    document.getElementById("add_salary_type").value = null;
+    document.getElementById("add_number").value = null;
+    document.getElementById("add_other_number").value = null;
+    document.getElementById("add_acc_no").value = null;
     
     formdata.append('profile',add_profile);
     formdata.append('name',add_name);
@@ -89,7 +107,7 @@ document.getElementById("addEmp").addEventListener('click', ()=>{
     formdata.append('other_mobile',add_other_number);
     formdata.append('account_num',add_acc_no);
     formdata.append('reg_date',today());    
-
+    
     fetch('/emp/', {
         headers: {},
         method: 'POST',

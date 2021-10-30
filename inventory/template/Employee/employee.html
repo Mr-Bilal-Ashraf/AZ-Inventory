@@ -567,14 +567,10 @@
                     <div style="height: 250px;">
                         <!-- Image Rounder -->
 
-                        <!-- <div class="wrapper">
-                            <button class="no-image" id="img-result">Upload Image</button>
-                        </div> -->
-                        <div id="round_image" style="display: flex;justify-content: center;">
-                            <img src="{% static 'images/male.jpg'%}" alt="" height="120" id="add_profile">
+                        <div id="round_image" class="wrapper" style="display: flex;justify-content: center;" onclick="haa()">
+                            <img src="{% static 'images/male.jpg'%}" alt="" height="150" id="add_profile" style="border: 2px dashed black; padding: 4px;">
                         </div>
                         <input type="file" name="pic" id="taking_image" onchange="change_profile(event,this,'add_profile')" style="display: none;" accept="image/*" required="">
-                        <label for="taking_image" class="btn" style="display: flex;justify-content: center;">Select Picture</label>
 
                         <!-- partial -->
 
@@ -685,7 +681,7 @@
                             <p>
                                 <label>
                                     Salary<br>
-                                    <input type="text" placeholder="Salary" id="add_salary" >
+                                    <input type="text" placeholder="Salary" id="add_salary" maxlength="18">
                                 </label>
                             </p>
 
