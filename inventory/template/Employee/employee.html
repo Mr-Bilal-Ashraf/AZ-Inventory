@@ -488,7 +488,7 @@
                                 <input type="text" list="name" class="update_pass" placeholder="Name">
                                 <datalist id="name" class="asker">
                                     {%for a in name%}
-                                        {% if a.name != "null" %}
+                                        {% if a.name != none %}
                                             <option>{{a.name}}</option>
                                         {% endif%}
                                     {% endfor %}
@@ -503,7 +503,7 @@
                                 <input type="text" list="department" class="update_pass" placeholder="Department">
                                 <datalist id="department" class="asker">
                                     {%for a in department%}
-                                        {% if a.department != "null" %}
+                                        {% if a.department != none %}
                                             <option>{{a.department}}</option>
                                         {% endif %}
                                     {% endfor %}
@@ -517,7 +517,7 @@
                                 <input type="text" list="designation" class="update_pass" placeholder="Designation">
                                 <datalist id="designation" class="asker">
                                     {%for a in designation%}
-                                        {% if a.name != "null" %}
+                                        {% if a.designation != none %}
                                             <option>{{a.designation}}</option>
                                         {% endif %}
                                     {% endfor %}
