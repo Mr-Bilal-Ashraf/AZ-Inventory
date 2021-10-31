@@ -485,61 +485,42 @@
                         <p>
                             <label>
                                 NAME<br>
-                                <input type="text" class="update_pass" placeholder="Name" s>
-                            </label>
-                        </p>
-
-
-                        <p>
-                            <label>
-                                Father Name<br>
-                                <input type="text" class="update_pass" placeholder="Father Name" s>
-                            </label>
-                        </p>
-
-
-                        <p>
-                            <label>
-                                CNIC<br>
-                                <input type="text" class="update_pass" placeholder="CNIC">
-                            </label>
-                        </p>
-
-
-
-
-                        <p>
-                            <label>
-                                Designation<br>
-                                <input type="text" list="designation" class="update_pass" placeholder="Blood Group">
-                                <datalist id="designation" class="asker">
-                                    <option>A+</option>
-                                    <option>A-</option>
-                                    <option>B+</option>
-                                    <option>B-</option>
-                                    <option>O+</option>
-                                    <option>O-</option>
-                                    <option>AB+</option>
-                                    <option>AB-</option>
+                                <input type="text" list="name" class="update_pass" placeholder="Name">
+                                <datalist id="name" class="asker">
+                                    {%for a in name%}
+                                        {% if a.name != "null" %}
+                                            <option>{{a.name}}</option>
+                                        {% endif%}
+                                    {% endfor %}
                                 </datalist>
                             </label>
                         </p>
 
 
-
                         <p>
                             <label>
                                 Department<br>
-                                <input type="text" list="department" class="update_pass" placeholder="Blood Group">
+                                <input type="text" list="department" class="update_pass" placeholder="Department">
                                 <datalist id="department" class="asker">
-                                    <option>A+</option>
-                                    <option>A-</option>
-                                    <option>B+</option>
-                                    <option>B-</option>
-                                    <option>O+</option>
-                                    <option>O-</option>
-                                    <option>AB+</option>
-                                    <option>AB-</option>
+                                    {%for a in department%}
+                                        {% if a.department != "null" %}
+                                            <option>{{a.department}}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </datalist>
+                            </label>
+                        </p>
+
+                        <p>
+                            <label>
+                                Designation<br>
+                                <input type="text" list="designation" class="update_pass" placeholder="Designation">
+                                <datalist id="designation" class="asker">
+                                    {%for a in designation%}
+                                        {% if a.name != "null" %}
+                                            <option>{{a.designation}}</option>
+                                        {% endif %}
+                                    {% endfor %}
                                 </datalist>
                             </label>
                         </p>
@@ -681,7 +662,7 @@
                             <p>
                                 <label>
                                     Salary<br>
-                                    <input type="text" placeholder="Salary" id="add_salary" maxlength="18">
+                                    <input type="number" placeholder="Salary" id="add_salary" maxlength="18">
                                 </label>
                             </p>
 

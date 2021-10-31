@@ -52,125 +52,136 @@ function today(){
 
 document.getElementById("addEmp").addEventListener('click', ()=>{
 
-    let formdata = new FormData();
-    add_profile = document.getElementById("taking_image").files[0] ? document.getElementById("taking_image").files[0] : null;
-    add_name = document.getElementById("add_name").value ? document.getElementById("add_name").value : null;
-    add_father = document.getElementById("add_father").value ? document.getElementById("add_father").value : null;
-    add_cnic = document.getElementById("add_cnic").value ?  document.getElementById("add_cnic").value : null;
-    add_blood = document.getElementById("add_blood").value ?  document.getElementById("add_blood").value : null;
-    add_religion = document.getElementById("add_religion").value ?  document.getElementById("add_religion").value : null;
-    add_gender = document.getElementById("add_gender").value ?  document.getElementById("add_gender").value : null;
-    add_address = document.getElementById("add_address").value ?  document.getElementById("add_address").value : null;
-    add_department = document.getElementById("add_department").value ? document.getElementById("add_department").value : null ;
-    add_designation = document.getElementById("add_designation").value ? document.getElementById("add_designation").value : null ;
-    add_salary = document.getElementById("add_salary").value ? document.getElementById("add_salary").value : 0 ;
-    add_salary_type = document.getElementById("add_salary_type").value ? document.getElementById("add_salary_type").value : null ;
-    add_number = document.getElementById("add_number").value ? document.getElementById("add_number").value : null ;
-    add_other_number = document.getElementById("add_other_number").value ? document.getElementById("add_other_number").value : null ;
-    add_acc_no = document.getElementById("add_acc_no").value ? document.getElementById("add_acc_no").value : null ;
+    if (document.getElementById("taking_image").files[0] == null){
+        swal(
+            'Sorry!',
+            'Please Upload A Picture To Proceed..!',
+            'error'
+        )
+    }
+    else{
+        let formdata = new FormData();
+        add_profile = document.getElementById("taking_image").files[0] ? document.getElementById("taking_image").files[0] : null;
+        add_name = document.getElementById("add_name").value ? document.getElementById("add_name").value : null;
+        add_father = document.getElementById("add_father").value ? document.getElementById("add_father").value : null;
+        add_cnic = document.getElementById("add_cnic").value ?  document.getElementById("add_cnic").value : null;
+        add_blood = document.getElementById("add_blood").value ?  document.getElementById("add_blood").value : null;
+        add_religion = document.getElementById("add_religion").value ?  document.getElementById("add_religion").value : null;
+        add_gender = document.getElementById("add_gender").value ?  document.getElementById("add_gender").value : null;
+        add_address = document.getElementById("add_address").value ?  document.getElementById("add_address").value : null;
+        add_department = document.getElementById("add_department").value ? document.getElementById("add_department").value : null ;
+        add_designation = document.getElementById("add_designation").value ? document.getElementById("add_designation").value : null ;
+        add_salary = document.getElementById("add_salary").value ? document.getElementById("add_salary").value : 0 ;
+        add_salary_type = document.getElementById("add_salary_type").value ? document.getElementById("add_salary_type").value : null ;
+        add_number = document.getElementById("add_number").value ? document.getElementById("add_number").value : null ;
+        add_other_number = document.getElementById("add_other_number").value ? document.getElementById("add_other_number").value : null ;
+        add_acc_no = document.getElementById("add_acc_no").value ? document.getElementById("add_acc_no").value : null ;
+        
+        formdata.append('profile',add_profile);
+        formdata.append('name',add_name);
+        formdata.append('father_name',add_father);
+        formdata.append('cnic',add_cnic);
+        formdata.append('blood',add_blood);
+        formdata.append('religion',add_religion);
+        formdata.append('gender',add_gender);
+        formdata.append('employee_of',usua);
+        formdata.append('email',null);
+        formdata.append('commission',0);
+        formdata.append('address',add_address);
+        formdata.append('department',add_department);
+        formdata.append('designation',add_designation);
+        formdata.append('salary',add_salary);
+        formdata.append('salary_left',add_salary);
+        formdata.append('salary_paid', 0);
+        formdata.append('salary_type',add_salary_type);
+        formdata.append('mobile',add_number);
+        formdata.append('other_mobile',add_other_number);
+        formdata.append('account_num',add_acc_no);
+        formdata.append('reg_date',today());    
 
-    document.getElementById("taking_image").value = null;
-    document.getElementById("add_profile").src = "/static/images/male.jpg";
-    document.getElementById("add_name").value = null;
-    document.getElementById("add_father").value = null;
-    document.getElementById("add_cnic").value = null;
-    document.getElementById("add_blood").value = null;
-    document.getElementById("add_religion").value = null;
-    document.getElementById("add_gender").value = null;
-    document.getElementById("add_address").value = null;
-    document.getElementById("add_department").value = null;
-    document.getElementById("add_designation").value = null;
-    document.getElementById("add_salary").value = null;
-    document.getElementById("add_salary_type").value = null;
-    document.getElementById("add_number").value = null;
-    document.getElementById("add_other_number").value = null;
-    document.getElementById("add_acc_no").value = null;
-    
-    formdata.append('profile',add_profile);
-    formdata.append('name',add_name);
-    formdata.append('father_name',add_father);
-    formdata.append('cnic',add_cnic);
-    formdata.append('blood',add_blood);
-    formdata.append('religion',add_religion);
-    formdata.append('gender',add_gender);
-    formdata.append('employee_of',usua);
-    formdata.append('email',null);
-    formdata.append('commission',0);
-    formdata.append('address',add_address);
-    formdata.append('department',add_department);
-    formdata.append('designation',add_designation);
-    formdata.append('salary',add_salary);
-    formdata.append('salary_left',add_salary);
-    formdata.append('salary_paid', 0);
-    formdata.append('salary_type',add_salary_type);
-    formdata.append('mobile',add_number);
-    formdata.append('other_mobile',add_other_number);
-    formdata.append('account_num',add_acc_no);
-    formdata.append('reg_date',today());    
-    
-    fetch('/emp/', {
-        headers: {},
-        method: 'POST',
-        body: formdata
-    }).then(function (response) {
-        return response.json();
-    }).then(function (received) {
-        if(received.x){
 
-            tr = document.createElement("tr");
-            tr.id = "d"+received.id;
-            tr.classList.add("table_properties");
+        fetch('/emp/', {
+            headers: {},
+            method: 'POST',
+            body: formdata
+        }).then(function (response) {
+            return response.json();
+        }).then(function (received) {
+            if(received.x){
 
-            td1 = document.createElement("td");
-            td1.innerText= add_name;
-            td1.id = "name"+received.id;
-            td2 = document.createElement("td");
-            td2.innerText = add_designation;
-            td2.id = "desi"+received.id;
-            td3 = document.createElement("td");
-            td3.innerText = add_salary;
-            td3.id= "sala"+received.id;
-            td4 = document.createElement("td");
-            td4.innerText = 0;
-            td4.id= "sa_pa"+received.id;
-            td5 = document.createElement("td");
-            td5.innerText = add_salary;
-            td5.id= "sa_la"+received.id;
+                tr = document.createElement("tr");
+                tr.id = "d"+received.id;
+                tr.classList.add("table_properties");
 
-            td6 = document.createElement("td");
-            div6 = document.createElement("div");
-            div6.classList.add("monthly");
-            div6.id = "sa_ty"+received.id;
-            div6.innerText = add_salary_type;
-            td6.append(div6);
+                td1 = document.createElement("td");
+                td1.innerText= add_name;
+                td1.id = "name"+received.id;
+                td2 = document.createElement("td");
+                td2.innerText = add_designation;
+                td2.id = "desi"+received.id;
+                td3 = document.createElement("td");
+                td3.innerText = add_salary;
+                td3.id= "sala"+received.id;
+                td4 = document.createElement("td");
+                td4.innerText = 0;
+                td4.id= "sa_pa"+received.id;
+                td5 = document.createElement("td");
+                td5.innerText = add_salary;
+                td5.id= "sa_la"+received.id;
 
-            td7 = document.createElement("td");
-            div7 = document.createElement("div");
-            div7.classList.add("leaves");
-            div7.id = "leav"+received.id;
-            div7.innerText = 0;
-            td7.append(div7);
-            
-            td8 = document.createElement("td");
-            td8.innerHTML = `<span class="actions_border"><i class="far fa-edit" id="action_edit" onclick="full_screen(${received.id}); everyone();"></i><i class="fas fa-trash" id="action_delete" onclick="deleting(${received.id})"></i></span>`;
-            tr.append(td1,td2,td3,td4,td5,td6,td7,td8);
-            document.getElementById("order_table").append(tr);
-            swal(
-                'Employee Added!',
-                'New Employee Has Been Added !',
-                'success'
-            )
-            stop();
-        }
-        else{
-            swal(
-                'Sorry!',
-                'Server Error! Please Try Later!',
-                'error'
-            )
-            stop();
-        }
-    })
+                td6 = document.createElement("td");
+                div6 = document.createElement("div");
+                div6.classList.add("monthly");
+                div6.id = "sa_ty"+received.id;
+                div6.innerText = add_salary_type;
+                td6.append(div6);
+
+                td7 = document.createElement("td");
+                div7 = document.createElement("div");
+                div7.classList.add("leaves");
+                div7.id = "leav"+received.id;
+                div7.innerText = 0;
+                td7.append(div7);
+                
+                td8 = document.createElement("td");
+                td8.innerHTML = `<span class="actions_border"><i class="far fa-edit" id="action_edit" onclick="full_screen(${received.id}); everyone();"></i><i class="fas fa-trash" id="action_delete" onclick="deleting(${received.id})"></i></span>`;
+                tr.append(td1,td2,td3,td4,td5,td6,td7,td8);
+                document.getElementById("order_table").append(tr);
+                swal(
+                    'Employee Added!',
+                    'New Employee Has Been Added !',
+                    'success'
+                )
+                stop();
+            }
+            else{
+                swal(
+                    'Sorry!',
+                    'Server Error! Please Try Later!',
+                    'error'
+                )
+                stop();
+            }
+        })
+
+        document.getElementById("taking_image").value = null;
+        document.getElementById("add_profile").src = "/static/images/male.jpg";
+        document.getElementById("add_name").value = null;
+        document.getElementById("add_father").value = null;
+        document.getElementById("add_cnic").value = null;
+        document.getElementById("add_blood").value = null;
+        document.getElementById("add_religion").value = null;
+        document.getElementById("add_gender").value = null;
+        document.getElementById("add_address").value = null;
+        document.getElementById("add_department").value = null;
+        document.getElementById("add_designation").value = null;
+        document.getElementById("add_salary").value = null;
+        document.getElementById("add_salary_type").value = null;
+        document.getElementById("add_number").value = null;
+        document.getElementById("add_other_number").value = null;
+        document.getElementById("add_acc_no").value = null;
+    }
+
 })
 
 

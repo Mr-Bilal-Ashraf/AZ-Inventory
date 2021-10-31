@@ -1,9 +1,8 @@
 from django.http.response import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.contrib.auth.models import User
-import json
+import json, base64
 
-# from .forms import addEmployee, pay
 from .models import employees
 
 from rest_framework.response import Response
@@ -37,8 +36,11 @@ class employee(APIView):
         if pk == None:
             emps = employees.objects.filter(employee_of = request.user.id)
             data = SerEmp(emps, many=True)
+            dis_name = employees.objects.values("name").filter(employee_of = request.user.id).distinct()
+            dis_department = employees.objects.values("department").filter(employee_of = request.user.id).distinct()
+            dis_designation = employees.objects.values("designation").filter(employee_of = request.user.id).distinct()
             # return Response(data.data)
-            return render(request, 'employee/employee.html', {'list': data.data})
+            return render(request, 'employee/employee.html', {'list': data.data,'name':dis_name,'department':dis_department,'designation':dis_designation})
         else:
             emps = employees.objects.get(id = pk)
             data = SerEmp(emps)
@@ -46,10 +48,16 @@ class employee(APIView):
 
 
     def post(self, request, format=None):
+        
+        name = request.data["name"]
+        if request.data["name"] == "null":
+            name = None
+            print(type(name))
         ser_emp = SerEmp(data=request.data)
         if ser_emp.is_valid():
-            obj = ser_emp.save()
-            return Response({"x": True, "id": obj.id})
+            return Response({"x": True})
+            # obj = ser_emp.save()
+            # return Response({"x": True, "id": obj.id})
         else:
             print(ser_emp.errors)
             return Response({"x": False})
