@@ -8,7 +8,3 @@ class SerEmp(serializers.ModelSerializer):
         model = employees
         fields = "__all__"
 
-class nemp(serializers.ModelSerializer):
-    class Meta:
-        model = employees
-        fields = ['profile', 'cnic']

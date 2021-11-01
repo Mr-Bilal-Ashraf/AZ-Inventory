@@ -187,16 +187,6 @@
 <body onload="myFunction()">
     <div id="loading"></div>
 
-
-    <script>
-        function notif() {
-            
-            // Push.create("Get Notified", {
-            //     body: "You Just Update the information of {USER NAME}",
-            //     icon: 'https://i.ytimg.com/vi/wu8F1bP5Wcg/hqdefault.jpg?sqp=-oaymwEiCKgBEF5IWvKriqkDFQgBFQAAAAAYASUAAMhCPQCAokN4AQ==&rs=AOn4CLANAfL5ZzH3bLGdNmeu7_M9aXcBfw'
-            // })
-        }
-    </script>
     <!-- Top Bar -->
     <section id="topbar">
         <a href="#az_dev" id="dv_dev"></a>
@@ -485,7 +475,7 @@
                         <p>
                             <label>
                                 NAME<br>
-                                <input type="text" list="name" class="update_pass" placeholder="Name">
+                                <input type="text" id="s_name" list="name" class="update_pass" placeholder="Name">
                                 <datalist id="name" class="asker">
                                     {%for a in name%}
                                         {% if a.name != none %}
@@ -500,7 +490,7 @@
                         <p>
                             <label>
                                 Department<br>
-                                <input type="text" list="department" class="update_pass" placeholder="Department">
+                                <input type="text" list="department" id="s_department" class="update_pass" placeholder="Department">
                                 <datalist id="department" class="asker">
                                     {%for a in department%}
                                         {% if a.department != none %}
@@ -514,7 +504,7 @@
                         <p>
                             <label>
                                 Designation<br>
-                                <input type="text" list="designation" class="update_pass" placeholder="Designation">
+                                <input type="text"  id="s_designation" list="designation" class="update_pass" placeholder="Designation">
                                 <datalist id="designation" class="asker">
                                     {%for a in designation%}
                                         {% if a.designation != none %}
@@ -527,8 +517,8 @@
 
                     </div>
                     <div style="display: flex;justify-content: center;padding: 10px 0px 30px 0px;">
-                        <span onclick="p_stop()"
-                            style="background-color: red; border: 2px solid rgba(0, 0, 0, 0.125);padding: 10px;font-weight: 600;cursor:pointer;padding: 8px 20px 8px 20px;border-radius: 5px;margin-left: 4px;">SEARCH</span>
+                        <button onclick="searcher()"
+                            style="background-color: red; border: 2px solid rgba(0, 0, 0, 0.125);padding: 10px;font-weight: 600;cursor:pointer;padding: 8px 20px 8px 20px;border-radius: 5px;margin-left: 4px;">SEARCH</button>
 
 
                     </div>
@@ -646,7 +636,14 @@
                             <p>
                                 <label>
                                     Department<br>
-                                    <input type="text" placeholder="Department" id="add_department" maxlength="60">
+                                    <input type="text" list="dept" placeholder="Department" id="add_department" maxlength="60">
+                                    <datalist id="dept" class="asker">
+                                        {%for a in department%}
+                                            {% if a.department != none %}
+                                                <option>{{a.department}}</option>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </datalist>
                                 </label>
                             </p>
 
@@ -654,7 +651,14 @@
                             <p>
                                 <label>
                                     Designation<br>
-                                    <input type="text" placeholder="Designation" id="add_designation" maxlength="30">
+                                    <input type="text" list="desi" placeholder="Designation" id="add_designation" maxlength="30">
+                                    <datalist id="desi" class="asker">
+                                        {%for a in designation%}
+                                            {% if a.designation != none %}
+                                                <option>{{a.designation}}</option>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </datalist>
                                 </label>
                             </p>
 
@@ -725,6 +729,7 @@
         <!-- Employee List -->
         <section class="color_tables">
             <div id="order_status" style="padding:20px 0px 20px 0px;">
+                <button onclick="data_after_srch()">aswe</button>
                 <div>
                     <div>
                         <table id="order_table">
@@ -756,30 +761,30 @@
                                 </th>
                             </tr>
                             {% if list%}
-                            {% for data in list%}
-                            <tr class="table_properties" id="d{{data.id}}">
-                                <td id="name{{data.id}}">{{data.name}}</td>
-                                <td id="desi{{data.id}}">{{data.designation}}</td>
-                                <td id="sala{{data.id}}">{{data.salary}}</td>
-                                <td id="sa_pa{{data.id}}">{{data.salary_paid}}</td>
-                                <td id="sa_la{{data.id}}">{{data.salary_left}}</td>
-                                <td>
-                                    <div class="monthly" id="sa_ty{{data.id}}">
-                                        {{data.salary_type}}
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="leaves" id="leav{{data.id}}">
-                                        0
-                                    </div>
-                                </td>
-                                <td><span class="actions_border">
-                                        <i class="far fa-edit" id="action_edit"
-                                            onclick="full_screen({{data.id}}); everyone();"></i>
-                                        <i class="fas fa-trash" id="action_delete" onclick="deleting({{data.id}})"></i>
-                                    </span></td>
-                            </tr>
-                            {% endfor %}
+                                {% for data in list%}
+                                <tr class="table_properties" id="d{{data.id}}">
+                                    <td id="name{{data.id}}">{{data.name}}</td>
+                                    <td id="desi{{data.id}}">{{data.designation}}</td>
+                                    <td>{{data.salary}}</td>
+                                    <td>{{data.salary_paid}}</td>
+                                    <td>{{data.salary_left}}</td>
+                                    <td>
+                                        <div class="monthly">
+                                            {{data.salary_type}}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="leaves">
+                                            0
+                                        </div>
+                                    </td>
+                                    <td><span class="actions_border">
+                                            <i class="far fa-edit" id="action_edit"
+                                                onclick="full_screen({{data.id}}); everyone();"></i>
+                                            <i class="fas fa-trash" id="action_delete" onclick="deleting({{data.id}})"></i>
+                                        </span></td>
+                                </tr>
+                                {% endfor %}
                             {% endif %}
 
                         </table>
@@ -1003,21 +1008,23 @@
 
 
     <script>
-        // $(document).ready(function(){
-        // 	$('div#loading').removeAttr('id');
-        // });
         var preloader = document.getElementById("loading");
-        // window.addEventListener('load', function(){
-        // 	preloader.style.display = 'none';
-        // 	})
+        usua = "{{request.user.id}}"
 
         function myFunction() {
             preloader.style.display = 'none';
         };
-        usua = "{{request.user.id}}"
         
     </script>
 
+    <section>
+        <audio src="{% static 'sounds/added_successfully.mp3'%}" id="add_suc"></audio>
+        <audio src="{% static 'sounds/adding_employee.mp3'%}" id="add_emp"></audio>
+        <audio src="{% static 'sounds/employee_removed.mp3'%}" id="emp_rem"></audio>
+        <audio src="{% static 'sounds/searching_employee.mp3'%}" id="sr_emp"></audio>
+        <audio src="{% static 'sounds/updated_successfully.mp3'%}" id="up_suc"></audio>
+        <audio src="{% static 'sounds/error.mp3'%}" id="eror"></audio>
+    </section>
 
     <!-- Scripts -->
     <section>
@@ -1030,11 +1037,6 @@
         <script src="{% static '3rd_party/bootstrap.js' %}"></script>
         <script src='{% static "3rd_party/jquery-latest.min.js" %}' type="text/javascript"></script>
         <script src="{% static 'js/employee/emp.js' %}"></script>
-        <!--  <script src="./img.js"></script>
-        <script src="./script.js"></script>
-        <script src="expander.js" defer></script>
-        <script src="pop_up.js"></script>
-        <script src="./submitbtn.js"></script> -->
     </section>
 </body>
 

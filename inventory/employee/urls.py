@@ -5,5 +5,6 @@ urlpatterns = [
     path('', views.employee.as_view(), name="Emp_Home"),
     path('<int:pk>/', views.employee.as_view(), name="emp_update"),
 
-    # path('pay/', views.salary, name="pay"),
+    path('srch/', views.srch, name="search"),
+    path('get/extra/', views.get_extra, name="get_extra"),
 ]
