@@ -52,11 +52,13 @@ function today() {
 
 
 function data_after_srch(){
+    document.getElementById("fetching_data").className += " fetching_data";
     fetch('/emp/get/extra/')
     .then(function (response) {
         return response.json();
     }).then(function (received) {
         if (received.x) {
+            document.getElementById("fetching_data").className = "fas fa-sync-alt";
             document.getElementById("order_table").innerHTML = `<tr class="table_head">
         <th id="th_1">
             <p class="just_chk_12">Name</p>
@@ -459,7 +461,21 @@ function searcher() {
         <th id="th_8">
             <p class="just_chk">Actions</p>
         </th>
-    </tr>`;
+    </tr>`; 
+            if (received["data"].length == 0){
+                var ring = document.getElementById("no_match");
+                ring.autoplay = true;
+                setTimeout(() => {
+                    ring.load();
+                    swal(
+                        'Sorry!',
+                        'No Matching Result Found!',
+                        'error'
+                    );
+                }, 700);
+                
+            }
+            
             for (i = 0; i < received["data"].length; i++) {
 
                 tr = document.createElement("tr");
@@ -500,6 +516,11 @@ function searcher() {
             var ring = document.getElementById("eror");
             ring.autoplay = true;
             ring.load();
+            swal(
+                'Sorry!',
+                'Server Error! Please Try Later!',
+                'error'
+            );
         }
     })
 

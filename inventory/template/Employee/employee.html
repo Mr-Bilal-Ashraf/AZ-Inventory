@@ -49,6 +49,33 @@
             transition: .1s ease;
         }
 
+        #fetching_data {
+            font-size: 30px;
+            color: #0090e7;
+            float: right;
+            position: relative;
+            right: 20px;
+            top: -5px;
+            z-index: 0;
+            transition: .01s ease;
+            /* animation: rotating_fetcher 5s infinite; */
+            /* -webkit-animation: rotation 2s infinite linear; */
+        }
+
+        .fetching_data {
+            -webkit-animation: rotation 2s infinite linear;
+        }
+
+        @-webkit-keyframes rotation {
+            from {
+                -webkit-transform: rotate(0deg);
+            }
+
+            to {
+                -webkit-transform: rotate(359deg);
+            }
+        }
+
         #bt {
             color: white;
             display: flex;
@@ -157,23 +184,24 @@
             background-color: #191C24;
         }
 
-        #subscribe, .btn{
+        #subscribe,
+        .btn {
             background-color: #8ca6b641;
             border: 2px solid rgba(0, 0, 0, 0.125);
             padding: 10px;
             font-weight: 600;
-            cursor:pointer;
+            cursor: pointer;
             padding: 8px 20px 8px 20px;
             border-radius: 5px;
             margin-right: 4px;
         }
-        #close_detail
-        {
-            background-color: #fc424b44; 
+
+        #close_detail {
+            background-color: #fc424b44;
             border: 2px solid rgba(0, 0, 0, 0.125);
             padding: 10px;
             font-weight: 600;
-            cursor:pointer;
+            cursor: pointer;
             padding: 8px 20px 8px 20px;
             border-radius: 5px;
             margin-left: 4px;
@@ -284,12 +312,13 @@
                                                 <tr>
                                                     <th width="30%">Email</th>
                                                     <td width="2%">:</td>
-                                                    <td><input type="text" maxlength="30"  id="update_email"></td>
+                                                    <td><input type="text" maxlength="30" id="update_email"></td>
                                                 </tr>
                                                 <tr>
                                                     <th width="30%">Blood Group</th>
                                                     <td width="2%">:</td>
-                                                    <td><input type="text" value="O+" id="update_blood" maxlength="4"></td>
+                                                    <td><input type="text" value="O+" id="update_blood" maxlength="4">
+                                                    </td>
                                                 </tr>
                                                 <tr>
                                                     <th width="30%">Religion</th>
@@ -299,7 +328,7 @@
                                                 <tr>
                                                     <th width="30%">Gender</th>
                                                     <td width="2%">:</td>
-                                                    <td><input type="text" maxlength="10"  id="update_gender"></td>
+                                                    <td><input type="text" maxlength="10" id="update_gender"></td>
                                                 </tr>
                                                 <tr>
                                                     <th width="30%">Address</th>
@@ -468,7 +497,7 @@
                     }
                 </style>
                 <div id="search_hider">
-                    <i class="fas fa-times-circle" id="haq_baho" onclick="s_stop()"></i>
+                    <i class="fas fa-times-circle" id="haq_baho" onclick="s_stop(); data_after_srch();"></i>
 
                     <div id="searcher">
                         <h2 style="width: 100%;margin: 20px;">Searching Employee</h2>
@@ -478,9 +507,9 @@
                                 <input type="text" id="s_name" list="name" class="update_pass" placeholder="Name">
                                 <datalist id="name" class="asker">
                                     {%for a in name%}
-                                        {% if a.name != none %}
-                                            <option>{{a.name}}</option>
-                                        {% endif%}
+                                    {% if a.name != none %}
+                                    <option>{{a.name}}</option>
+                                    {% endif%}
                                     {% endfor %}
                                 </datalist>
                             </label>
@@ -490,12 +519,13 @@
                         <p>
                             <label>
                                 Department<br>
-                                <input type="text" list="department" id="s_department" class="update_pass" placeholder="Department">
+                                <input type="text" list="department" id="s_department" class="update_pass"
+                                    placeholder="Department">
                                 <datalist id="department" class="asker">
                                     {%for a in department%}
-                                        {% if a.department != none %}
-                                            <option>{{a.department}}</option>
-                                        {% endif %}
+                                    {% if a.department != none %}
+                                    <option>{{a.department}}</option>
+                                    {% endif %}
                                     {% endfor %}
                                 </datalist>
                             </label>
@@ -504,12 +534,13 @@
                         <p>
                             <label>
                                 Designation<br>
-                                <input type="text"  id="s_designation" list="designation" class="update_pass" placeholder="Designation">
+                                <input type="text" id="s_designation" list="designation" class="update_pass"
+                                    placeholder="Designation">
                                 <datalist id="designation" class="asker">
                                     {%for a in designation%}
-                                        {% if a.designation != none %}
-                                            <option>{{a.designation}}</option>
-                                        {% endif %}
+                                    {% if a.designation != none %}
+                                    <option>{{a.designation}}</option>
+                                    {% endif %}
                                     {% endfor %}
                                 </datalist>
                             </label>
@@ -538,10 +569,14 @@
                     <div style="height: 250px;">
                         <!-- Image Rounder -->
 
-                        <div id="round_image" class="wrapper" style="display: flex;justify-content: center;" onclick="haa()">
-                            <img src="{% static 'images/male.jpg'%}" alt="" height="150" id="add_profile" style="border: 2px dashed black; padding: 4px;">
+                        <div id="round_image" class="wrapper" style="display: flex;justify-content: center;"
+                            onclick="haa()">
+                            <img src="{% static 'images/male.jpg'%}" alt="" height="150" id="add_profile"
+                                style="border: 2px dashed black; padding: 4px;">
                         </div>
-                        <input type="file" name="pic" id="taking_image" onchange="change_profile(event,this,'add_profile')" style="display: none;" accept="image/*" required="">
+                        <input type="file" name="pic" id="taking_image"
+                            onchange="change_profile(event,this,'add_profile')" style="display: none;" accept="image/*"
+                            required="">
 
                         <!-- partial -->
 
@@ -585,7 +620,8 @@
                             <p>
                                 <label>
                                     Blood Group<br>
-                                    <input type="text" list="blood" placeholder="Blood Group" id="add_blood" maxlength="4">
+                                    <input type="text" list="blood" placeholder="Blood Group" id="add_blood"
+                                        maxlength="4">
                                     <datalist id="blood">
                                         <option>A+</option>
                                         <option>A-</option>
@@ -604,7 +640,8 @@
                             <p>
                                 <label>
                                     Religion<br>
-                                    <input type="text" list="religion" placeholder="Religion" id="add_religion" maxlength="15">
+                                    <input type="text" list="religion" placeholder="Religion" id="add_religion"
+                                        maxlength="15">
                                     <datalist id="religion">
                                         <option>Muslim</option>
                                         <option>Christian</option>
@@ -618,7 +655,8 @@
                             <p>
                                 <label>
                                     Gender<br>
-                                    <input type="text" list="gender" placeholder="Gender" id="add_gender" maxlength="10">
+                                    <input type="text" list="gender" placeholder="Gender" id="add_gender"
+                                        maxlength="10">
                                     <datalist id="gender">
                                         <option>Male</option>
                                         <option>Female</option>
@@ -636,12 +674,13 @@
                             <p>
                                 <label>
                                     Department<br>
-                                    <input type="text" list="dept" placeholder="Department" id="add_department" maxlength="60">
+                                    <input type="text" list="dept" placeholder="Department" id="add_department"
+                                        maxlength="60">
                                     <datalist id="dept" class="asker">
                                         {%for a in department%}
-                                            {% if a.department != none %}
-                                                <option>{{a.department}}</option>
-                                            {% endif %}
+                                        {% if a.department != none %}
+                                        <option>{{a.department}}</option>
+                                        {% endif %}
                                         {% endfor %}
                                     </datalist>
                                 </label>
@@ -651,12 +690,13 @@
                             <p>
                                 <label>
                                     Designation<br>
-                                    <input type="text" list="desi" placeholder="Designation" id="add_designation" maxlength="30">
+                                    <input type="text" list="desi" placeholder="Designation" id="add_designation"
+                                        maxlength="30">
                                     <datalist id="desi" class="asker">
                                         {%for a in designation%}
-                                            {% if a.designation != none %}
-                                                <option>{{a.designation}}</option>
-                                            {% endif %}
+                                        {% if a.designation != none %}
+                                        <option>{{a.designation}}</option>
+                                        {% endif %}
                                         {% endfor %}
                                     </datalist>
                                 </label>
@@ -674,7 +714,8 @@
                             <p>
                                 <label>
                                     Salary Type<br>
-                                    <input type="text" list="salary_type" placeholder="Salary Type" id="add_salary_type">
+                                    <input type="text" list="salary_type" placeholder="Salary Type"
+                                        id="add_salary_type">
                                     <datalist id="salary_type">
                                         <option>Monthly</option>
                                         <option>Weekly</option>
@@ -729,7 +770,7 @@
         <!-- Employee List -->
         <section class="color_tables">
             <div id="order_status" style="padding:20px 0px 20px 0px;">
-                <button onclick="data_after_srch()">aswe</button>
+                <p><i class="fas fa-sync-alt" id="fetching_data" onclick="data_after_srch()"></i></p>
                 <div>
                     <div>
                         <table id="order_table">
@@ -761,30 +802,30 @@
                                 </th>
                             </tr>
                             {% if list%}
-                                {% for data in list%}
-                                <tr class="table_properties" id="d{{data.id}}">
-                                    <td id="name{{data.id}}">{{data.name}}</td>
-                                    <td id="desi{{data.id}}">{{data.designation}}</td>
-                                    <td>{{data.salary}}</td>
-                                    <td>{{data.salary_paid}}</td>
-                                    <td>{{data.salary_left}}</td>
-                                    <td>
-                                        <div class="monthly">
-                                            {{data.salary_type}}
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="leaves">
-                                            0
-                                        </div>
-                                    </td>
-                                    <td><span class="actions_border">
-                                            <i class="far fa-edit" id="action_edit"
-                                                onclick="full_screen({{data.id}}); everyone();"></i>
-                                            <i class="fas fa-trash" id="action_delete" onclick="deleting({{data.id}})"></i>
-                                        </span></td>
-                                </tr>
-                                {% endfor %}
+                            {% for data in list%}
+                            <tr class="table_properties" id="d{{data.id}}">
+                                <td id="name{{data.id}}">{{data.name}}</td>
+                                <td id="desi{{data.id}}">{{data.designation}}</td>
+                                <td>{{data.salary}}</td>
+                                <td>{{data.salary_paid}}</td>
+                                <td>{{data.salary_left}}</td>
+                                <td>
+                                    <div class="monthly">
+                                        {{data.salary_type}}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="leaves">
+                                        0
+                                    </div>
+                                </td>
+                                <td><span class="actions_border">
+                                        <i class="far fa-edit" id="action_edit"
+                                            onclick="full_screen({{data.id}}); everyone();"></i>
+                                        <i class="fas fa-trash" id="action_delete" onclick="deleting({{data.id}})"></i>
+                                    </span></td>
+                            </tr>
+                            {% endfor %}
                             {% endif %}
 
                         </table>
@@ -1014,7 +1055,6 @@
         function myFunction() {
             preloader.style.display = 'none';
         };
-        
     </script>
 
     <section>
@@ -1024,6 +1064,9 @@
         <audio src="{% static 'sounds/searching_employee.mp3'%}" id="sr_emp"></audio>
         <audio src="{% static 'sounds/updated_successfully.mp3'%}" id="up_suc"></audio>
         <audio src="{% static 'sounds/error.mp3'%}" id="eror"></audio>
+        <audio src="{% static 'sounds/no match found.mp3'%}" id="no_match"></audio>
+        <audio src="{% static 'sounds/sorry for facing this problem.mp3'%}" id="sorry"></audio>
+        <audio src="{% static 'sounds/this feature will be available.mp3'%}" id="feature"></audio>
     </section>
 
     <!-- Scripts -->
