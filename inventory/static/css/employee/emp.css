@@ -105,9 +105,6 @@
     background-color: #fd7e14;
 }
 
-#update_employee {
-    background-color: #3fc5f0;
-}
 
 #active {
     background-color: #28a745;
@@ -196,8 +193,8 @@
     transition: .4s ease;
 }
 
-#inputer_baap input,
-.update_pass {
+.design_input,
+.search_fields {
     padding: 10px;
     font-size: 18px;
     color: white;
@@ -213,8 +210,15 @@
     border-bottom: .1px solid #3fc5f0;
 }
 
-#inputer_baap input:focus,
-.update_pass:focus {
+.req{
+    border-top: .1px solid #dc3545;
+    border-left: 7px solid #dc3545;
+    border-right: 7px solid #dc3545;
+    border-bottom: .1px solid #dc3545;
+}
+
+.design_input:focus,
+.search_fields:focus {
     transition: .2s ease;
     height: 50px;
     width: 320px;

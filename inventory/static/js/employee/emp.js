@@ -1,3 +1,5 @@
+$('html, body').animate({ scrollTop: 0 }, 'fast');
+
 /* Sidebar Opening and closing Script */
 
 $(".sidebar-dropdown > a").click(function () {
@@ -37,6 +39,21 @@ function haa() {
     document.getElementById("taking_image").click();
 }
 
+// features not available right now
+
+function features() {
+    var ring = document.getElementById("feature");
+    ring.autoplay = true;
+    ring.load();
+    swal(
+        'Version 1.0.0',
+        'This Feature Will Be Available In Next Version !',
+        'info'
+    )
+}
+
+
+
 /// get today date
 
 function today() {
@@ -51,15 +68,18 @@ function today() {
 // Refresh data after serach
 
 
-function data_after_srch(){
+function data_after_srch() {
+    var ring = document.getElementById("refreshing");
+    ring.autoplay = true;
+    ring.load();
     document.getElementById("fetching_data").className += " fetching_data";
     fetch('/emp/get/extra/')
-    .then(function (response) {
-        return response.json();
-    }).then(function (received) {
-        if (received.x) {
-            document.getElementById("fetching_data").className = "fas fa-sync-alt";
-            document.getElementById("order_table").innerHTML = `<tr class="table_head">
+        .then(function (response) {
+            return response.json();
+        }).then(function (received) {
+            if (received.x) {
+                document.getElementById("fetching_data").className = "fas fa-sync-alt";
+                document.getElementById("order_table").innerHTML = `<tr class="table_head">
         <th id="th_1">
             <p class="just_chk_12">Name</p>
         </th>
@@ -85,48 +105,50 @@ function data_after_srch(){
             <p class="just_chk">Actions</p>
         </th>
     </tr>`;
-            for (i = 0; i < received["data"].length; i++) {
+                for (i = 0; i < received["data"].length; i++) {
 
-                tr = document.createElement("tr");
-                tr.id = "d" + received["data"][i].id;
-                tr.classList.add("table_properties");
+                    tr = document.createElement("tr");
+                    tr.id = "d" + received["data"][i].id;
+                    tr.classList.add("table_properties");
 
-                td1 = document.createElement("td");
-                td1.id = "name" + received["data"][i].id;
-                td1.innerText = received["data"][i].name;
-                td2 = document.createElement("td");
-                td2.id = "desi" + received["data"][i].id;
-                td2.innerText = received["data"][i].designation;
-                td3 = document.createElement("td");
-                td3.innerText = received["data"][i].salary;
-                td4 = document.createElement("td");
-                td4.innerText = received["data"][i].salary_paid;
-                td5 = document.createElement("td");
-                td5.innerText = received["data"][i].salary_left;
+                    td1 = document.createElement("td");
+                    td1.className = "capi";
+                    td1.id = "name" + received["data"][i].id;
+                    td1.innerText = received["data"][i].name;
+                    td2 = document.createElement("td");
+                    td2.className = "capi";
+                    td2.id = "desi" + received["data"][i].id;
+                    td2.innerText = received["data"][i].designation;
+                    td3 = document.createElement("td");
+                    td3.innerText = received["data"][i].salary;
+                    td4 = document.createElement("td");
+                    td4.innerText = received["data"][i].salary_paid;
+                    td5 = document.createElement("td");
+                    td5.innerText = received["data"][i].salary_left;
 
-                td6 = document.createElement("td");
-                div6 = document.createElement("div");
-                div6.classList.add("monthly");
-                div6.innerText = received["data"][i].salary_type;
-                td6.append(div6);
+                    td6 = document.createElement("td");
+                    div6 = document.createElement("div");
+                    div6.classList.add("monthly");
+                    div6.innerText = received["data"][i].salary_type;
+                    td6.append(div6);
 
-                td7 = document.createElement("td");
-                div7 = document.createElement("div");
-                div7.classList.add("leaves");
-                div7.innerText = 0;
-                td7.append(div7);
+                    td7 = document.createElement("td");
+                    div7 = document.createElement("div");
+                    div7.classList.add("leaves");
+                    div7.innerText = 0;
+                    td7.append(div7);
 
-                td8 = document.createElement("td");
-                td8.innerHTML = `<span class="actions_border"><i class="far fa-edit" id="action_edit" onclick="full_screen(${received["data"][i].id}); everyone();"></i><i class="fas fa-trash" id="action_delete" onclick="deleting(${received["data"][i].id})"></i></span>`;
-                tr.append(td1, td2, td3, td4, td5, td6, td7, td8);
-                document.getElementById("order_table").append(tr);
+                    td8 = document.createElement("td");
+                    td8.innerHTML = `<span class="actions_border"><i class="far fa-edit" id="action_edit" onclick="full_screen(${received["data"][i].id}); everyone();"></i><i class="fas fa-trash" id="action_delete" onclick="deleting(${received["data"][i].id})"></i></span>`;
+                    tr.append(td1, td2, td3, td4, td5, td6, td7, td8);
+                    document.getElementById("order_table").append(tr);
+                }
+            } else {
+                var ring = document.getElementById("eror");
+                ring.autoplay = true;
+                ring.load();
             }
-        } else {
-            var ring = document.getElementById("eror");
-            ring.autoplay = true;
-            ring.load();
-        }
-    })
+        })
 }
 
 
@@ -173,96 +195,125 @@ document.getElementById("addEmp").addEventListener('click', () => {
     formdata.append('account_num', add_acc_no);
     formdata.append('reg_date', today());
 
-    var ring = document.getElementById("add_emp");
-    ring.autoplay = true;
-    ring.load();
+    if (add_name != null && add_father != null && add_religion != null && add_gender != null && add_address != null && add_number != null) {
+        var ring = document.getElementById("add_emp");
+        ring.autoplay = true;
+        ring.load();
 
-    fetch('/emp/', {
-        headers: {},
-        method: 'POST',
-        body: formdata
-    }).then(function (response) {
-        return response.json();
-    }).then(function (received) {
-        if (received.x) {
+        fetch('/emp/', {
+            headers: {},
+            method: 'POST',
+            body: formdata
+        }).then(function (response) {
+            return response.json();
+        }).then(function (received) {
+            if (received.x) {
 
-            tr = document.createElement("tr");
-            tr.id = "d" + received.id;
-            tr.classList.add("table_properties");
+                tr = document.createElement("tr");
+                tr.id = "d" + received.id;
+                tr.classList.add("table_properties");
 
-            td1 = document.createElement("td");
-            td1.innerText = add_name;
-            td1.id = "name" + received.id;
-            td2 = document.createElement("td");
-            td2.innerText = add_designation;
-            td2.id = "desi" + received.id;
-            td3 = document.createElement("td");
-            td3.innerText = add_salary;
-            td3.id = "sala" + received.id;
-            td4 = document.createElement("td");
-            td4.innerText = 0;
-            td4.id = "sa_pa" + received.id;
-            td5 = document.createElement("td");
-            td5.innerText = add_salary;
-            td5.id = "sa_la" + received.id;
+                td1 = document.createElement("td");
+                td1.className = "capi";
+                td1.innerText = add_name;
+                td1.id = "name" + received.id;
+                td2 = document.createElement("td");
+                td2.className = "capi";
+                td2.innerText = add_designation;
+                td2.id = "desi" + received.id;
+                td3 = document.createElement("td");
+                td3.innerText = add_salary;
+                td3.id = "sala" + received.id;
+                td4 = document.createElement("td");
+                td4.innerText = 0;
+                td4.id = "sa_pa" + received.id;
+                td5 = document.createElement("td");
+                td5.innerText = add_salary;
+                td5.id = "sa_la" + received.id;
 
-            td6 = document.createElement("td");
-            div6 = document.createElement("div");
-            div6.classList.add("monthly");
-            div6.id = "sa_ty" + received.id;
-            div6.innerText = add_salary_type;
-            td6.append(div6);
+                td6 = document.createElement("td");
+                div6 = document.createElement("div");
+                div6.classList.add("monthly");
+                div6.id = "sa_ty" + received.id;
+                div6.innerText = add_salary_type;
+                td6.append(div6);
 
-            td7 = document.createElement("td");
-            div7 = document.createElement("div");
-            div7.classList.add("leaves");
-            div7.id = "leav" + received.id;
-            div7.innerText = 0;
-            td7.append(div7);
+                td7 = document.createElement("td");
+                div7 = document.createElement("div");
+                div7.classList.add("leaves");
+                div7.id = "leav" + received.id;
+                div7.innerText = 0;
+                td7.append(div7);
 
-            td8 = document.createElement("td");
-            td8.innerHTML = `<span class="actions_border"><i class="far fa-edit" id="action_edit" onclick="full_screen(${received.id}); everyone();"></i><i class="fas fa-trash" id="action_delete" onclick="deleting(${received.id})"></i></span>`;
-            tr.append(td1, td2, td3, td4, td5, td6, td7, td8);
-            document.getElementById("order_table").append(tr);
-            var ring = document.getElementById("add_suc");
-            ring.autoplay = true;
-            ring.load();
-            swal(
-                'Employee Added!',
-                'New Employee Has Been Added !',
-                'success'
-            )
-            stop();
-        } else {
-            var ring = document.getElementById("eror");
-            ring.autoplay = true;
-            ring.load();
-            swal(
-                'Sorry!',
-                'Server Error! Please Try Later!',
-                'error'
-            )
-            stop();
-        }
-    })
+                td8 = document.createElement("td");
+                td8.innerHTML = `<span class="actions_border"><i class="far fa-edit" id="action_edit" onclick="full_screen(${received.id}); everyone();"></i><i class="fas fa-trash" id="action_delete" onclick="deleting(${received.id})"></i></span>`;
+                tr.append(td1, td2, td3, td4, td5, td6, td7, td8);
+                document.getElementById("order_table").append(tr);
+                setTimeout(() => {
+                    var ring = document.getElementById("add_suc");
+                    ring.autoplay = true;
+                    ring.load();
+                    swal(
+                        'Employee Added!',
+                        'New Employee Has Been Added !',
+                        'success'
+                    )
+                    stop();
+                }, 700);
+            } else {
+                setTimeout(() => {
+                    var ring = document.getElementById("eror");
+                    ring.autoplay = true;
+                    ring.load();
 
-    document.getElementById("taking_image").value = null;
-    document.getElementById("add_profile").src = "/static/images/male.jpg";
-    document.getElementById("add_name").value = null;
-    document.getElementById("add_father").value = null;
-    document.getElementById("add_cnic").value = null;
-    document.getElementById("add_blood").value = null;
-    document.getElementById("add_religion").value = null;
-    document.getElementById("add_gender").value = null;
-    document.getElementById("add_address").value = null;
-    document.getElementById("add_department").value = null;
-    document.getElementById("add_designation").value = null;
-    document.getElementById("add_salary").value = null;
-    document.getElementById("add_salary_type").value = null;
-    document.getElementById("add_number").value = null;
-    document.getElementById("add_other_number").value = null;
-    document.getElementById("add_acc_no").value = null;
+                    swal(
+                        'Sorry!',
+                        'Server Error! Please Try Later!',
+                        'error'
+                    )
+                    stop();
+                }, 700);
+                
+            }
+        })
+        document.getElementById("add_name").className = "design_input";
+        document.getElementById("add_father").className = "design_input";
+        document.getElementById("add_religion").className = "design_input";
+        document.getElementById("add_gender").className = "design_input";
+        document.getElementById("add_address").className = "design_input";
+        document.getElementById("add_number").className = "design_input";
 
+        document.getElementById("taking_image").value = null;
+        document.getElementById("add_profile").src = "/static/images/male.jpg";
+        document.getElementById("add_name").value = null;
+        document.getElementById("add_father").value = null;
+        document.getElementById("add_cnic").value = null;
+        document.getElementById("add_blood").value = null;
+        document.getElementById("add_religion").value = null;
+        document.getElementById("add_gender").value = null;
+        document.getElementById("add_address").value = null;
+        document.getElementById("add_department").value = null;
+        document.getElementById("add_designation").value = null;
+        document.getElementById("add_salary").value = null;
+        document.getElementById("add_salary_type").value = null;
+        document.getElementById("add_number").value = null;
+        document.getElementById("add_other_number").value = null;
+        document.getElementById("add_acc_no").value = null;
+    } else {
+        var ring = document.getElementById("specify");
+        ring.autoplay = true;
+        ring.load();
+        document.getElementById("add_name").className = "design_input req"; 
+        document.getElementById("add_father").className = "design_input req"; 
+        document.getElementById("add_religion").className = "design_input req"; 
+        document.getElementById("add_gender").className = "design_input req"; 
+        document.getElementById("add_address").className = "design_input req"; 
+        document.getElementById("add_number").className = "design_input req"; 
+        swal({
+            text: 'Please Specify Required Fields!',
+            type: 'warning'
+        });
+    }
 
 })
 
@@ -413,9 +464,7 @@ function change_profile(event, element, img_id) {
 // Search and present data to the screen
 
 function searcher() {
-    var ring = document.getElementById("sr_emp");
-    ring.autoplay = true;
-    ring.load();
+
     s_name = document.getElementById("s_name").value;
     s_department = document.getElementById("s_department").value;
     s_designation = document.getElementById("s_designation").value;
@@ -425,105 +474,119 @@ function searcher() {
     s_dict.department = s_department ? s_department.toLowerCase() : null;
     s_dict.designation = s_designation ? s_designation.toLowerCase() : null;
 
-    fetch('/emp/srch/', {
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        method: 'POST',
-        body: JSON.stringify(s_dict)
-    }).then(function (response) {
-        return response.json();
-    }).then(function (received) {
-        if (received.x) {
-            document.getElementById("order_status").scrollIntoView();
-            document.getElementById("order_table").innerHTML = `<tr class="table_head">
-        <th id="th_1">
-            <p class="just_chk_12">Name</p>
-        </th>
-        <th id="th_2">
-            <p class="just_chk_12">Designation</p>
-        </th>
-        <th id="th_3">
-            <p class="just_chk_150 extra">Salary</p>
-        </th>
-        <th id="th_4">
-            <p class="just_chk_456">Salary Paid</p>
-        </th>
-        <th id="th_5">
-            <p class="just_chk_456">Salary Left</p>
-        </th>
-        <th id="th_6">
-            <p class="just_chk_456">Salary Type</p>
-        </th>
-        <th id="th_7">
-            <p class="just_chk">Leaves</p>
-        </th>
-        <th id="th_8">
-            <p class="just_chk">Actions</p>
-        </th>
-    </tr>`; 
-            if (received["data"].length == 0){
-                var ring = document.getElementById("no_match");
+    if (s_dict.name != null || s_dict.department != null || s_dict.designation != null) {
+        var ring = document.getElementById("sr_emp");
+        ring.autoplay = true;
+        ring.load();
+        fetch('/emp/srch/', {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            method: 'POST',
+            body: JSON.stringify(s_dict)
+        }).then(function (response) {
+            return response.json();
+        }).then(function (received) {
+            if (received.x) {
+                document.getElementById("order_status").scrollIntoView();
+                document.getElementById("order_table").innerHTML = `<tr class="table_head">
+            <th id="th_1">
+                <p class="just_chk_12">Name</p>
+            </th>
+            <th id="th_2">
+                <p class="just_chk_12">Designation</p>
+            </th>
+            <th id="th_3">
+                <p class="just_chk_150 extra">Salary</p>
+            </th>
+            <th id="th_4">
+                <p class="just_chk_456">Salary Paid</p>
+            </th>
+            <th id="th_5">
+                <p class="just_chk_456">Salary Left</p>
+            </th>
+            <th id="th_6">
+                <p class="just_chk_456">Salary Type</p>
+            </th>
+            <th id="th_7">
+                <p class="just_chk">Leaves</p>
+            </th>
+            <th id="th_8">
+                <p class="just_chk">Actions</p>
+            </th>
+        </tr>`;
+                if (received["data"].length == 0) {
+                    var ring = document.getElementById("no_match");
+                    ring.autoplay = true;
+                    setTimeout(() => {
+                        ring.load();
+                        swal(
+                            'Sorry!',
+                            'No Matching Result Found!',
+                            'error'
+                        );
+                    }, 700);
+
+                }
+
+                for (i = 0; i < received["data"].length; i++) {
+
+                    tr = document.createElement("tr");
+                    tr.id = "d" + received["data"][i].id;
+                    tr.classList.add("table_properties");
+
+                    td1 = document.createElement("td");
+                    td1.className = "capi";
+                    td1.id = "name" + received["data"][i].id;
+                    td1.innerText = received["data"][i].name;
+                    td2 = document.createElement("td");
+                    td2.className = "capi";
+                    td2.id = "desi" + received["data"][i].id;
+                    td2.innerText = received["data"][i].designation;
+                    td3 = document.createElement("td");
+                    td3.innerText = received["data"][i].salary;
+                    td4 = document.createElement("td");
+                    td4.innerText = received["data"][i].salary_paid;
+                    td5 = document.createElement("td");
+                    td5.innerText = received["data"][i].salary_left;
+
+                    td6 = document.createElement("td");
+                    div6 = document.createElement("div");
+                    div6.classList.add("monthly");
+                    div6.innerText = received["data"][i].salary_type;
+                    td6.append(div6);
+
+                    td7 = document.createElement("td");
+                    div7 = document.createElement("div");
+                    div7.classList.add("leaves");
+                    div7.innerText = 0;
+                    td7.append(div7);
+
+                    td8 = document.createElement("td");
+                    td8.innerHTML = `<span class="actions_border"><i class="far fa-edit" id="action_edit" onclick="full_screen(${received["data"][i].id}); everyone();"></i><i class="fas fa-trash" id="action_delete" onclick="deleting(${received["data"][i].id})"></i></span>`;
+                    tr.append(td1, td2, td3, td4, td5, td6, td7, td8);
+                    document.getElementById("order_table").append(tr);
+                }
+            } else {
+                var ring = document.getElementById("eror");
                 ring.autoplay = true;
-                setTimeout(() => {
-                    ring.load();
-                    swal(
-                        'Sorry!',
-                        'No Matching Result Found!',
-                        'error'
-                    );
-                }, 700);
-                
+                ring.load();
+                swal(
+                    'Sorry!',
+                    'Server Error! Please Try Later!',
+                    'error'
+                );
             }
-            
-            for (i = 0; i < received["data"].length; i++) {
-
-                tr = document.createElement("tr");
-                tr.id = "d" + received["data"][i].id;
-                tr.classList.add("table_properties");
-
-                td1 = document.createElement("td");
-                td1.id = "name" + received["data"][i].id;
-                td1.innerText = received["data"][i].name;
-                td2 = document.createElement("td");
-                td2.id = "desi" + received["data"][i].id;
-                td2.innerText = received["data"][i].designation;
-                td3 = document.createElement("td");
-                td3.innerText = received["data"][i].salary;
-                td4 = document.createElement("td");
-                td4.innerText = received["data"][i].salary_paid;
-                td5 = document.createElement("td");
-                td5.innerText = received["data"][i].salary_left;
-
-                td6 = document.createElement("td");
-                div6 = document.createElement("div");
-                div6.classList.add("monthly");
-                div6.innerText = received["data"][i].salary_type;
-                td6.append(div6);
-
-                td7 = document.createElement("td");
-                div7 = document.createElement("div");
-                div7.classList.add("leaves");
-                div7.innerText = 0;
-                td7.append(div7);
-
-                td8 = document.createElement("td");
-                td8.innerHTML = `<span class="actions_border"><i class="far fa-edit" id="action_edit" onclick="full_screen(${received["data"][i].id}); everyone();"></i><i class="fas fa-trash" id="action_delete" onclick="deleting(${received["data"][i].id})"></i></span>`;
-                tr.append(td1, td2, td3, td4, td5, td6, td7, td8);
-                document.getElementById("order_table").append(tr);
-            }
-        } else {
-            var ring = document.getElementById("eror");
-            ring.autoplay = true;
-            ring.load();
-            swal(
-                'Sorry!',
-                'Server Error! Please Try Later!',
-                'error'
-            );
-        }
-    })
-
+        })
+    } else {
+        var ring = document.getElementById("specify");
+        ring.autoplay = true;
+        ring.load();
+        swal({
+            text: 'Please Specify A Field!',
+            type: 'warning'
+        });
+    }
 }
 
 
