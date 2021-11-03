@@ -1,0 +1,91 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <title>Fill Up The Details</title>
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css'>
+    <link rel='stylesheet' href='https://unicons.iconscout.com/release/v2.1.9/css/unicons.css'>
+    <link rel="stylesheet" href="{% static '3rd_party/all.min.css'%}">
+    <link rel="stylesheet" href="{% static 'css/Login/AfterSignUp.css'%}">
+    <script>
+        function change_profile(event, element, img_id) {
+
+            var ele_id = element.id;
+
+            prf_pic = document.getElementById(img_id);
+            var file = document.getElementById(ele_id).files;
+            if (file.length > 0) {
+                var filereader = new FileReader()
+                filereader.onload = function(event) {
+                    prf_pic.setAttribute("src", event.target.result);
+                }
+                filereader.readAsDataURL(file[0]);
+            }
+        }        
+    </script>
+
+    <!-- partial:index.partial.html -->
+    <a href="#" class="logo" id="logo">
+        <img src="{% static 'images/logo.png'%}" alt="">
+    </a>
+
+    <div class="section">
+        <div class="container">
+            <div class="row full-height justify-content-center">
+                <div class="col-12 text-center align-self-center py-5">
+                    <div class="section pb-5 pt-5 pt-sm-2 text-center">
+                        <div class="card-3d-wrap mx-auto">
+                            <div class="card-3d-wrapper">
+                                <div class="card-front">
+                                    <div class="center-wrap">
+                                        <div class="section text-center">
+                                            <!-- Edit by Farooq -->
+                                            <form action="/acc/sign/details/" method="POST" enctype="multipart/form-data">
+                                                {% csrf_token %}
+                                                <div id="round_image" style="display: flex;justify-content: center;">
+                                                    <img src="{% static 'images/male.jpg'%}" alt="" height="120" id="profile_pic">
+                                                </div>{{form.pic}}
+                                                <label for="taking_image" class="btn mt-4">Select Picture</label>
+                                                <!-- Edit by Farooq -->
+                                                
+                                                <div class="form-group">
+                                                    {{form.firstname}}
+                                                    <i class="input-icon uil uil-user-circle"></i>
+                                                </div>
+                                                <div class="form-group mt-2">
+                                                    {{form.lastname}}
+                                                    <i class="input-icon uil uil-user-circle"></i>
+                                                </div>
+                                                <div class="form-group mt-2">
+                                                    {{form.contact}}
+                                                    <i class="input-icon uil uil-at"></i>
+                                                </div>
+                                                <div class="form-group mt-2">
+                                                    {{form.address}}
+                                                    <i class="input-icon uil uil-at"></i>
+                                                </div><br>
+                                                {% if messages %}
+                                                    {% for msg in messages %}
+                                                        <div {% if msg.tags %} class="{{msg.tags}}" {% endif %}>{{msg}}</div>
+                                                    {% endfor %}
+                                                {% endif %}
+                                                <button type="submit" class="btn mt-4">Start Working</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- partial -->
+    </body>
+
+</html>
