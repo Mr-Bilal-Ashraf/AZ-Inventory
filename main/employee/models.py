@@ -23,3 +23,5 @@ class employees(models.Model):
     salary = models.IntegerField(blank=True, null=True)
     salary_paid = models.IntegerField(blank=True, null=True)
     salary_left = models.IntegerField(blank=True, null=True)
+    daily_leaves = models.CharField(max_length= 500 ,blank=True, null=True)
+    monthly_leaves = models.CharField(max_length= 1000 ,blank=True, null=True)

@@ -836,7 +836,7 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <div class="leaves">
+                                    <div id="leave{{data.id}}" class="leaves" onclick="chckleave({{data.id}})">
                                         0
                                     </div>
                                 </td>
@@ -876,11 +876,11 @@
                             alt="User picture">
                     </div>
                     <div class="user-info">
-                        <span class="user-name">{{uname}}</span>
+                        <span class="user-name capi">{{request.user.first_name}}</span>
                         <span class="user-role">
-                            {% if is_admin == 1%}
+                            {% if request.user.is_staff == True %}
                                 Admin
-                            {% elif is_admin == 0%}
+                            {% elif request.user.is_staff == False %}
                                 User
                             {% endif%}
                         </span>
@@ -1076,10 +1076,17 @@
     <script>
         var preloader = document.getElementById("loading");
         usua = "{{request.user.id}}"
-
         function myFunction() {
             preloader.style.display = 'none';
         };
+        daily_leaves = {}
+        {% for a in list %}
+            console.log("{{a.daily_leaves}}")
+            daily_leaves[{{a.id}}] = "{{a.daily_leaves}}"
+        {% endfor %}
+        console.log(daily_leaves);
+
+
     </script>
 
     <section>

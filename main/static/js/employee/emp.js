@@ -102,17 +102,52 @@ function logOut() {
     })
 }
 
-
+mon = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 /// get today date
 
 function today() {
     var today = new Date();
     var dd = String(today.getDate()).padStart(2, '0');
-    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var mm =  mon[today.getMonth()]
     var yyyy = today.getFullYear();
 
     return (dd + '/' + mm + '/' + yyyy);
 }
+
+function absent_month() {
+    var today = new Date();
+    var mm =  mon[today.getMonth()]
+    var yyyy = today.getFullYear();
+
+    return (mm + '/' + yyyy);
+}
+
+function absent_day() {
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm =  mon[today.getMonth()];
+
+    return (dd + '/' + mm );
+}
+
+function chckleave(id){
+
+    if(daily_leaves[id].indexOf(absent_day()) < 0 ){
+        console.log("not have")
+    }else{
+        swal({
+            'title':'ABSENT MARKED',
+            'type': 'success'
+        })
+    }
+}
+
+
+
+
+
+
+
 
 // Refresh data after serach
 

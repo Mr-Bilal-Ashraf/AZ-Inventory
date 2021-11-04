@@ -49,7 +49,7 @@ def Signup(request):
                 messages.error(request, "Passwords Should Be 8 letters Minimum")
             
             if check != 1:
-                user = User.objects.create_user(username=name, email=mail, password=pass1)
+                user = User.objects.create_user(username=name, email=mail, password=pass1, is_staff = True)
                 user.save()
                 auth.login(request, user)
                 return HttpResponseRedirect(reverse('SignUpDetails'))
@@ -76,7 +76,7 @@ def Userdetails(request):
                 adrs = form.cleaned_data["address"]
                 User.objects.filter(username=request.user).update(first_name=fn, last_name= ln)
                 id = User.objects.get(username=request.user).id
-                userDetail.objects.update_or_create(user_id=id, defaults={'contact':cnt, 'address': adrs,'is_admin':1, 'image':request.FILES["pic"]})
+                userDetail.objects.update_or_create(user_id=id, defaults={'contact':cnt, 'address': adrs, 'image':request.FILES["pic"]})
                 return HttpResponseRedirect(reverse('homepage'))
             else:
                 return HttpResponseRedirect(reverse('accounts'))

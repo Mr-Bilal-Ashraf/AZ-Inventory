@@ -20,34 +20,33 @@ class employee(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, pk = None, format=None):
-        try:
-            if pk == None:
-                user_name = User.objects.values("first_name").get(id = request.user.id)
-                img = userDetail.objects.values("image","is_admin").get(user_id = request.user.id)
-                emps = employees.objects.values("id","name","designation","salary","salary_paid","salary_left","salary_type").filter(employee_of = request.user.id)
-                data = SerEmp(emps, many=True)
-                dis_name = employees.objects.values("name").filter(employee_of = request.user.id).distinct()
-                dis_department = employees.objects.values("department").filter(employee_of = request.user.id).distinct()
-                dis_designation = employees.objects.values("designation").filter(employee_of = request.user.id).distinct()
-                for x in dis_name:
-                    if x["name"] is not None:
-                        x["name"] = x["name"].title()
+        # try:
+        if pk == None:
+            img = userDetail.objects.values("image").get(user_id = request.user.id)
+            emps = employees.objects.values("id","name","designation","salary","salary_paid","salary_left","salary_type","daily_leaves").filter(employee_of = request.user.id)
+            data = SerEmp(emps, many=True)
+            dis_name = employees.objects.values("name").filter(employee_of = request.user.id).distinct()
+            dis_department = employees.objects.values("department").filter(employee_of = request.user.id).distinct()
+            dis_designation = employees.objects.values("designation").filter(employee_of = request.user.id).distinct()
+            for x in dis_name:
+                if x["name"] is not None:
+                    x["name"] = x["name"].title()
 
-                for x in dis_department:
-                    if x["department"] is not None:
-                        x["department"] = x["department"].title()
+            for x in dis_department:
+                if x["department"] is not None:
+                    x["department"] = x["department"].title()
 
-                for x in dis_designation:
-                    if x["designation"] is not None:
-                        x["designation"] = x["designation"].title()
-                # return Response(data.data)
-                return render(request, 'employee/employee.html', {'list': data.data,'name':dis_name,'department':dis_department,'designation':dis_designation, "uname": user_name["first_name"], 'is_admin':img["is_admin"], "image": img["image"]})
-            else:
-                emps = employees.objects.get(id = pk)
-                data = SerEmp(emps)
-                return Response(data.data)
-        except:
-            return render(request, '404.html')
+            for x in dis_designation:
+                if x["designation"] is not None:
+                    x["designation"] = x["designation"].title()
+            # return Response(data.data)
+            return render(request, 'employee/employee.html', {'list': data.data,'name':dis_name,'department':dis_department,'designation':dis_designation, "image": img["image"]})
+        else:
+            emps = employees.objects.get(id = pk)
+            data = SerEmp(emps)
+            return Response(data.data)
+        # except:
+            # return render(request, '404.html')
 
 
     def post(self, request, format=None):
