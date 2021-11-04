@@ -2,6 +2,23 @@ $('html, body').animate({
     scrollTop: 0
 }, 'fast');
 
+function getCookie(cname) {
+    let name = cname + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+
+
 /* Sidebar Opening and closing Script */
 
 $(".sidebar-dropdown > a").click(function () {
@@ -54,6 +71,36 @@ function features() {
     )
 }
 
+function logOut() {
+    swal({
+        title: 'Logout',
+        text: "Are You Sure ?",
+        type: 'info',
+        showCancelButton: true,
+        confirmButtonText: 'Log Out',
+        showLoaderOnConfirm: true,
+        preConfirm: () => {
+            fetch('/emp/logout/')
+                .then(function (response) {
+                    return response.json();
+                }).then(function (received) {
+                    if (received.x) {
+                        window.location.href = "/acc"
+                    } else {
+                        var ring = document.getElementById("eror");
+                        ring.autoplay = true;
+                        ring.load();
+                        swal(
+                            'Sorry!',
+                            'Server Error! Please Try Later!',
+                            'error'
+                        );
+                    }
+                })
+        },
+        allowOutsideClick: true
+    })
+}
 
 
 /// get today date
@@ -205,7 +252,7 @@ document.getElementById("addEmp").addEventListener('click', () => {
         ring.load();
 
         fetch('/emp/', {
-            headers: {},
+            headers: {"X-CSRFToken": getCookie("csrftoken")},
             method: 'POST',
             body: formdata
         }).then(function (response) {
@@ -357,6 +404,7 @@ document.getElementById("subscribe").addEventListener('click', () => {
             fetch(url, {
                 headers: {
                     'Content-Type': 'application/json',
+                    "X-CSRFToken": getCookie("csrftoken")
                 },
                 method: 'PATCH',
                 body: JSON.stringify(d_to_u)
@@ -414,6 +462,7 @@ function deleting(del_id) {
             fetch(url, {
                 headers: {
                     'Content-Type': 'application/json',
+                    "X-CSRFToken": getCookie("csrftoken")
                 },
                 method: 'DELETE',
             }).then(function (response) {
@@ -485,6 +534,7 @@ function searcher() {
         fetch('/emp/srch/', {
             headers: {
                 'Content-Type': 'application/json',
+                "X-CSRFToken": getCookie("csrftoken")
             },
             method: 'POST',
             body: JSON.stringify(s_dict)

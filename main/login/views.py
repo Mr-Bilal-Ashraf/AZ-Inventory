@@ -10,13 +10,16 @@ from .models import userDetail
 
 
 def accounts(request):
-    Upform = SignUp()
-    Inform = SignIn()
-    context = {
-        'Upform' : Upform,
-        'Inform' : Inform
-    }
-    return render(request, 'LogIn/SignUp.html', context)
+    if request.user.is_authenticated:
+        return HttpResponseRedirect('/emp/')
+    else:
+        Upform = SignUp()
+        Inform = SignIn()
+        context = {
+            'Upform' : Upform,
+            'Inform' : Inform
+        }
+        return render(request, 'LogIn/SignUp.html', context)
 
 def Signup(request):
     if request.method == 'POST':
@@ -104,7 +107,7 @@ def Signin(request):
                 user = auth.authenticate(request, username= name, password= passw)
                 if user is not None:
                     auth.login(request, user)
-                    return HttpResponseRedirect(reverse('homepage'))
+                    return HttpResponseRedirect('/emp/')
                 else:
                     messages.error(request, "Password Incorrect")
 

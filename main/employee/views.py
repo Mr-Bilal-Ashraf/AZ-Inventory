@@ -1,22 +1,22 @@
 from django.shortcuts import render
-
+from django.contrib.auth import logout
+from django.contrib.auth.models import User
 
 from .models import employees
-from django.contrib.auth.models import User
 from login.models import userDetail
 
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
-from rest_framework.authentication import BasicAuthentication
+from rest_framework.authentication import BasicAuthentication, SessionAuthentication
 from rest_framework.permissions import IsAuthenticated
 from .serializer import SerEmp
 
 
 class employee(APIView):
     parser_classes = (MultiPartParser, FormParser, JSONParser)
-    authentication_classes = [BasicAuthentication]
+    authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get(self, request, pk = None, format=None):
@@ -117,3 +117,12 @@ def get_extra(request):
         return Response({'data': data.data, 'x':True})
     except:
         return Response({'x': False})
+
+
+@api_view(['GET'])
+def logOut(request):
+    try:
+        logout(request)
+        return Response({'x':True})
+    except:
+        return Response({'x':False})
