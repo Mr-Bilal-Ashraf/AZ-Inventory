@@ -16,6 +16,7 @@
 }
 
 .leaves {
+    cursor: pointer;
     text-align: center;
     border-radius: 5px;
     width: 40px;

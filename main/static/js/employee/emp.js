@@ -130,14 +130,69 @@ function absent_day() {
     return (dd + '/' + mm );
 }
 
+function cal_leaves(id){
+    var today = new Date();
+    document.getElementById("leave"+id).innerHTML = daily_leaves[id].split(mon[today.getMonth()]).length - 1;
+    swal({
+        'title':'TODAY\'s ABSENT MARKED',
+        'type': 'success'
+    })
+}
+
+// console.table((daily_leaves[6].slice(0,daily_leaves[6].length-1)).split(" "))
+
+
 function chckleave(id){
 
-    if(daily_leaves[id].indexOf(absent_day()) < 0 ){
-        console.log("not have")
+    form = new FormData()
+    if(daily_leaves[id] == null || daily_leaves[id] == 'null'){
+
+        today = absent_day() + " ";
+        form.append("id",id);
+        form.append("leaves", today);
+
+        fetch('/emp/leave/', {
+            headers: {
+                "X-CSRFToken": getCookie("csrftoken")
+            },
+            method: 'POST',
+            body: form
+        }).then(function (response) {
+            return response.json();
+        }).then(function (received) {
+            if(received.x){
+                daily_leaves[id] = absent_day() + " ";
+                cal_leaves(id);
+            }
+        })
+
+
+    }else if(daily_leaves[id].indexOf(absent_day()) < 0 ){
+
+        today = daily_leaves[id];
+        today += absent_day() + " ";
+        form.append("id",id);
+        form.append("leaves", today);
+
+        fetch('/emp/leave/', {
+            headers: {
+                "X-CSRFToken": getCookie("csrftoken")
+            },
+            method: 'POST',
+            body: form
+        }).then(function (response) {
+            return response.json();
+        }).then(function (received) {
+            if(received.x){
+                daily_leaves[id] += absent_day() + " ";
+                cal_leaves(id);
+            }
+
+        })
     }else{
         swal({
-            'title':'ABSENT MARKED',
-            'type': 'success'
+            'title':'ABSENT ALREADY MARKED',
+            'type': 'info'
         })
     }
 }
@@ -217,12 +272,14 @@ function data_after_srch(a) {
                     div6.classList.add("monthly");
                     div6.innerText = received["data"][i].salary_type;
                     td6.append(div6);
-
+                    var today = new Date();
+                    if(daily_leaves[received["data"][i].id] != null && daily_leaves[received["data"][i].id] != "null")
+                        absent = daily_leaves[received["data"][i].id].split(mon[today.getMonth()]).length - 1;
+                    else
+                        absent = 0;
+                    console.log(absent)
                     td7 = document.createElement("td");
-                    div7 = document.createElement("div");
-                    div7.classList.add("leaves");
-                    div7.innerText = 0;
-                    td7.append(div7);
+                    td7.innerHTML = `<div id="leave${received.id}" class="leaves" onclick="chckleave(${received.id})">${absent}</div>`
 
                     td8 = document.createElement("td");
                     td8.innerHTML = `<span class="actions_border"><i class="far fa-edit" id="action_edit" onclick="full_screen(${received["data"][i].id}); everyone();"></i><i class="fas fa-trash" id="action_delete" onclick="deleting(${received["data"][i].id})"></i></span>`;
@@ -325,11 +382,7 @@ document.getElementById("addEmp").addEventListener('click', () => {
                 td6.append(div6);
 
                 td7 = document.createElement("td");
-                div7 = document.createElement("div");
-                div7.classList.add("leaves");
-                div7.id = "leav" + received.id;
-                div7.innerText = 0;
-                td7.append(div7);
+                td7.innerHTML = `<div id="leave${received.id}" class="leaves" onclick="chckleave(${received.id})">0</div>`
 
                 td8 = document.createElement("td");
                 td8.innerHTML = `<span class="actions_border"><i class="far fa-edit" id="action_edit" onclick="full_screen(${received.id}); everyone();"></i><i class="fas fa-trash" id="action_delete" onclick="deleting(${received.id})"></i></span>`;
@@ -346,6 +399,24 @@ document.getElementById("addEmp").addEventListener('click', () => {
                     )
                     stop();
                 }, 700);
+
+                document.getElementById("taking_image").value = null;
+                document.getElementById("add_profile").src = "/static/images/male.jpg";
+                document.getElementById("add_name").value = null;
+                document.getElementById("add_father").value = null;
+                document.getElementById("add_cnic").value = null;
+                document.getElementById("add_blood").value = null;
+                document.getElementById("add_religion").value = null;
+                document.getElementById("add_gender").value = null;
+                document.getElementById("add_address").value = null;
+                document.getElementById("add_department").value = null;
+                document.getElementById("add_designation").value = null;
+                document.getElementById("add_salary").value = null;
+                document.getElementById("add_salary_type").value = null;
+                document.getElementById("add_number").value = null;
+                document.getElementById("add_other_number").value = null;
+                document.getElementById("add_acc_no").value = null;
+
             } else {
                 setTimeout(() => {
                     var ring = document.getElementById("eror");
@@ -369,22 +440,6 @@ document.getElementById("addEmp").addEventListener('click', () => {
         document.getElementById("add_address").className = "design_input";
         document.getElementById("add_number").className = "design_input";
 
-        document.getElementById("taking_image").value = null;
-        document.getElementById("add_profile").src = "/static/images/male.jpg";
-        document.getElementById("add_name").value = null;
-        document.getElementById("add_father").value = null;
-        document.getElementById("add_cnic").value = null;
-        document.getElementById("add_blood").value = null;
-        document.getElementById("add_religion").value = null;
-        document.getElementById("add_gender").value = null;
-        document.getElementById("add_address").value = null;
-        document.getElementById("add_department").value = null;
-        document.getElementById("add_designation").value = null;
-        document.getElementById("add_salary").value = null;
-        document.getElementById("add_salary_type").value = null;
-        document.getElementById("add_number").value = null;
-        document.getElementById("add_other_number").value = null;
-        document.getElementById("add_acc_no").value = null;
     } else {
         var ring = document.getElementById("require");
         ring.autoplay = true;

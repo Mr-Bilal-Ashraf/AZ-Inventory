@@ -1,3 +1,4 @@
+from django.http.response import HttpResponse
 from django.shortcuts import render
 from django.contrib.auth import logout
 from django.contrib.auth.models import User
@@ -116,6 +117,12 @@ def get_extra(request):
         return Response({'data': data.data, 'x':True})
     except:
         return Response({'x': False})
+
+@api_view(['POST'])
+def mark_leave(request):
+    employees.objects.filter(id=request.POST["id"], employee_of = request.user.id).update(daily_leaves = request.POST["leaves"])
+
+    return Response({"x": True})
 
 
 @api_view(['GET'])

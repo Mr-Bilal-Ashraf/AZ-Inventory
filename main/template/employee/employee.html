@@ -1074,18 +1074,30 @@
 
 
     <script>
+        daily_leaves = {}
+        {% for a in list %}
+            {% if a.daily_leaves is not none %}
+                daily_leaves[{{a.id}}] = "{{a.daily_leaves}}"
+            {% elif a.daily_leaves is none %}
+                daily_leaves[{{a.id}}] = null
+            {% endif %}
+        {% endfor %}
+
+
         var preloader = document.getElementById("loading");
         usua = "{{request.user.id}}"
         function myFunction() {
+            calculate_leaves = Object.keys(daily_leaves);
+            for(i=0; i<calculate_leaves.length; i++){
+                id = calculate_leaves[i];
+                if(daily_leaves[id] == null || daily_leaves[id] == "null"){
+                    document.getElementById("leave"+id).innerHTML = 0;
+                }else{
+                    document.getElementById("leave"+id).innerHTML = daily_leaves[id].split('Nov').length - 1;
+                }
+            }
             preloader.style.display = 'none';
         };
-        daily_leaves = {}
-        {% for a in list %}
-            console.log("{{a.daily_leaves}}")
-            daily_leaves[{{a.id}}] = "{{a.daily_leaves}}"
-        {% endfor %}
-        console.log(daily_leaves);
-
 
     </script>
 
