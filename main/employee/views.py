@@ -112,7 +112,7 @@ def srch(request):
 @api_view(['GET'])
 def get_extra(request):
     try:
-        emps = employees.objects.values("id","name","designation","salary","salary_paid","salary_left","salary_type").filter(employee_of = request.user.id)
+        emps = employees.objects.values("id","name","designation","salary","salary_paid","salary_left","salary_type","daily_leaves").filter(employee_of = request.user.id)
         data = SerEmp(emps, many=True)
         return Response({'data': data.data, 'x':True})
     except:

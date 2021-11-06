@@ -140,6 +140,21 @@ function cal_leaves(id){
 }
 
 // console.table((daily_leaves[6].slice(0,daily_leaves[6].length-1)).split(" "))
+// a = daily_leaves[6].slice(0,daily_leaves[6].lastIndexOf("Nov")+3)
+// a = daily_leaves[6].slice(daily_leaves[6].lastIndexOf("Nov")+4)
+
+function clear_last_month(id){
+    last_month_name = daily_leaves[id].slice(3,6);
+    next_month_leaves = daily_leaves[id].slice(daily_leaves[id].lastIndexOf(last_month_name)+4)
+    console.log(next_month_leaves);
+}
+
+function last_month_leaves(id){
+    last_month_name = daily_leaves[id].slice(3,6);
+    next_month_leaves = daily_leaves[id].slice(0, daily_leaves[id].lastIndexOf(last_month_name)+3);
+    console.table(next_month_leaves.split(" "));
+
+}
 
 
 function chckleave(id){
@@ -273,13 +288,14 @@ function data_after_srch(a) {
                     div6.innerText = received["data"][i].salary_type;
                     td6.append(div6);
                     var today = new Date();
+                    daily_leaves[received["data"][i].id] = received["data"][i].daily_leaves;
+                    
                     if(daily_leaves[received["data"][i].id] != null && daily_leaves[received["data"][i].id] != "null")
                         absent = daily_leaves[received["data"][i].id].split(mon[today.getMonth()]).length - 1;
                     else
                         absent = 0;
-                    console.log(absent)
                     td7 = document.createElement("td");
-                    td7.innerHTML = `<div id="leave${received.id}" class="leaves" onclick="chckleave(${received.id})">${absent}</div>`
+                    td7.innerHTML = `<div id="leave${received["data"][i].id}" class="leaves" onclick="chckleave(${received["data"][i].id})">${absent}</div>`
 
                     td8 = document.createElement("td");
                     td8.innerHTML = `<span class="actions_border"><i class="far fa-edit" id="action_edit" onclick="full_screen(${received["data"][i].id}); everyone();"></i><i class="fas fa-trash" id="action_delete" onclick="deleting(${received["data"][i].id})"></i></span>`;
@@ -546,7 +562,7 @@ function deleting(del_id) {
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!',
+        confirmButtonText: 'Delete it!',
         allowOutsideClick: true,
         preConfirm: () => {
             fetch(url, {
@@ -700,11 +716,14 @@ function searcher() {
                     div6.innerText = received["data"][i].salary_type;
                     td6.append(div6);
 
+                    var today = new Date();
+                    if(daily_leaves[received["data"][i].id] != null && daily_leaves[received["data"][i].id] != "null")
+                        absent = daily_leaves[received["data"][i].id].split(mon[today.getMonth()]).length - 1;
+                    else
+                        absent = 0;
+
                     td7 = document.createElement("td");
-                    div7 = document.createElement("div");
-                    div7.classList.add("leaves");
-                    div7.innerText = 0;
-                    td7.append(div7);
+                    td7.innerHTML = `<div id="leave${received["data"][i].id}" class="leaves" onclick="chckleave(${received["data"][i].id})">${absent}</div>`
 
                     td8 = document.createElement("td");
                     td8.innerHTML = `<span class="actions_border"><i class="far fa-edit" id="action_edit" onclick="full_screen(${received["data"][i].id}); everyone();"></i><i class="fas fa-trash" id="action_delete" onclick="deleting(${received["data"][i].id})"></i></span>`;
