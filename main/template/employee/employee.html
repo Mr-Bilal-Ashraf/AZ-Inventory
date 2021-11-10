@@ -1,0 +1,1133 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Management System</title>
+    <!-- All Css Files -->
+    <Section>
+        <link rel='stylesheet' href="{% static '3rd_party/bootstrap.css' %}">
+        <link rel='stylesheet' href="{% static '3rd_party/all.css' %}">
+        <link rel="stylesheet" href='{% static "3rd_party/sweetalert2.min.css" %}'>
+        <link rel="stylesheet" href='{% static "3rd_party/all.min.css" %}'>
+        <link href='https://fonts.googleapis.com/css?family=Montserrat:700' rel='stylesheet' type='text/css'>
+
+        <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
+        <link rel="stylesheet" href="{% static 'css/employee/emp.css' %}">
+        <!-- 
+        <link rel="stylesheet" href="order_status.css">
+        <link rel="stylesheet" href="topbar.css">
+        <link rel="stylesheet" href="profile.css">
+        <link rel="stylesheet" href="employeebtn.css">
+        <link rel="stylesheet" href="./img.css">
+        <link rel="stylesheet" href="expander.css">
+        <link rel="stylesheet" href="./submitbtn.css">
+ -->
+    </Section>
+    <style>
+        #loading {
+            position: fixed;
+            width: 100%;
+            height: 100vh;
+            background: #0E111F url("{% static 'images/employee/animation.gif' %}") no-repeat center center;
+            z-index: 99999;
+        }
+
+        #employee_update_lock {
+            display: none;
+            position: fixed;
+            top: 0;
+            height: 100vh;
+            width: 100%;
+            background-color: black;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2;
+            transition: .1s ease;
+        }
+
+        .capi {
+            text-transform: capitalize;
+        }
+
+        #fetching_data {
+            font-size: 30px;
+            color: #0090e7;
+            float: right;
+            position: absolute;
+            right: 50px;
+            /* top: -5px; */
+            z-index: 0;
+            transition: .01s ease;
+            /* animation: rotating_fetcher 5s infinite; */
+            /* -webkit-animation: rotation 2s infinite linear; */
+        }
+
+        .fetching_data {
+            -webkit-animation: rotation 2s infinite linear;
+        }
+
+        @-webkit-keyframes rotation {
+            from {
+                -webkit-transform: rotate(0deg);
+            }
+
+            to {
+                -webkit-transform: rotate(359deg);
+            }
+        }
+
+        #bt {
+            color: white;
+            display: flex;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        #bt input,
+        textarea {
+            background: none;
+            height: 40px;
+            width: 330px;
+            transition: .3s ease;
+            border: none;
+            border-bottom: 2px solid white;
+            outline: none;
+            color: white;
+        }
+
+        #bt input:focus {
+            width: 400px;
+            border-bottom: 2px solid greenyellow;
+        }
+
+        #bt textarea:focus {
+            width: 400px;
+            border: 2px solid greenyellow;
+        }
+
+        #bt textarea {
+            height: 100px;
+            border-bottom: 2px solid white;
+            border-left: 1.5px solid white;
+            border-right: 1.5px solid white;
+        }
+
+        #report_button {
+            border: 1px solid rgb(182, 179, 179);
+            width: 100px;
+            padding: 7px;
+            text-align: center;
+            margin: 10px auto;
+            cursor: pointer;
+            transition: .1s ease;
+            overflow: hidden;
+        }
+
+        #report_button:hover {
+            padding: 4px;
+            width: 90px;
+            border-color: greenyellow;
+        }
+
+        #report_button:active {
+            background-color: greenyellow;
+            padding: 7px;
+            width: 50px;
+            color: black;
+        }
+
+        @media(max-width:410px) {
+            #bt input:focus {
+                width: 320px;
+                border-bottom: 2px solid greenyellow;
+            }
+
+            #bt textarea:focus {
+                width: 320px;
+                border: 2px solid greenyellow;
+            }
+        }
+
+        #detail {
+            transition: .4s ease;
+            overflow: scroll;
+            background-color: black;
+            height: 00vh;
+            width: 100%;
+            position: fixed;
+            top: 0%;
+            z-index: 2;
+        }
+
+        .table input {
+            border: none;
+            outline: none;
+            width: 100%;
+        }
+
+        #heading_shareef {
+            width: 99.3%;
+            background-color: #191C24;
+            margin: 0% auto;
+            border-radius: 7px;
+            color: white;
+        }
+
+        #overview {
+            text-align: center;
+            padding: 15px 0px 20px 0px;
+            margin-bottom: 20px;
+        }
+
+        #search_expander {
+            color: white;
+            background-color: #191C24;
+        }
+
+        #subscribe,
+        .btn {
+            background-color: #8ca6b641;
+            border: 2px solid rgba(0, 0, 0, 0.125);
+            padding: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 8px 20px 8px 20px;
+            border-radius: 5px;
+            margin-right: 4px;
+        }
+
+        #close_detail {
+            background-color: #fc424b44;
+            border: 2px solid rgba(0, 0, 0, 0.125);
+            padding: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 8px 20px 8px 20px;
+            border-radius: 5px;
+            margin-left: 4px;
+        }
+    </style>
+
+</head>
+
+
+
+<body onload="myFunction()">
+    <div id="loading"></div>
+
+    <!-- Top Bar -->
+    <section id="topbar">
+        <a href="#az_dev" id="dv_dev"></a>
+        <h3 id="az_dev">AZAAD DEV</h3>
+        <h3 id="shop_name">Feminism Ki Dukaan</h3>
+    </section>
+
+
+    <!-- Expanding Update Employee -->
+    <section id="employee_update_lock">
+        <i class="fas fa-times-circle"
+            style="color: #fc424a;font-size: 50px;position:absolute;top:10px;right: 10px; cursor: pointer;"
+            onclick="dlose()"></i>
+
+        <div style="background-color: #191C24;width: 500px;" id="bt">
+            <div>
+                <h3 style="text-align: center;margin: 20px 0px; ">Report Page</h3>
+                <p>
+                    Lisence_number: <br>
+                    <input type="text">
+                </p>
+                <p>
+                    Password: <br>
+                    <input type="text">
+                </p>
+                <p>
+                    Issuse Starting Date: <br>
+                    <input type="text">
+                </p>
+                <p>
+                    Explain Your Issue Below: <br>
+                    <textarea name="" id="" cols="30" rows="10"></textarea>
+                </p>
+                <div id="report_button">
+                    SUBMIT
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- Full Screen Detail of Employee -->
+
+    <!-- user  Profile -->
+    <section id="detail">
+
+
+        <div class="rt-container">
+            <div class="col-rt-12">
+                <div class="Scriptcontent">
+                    <!-- Student Profile -->
+                    <div class="student-profile py-4">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-lg-4" style="margin-bottom:20px;">
+                                    <div class="card shadow-sm">
+                                        <div class="card-header bg-transparent text-center">
+                                            <img class="profile_img" id="update_profile" src="" alt="student dp">
+                                            <h3 id="head_name" class="capi"></h3>
+                                        </div>
+                                        <div class="card-body">
+                                            <p class="mb-0 capi" id="head_designation"></p>
+                                            <!-- <p class="mb-0"><strong class="pr-1" id="head_id">ID:</strong></p> -->
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-8">
+                                    <div class="card shadow-sm">
+                                        <div class="card-header bg-transparent border-0">
+                                            <h3 class="mb-0"><i class="far fa-clone pr-1"></i>Personal Information</h3>
+                                        </div>
+                                        <div class="card-body pt-0">
+
+                                            <table class="table table-bordered">
+                                                <tr>
+                                                    <th width="30%">id</th>
+                                                    <td width="2%">:</td>
+                                                    <td id="update_id">125</td>
+                                                </tr>
+                                                <tr>
+                                                    <th width="30%">Name</th>
+                                                    <td width="2%">:</td>
+                                                    <td><input type="text" maxlength="70" id="update_name" class="capi">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th width="30%">Father Name</th>
+                                                    <td width="2%">:</td>
+                                                    <td><input type="text" maxlength="70" id="update_fa_name"
+                                                            class="capi"></td>
+                                                </tr>
+                                                <tr>
+                                                    <th width="30%">CNIC</th>
+                                                    <td width="2%">:</td>
+                                                    <td><input type="text" maxlength="15" id="update_cnic"></td>
+                                                </tr>
+                                                <tr>
+                                                    <th width="30%">Email</th>
+                                                    <td width="2%">:</td>
+                                                    <td><input type="text" maxlength="30" id="update_email"></td>
+                                                </tr>
+                                                <tr>
+                                                    <th width="30%">Blood Group</th>
+                                                    <td width="2%">:</td>
+                                                    <td><input type="text" value="O+" id="update_blood" maxlength="4">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th width="30%">Religion</th>
+                                                    <td width="2%">:</td>
+                                                    <td><input type="text" maxlength="15" id="update_religion"></td>
+                                                </tr>
+                                                <tr>
+                                                    <th width="30%">Gender</th>
+                                                    <td width="2%">:</td>
+                                                    <td><input type="text" maxlength="10" id="update_gender"></td>
+                                                </tr>
+                                                <tr>
+                                                    <th width="30%">Address</th>
+                                                    <td width="2%">:</td>
+                                                    <td><input type="text" value="From Mars" id="update_address"></td>
+                                                </tr>
+                                            </table>
+
+                                            <h3 class="mb-0"><i class="far fa-clone pr-1"
+                                                    style="margin-bottom: 20px;"></i>Employee Information</h3>
+
+                                            <table class="table table-bordered">
+                                                <tr>
+                                                    <th width="30%">Department</th>
+                                                    <td width="2%">:</td>
+                                                    <td><input type="text" maxlength="60" id="update_department"
+                                                            class="capi"></td>
+                                                </tr>
+                                                <tr>
+                                                    <th width="30%">Designation</th>
+                                                    <td width="2%">:</td>
+                                                    <td><input type="text" maxlength="30" id="update_designation"
+                                                            class="capi"></td>
+                                                </tr>
+                                                <tr>
+                                                    <th width="30%">Registration Date</th>
+                                                    <td width="2%">:</td>
+                                                    <td id="update_reg_date"></td>
+                                                </tr>
+                                                <tr>
+                                                    <th width="30%">Salary Type</th>
+                                                    <td width="2%">:</td>
+                                                    <td id="update_salary_type"></td>
+                                                </tr>
+                                                <tr>
+                                                    <th width="30%">Salary</th>
+                                                    <td width="2%">:</td>
+                                                    <td id="update_salary"></td>
+                                                </tr>
+                                                <tr>
+                                                    <th width="30%">Comission</th>
+                                                    <td width="2%">:</td>
+                                                    <td><input type="text" value="125,000" id="update_commission"></td>
+                                                </tr>
+                                                <tr>
+                                                    <th width="30%">Phone Number</th>
+                                                    <td width="2%">:</td>
+                                                    <td><input type="text" maxlength="12" id="update_num"></td>
+                                                </tr>
+                                                <tr>
+                                                    <th width="30%">Other Number</th>
+                                                    <td width="2%">:</td>
+                                                    <td><input type="text" maxlength="12" id="update_other_num"></td>
+                                                </tr>
+                                                <tr>
+                                                    <th width="30%">Bank Account Number</th>
+                                                    <td width="2%">:</td>
+                                                    <td><input type="text" maxlength="30" id="update_bank_num"></td>
+                                                </tr>
+                                            </table>
+
+                                        </div>
+                                        <div style="height: 55px;">
+                                            <div style="display: flex;justify-content: center;">
+                                                <span id="subscribe">UPDATE</span>
+                                                <span onclick="p_stop()" id="close_detail">CLOSE</span>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <section>
+
+                        <!-- SweetAlert2 -->
+
+
+
+                    </section>
+
+
+                </div>
+            </div>
+    </section>
+
+
+
+    <section id="centering">
+
+        <section>
+
+            <!-- More options of employee management -->
+            <section>
+
+
+
+                <div id="employee_btn_container">
+
+                    <!-- search Employee -->
+                    <a href="#overview" id="search_clicked"></a>
+
+                    <div class="employee_btn" id="search" onclick="search_run()">
+                        <h4 class="em_btn_search" id="search_employee">SEARCH EMPLOYEE</h4>
+                        <i class="fab fa-searchengin" id="em_btn_1"></i>
+                    </div>
+
+                    <!-- Add new Employee -->
+                    <a href="#overview" id="clicked"></a>
+                    <div class="employee_btn" id="add_new" onclick="add_new_employee()">
+                        <h4 class="em_btn_add" id="add_employee">ADD EMPLOYEE</h4>
+                        <i class="fas fa-plus-circle" id="em_btn_2"></i>
+                    </div>
+
+                    <!-- Who are on duty today -->
+                    <div class="employee_btn" id="active" onclick="features()">
+                        <h4 class="em_btn_title">ACTIVE</h4>
+                        <i class="fas fa-eye" id="em_btn_4"></i>
+                    </div>
+
+
+                    <!-- Who are not on duty today -->
+                    <div class="employee_btn" id="not_active" onclick="features()">
+                        <h4 class="em_btn_title">NOT ACTIVE</h4>
+                        <i class="fas fa-eye-slash" id="em_btn_5"></i>
+
+                    </div>
+
+                    <!-- Update Employee -->
+                    <!-- employeeLock() function is used to show report page,,, use it in next version -->
+                    <div class="employee_btn" id="report" onclick="features()" style="background-color: #3fc5f0;">
+                        <h4 class="em_btn_title">REPORT ISSUE</h4>
+                        <i class="fas fa-wrench" id="em_btn_3"></i>
+                    </div>
+
+                </div>
+
+                </div>
+            </section>
+            <!-- Heading and Shareef Line -->
+            <section id="heading_shareef">
+                <h3 id="overview">Allah Ho</h3>
+            </section>
+
+
+            <!-- Expanding Search Menu -->
+            <section id="search_expander">
+                <style>
+                    #haq_baho {
+                        color: #fc424a;
+                        font-size: 50px;
+                        float: right;
+                        position: relative;
+                        top: 20px;
+                        right: 20px;
+                        cursor: pointer;
+                    }
+
+                    @media(max-width:380px) {
+                        #haq_baho {
+                            top: 10px;
+                            right: 10px;
+                        }
+                    }
+                </style>
+                <div id="search_hider">
+                    <i class="fas fa-times-circle" id="haq_baho" onclick="s_stop(); data_after_srch(1);"></i>
+
+                    <div id="searcher">
+                        <h2 style="width: 100%;margin: 20px;">Searching Employee</h2>
+                        <p>
+                            <label>
+                                NAME<br>
+                                <input type="text" id="s_name" list="name" class="search_fields" placeholder="Name">
+                                <datalist id="name" class="asker">
+                                    {%for a in name%}
+                                        {% if a.name != none %}
+                                            <option>{{a.name}}</option>
+                                        {% endif%}
+                                    {% endfor %}
+                                </datalist>
+                            </label>
+                        </p>
+
+
+                        <p>
+                            <label>
+                                Department<br>
+                                <input type="text" list="department" id="s_department" class="search_fields"
+                                    placeholder="Department">
+                                <datalist id="department" class="asker">
+                                    {%for a in department%}
+                                    {% if a.department != none %}
+                                    <option>{{a.department}}</option>
+                                    {% endif %}
+                                    {% endfor %}
+                                </datalist>
+                            </label>
+                        </p>
+
+                        <p>
+                            <label>
+                                Designation<br>
+                                <input type="text" id="s_designation" list="designation" class="search_fields"
+                                    placeholder="Designation">
+                                <datalist id="designation" class="asker">
+                                    {%for a in designation%}
+                                    {% if a.designation != none %}
+                                    <option>{{a.designation}}</option>
+                                    {% endif %}
+                                    {% endfor %}
+                                </datalist>
+                            </label>
+                        </p>
+
+                    </div>
+                    <div style="display: flex;justify-content: center;padding: 10px 0px 30px 0px;">
+                        <button onclick="searcher()"
+                            style="background-color: red; border: 2px solid rgba(0, 0, 0, 0.125);padding: 10px;font-weight: 600;cursor:pointer;padding: 8px 20px 8px 20px;border-radius: 5px;margin-left: 4px;">SEARCH</button>
+
+
+                    </div>
+
+                </div>
+            </section>
+
+
+
+            <!-- Expanding Add New Employee -->
+            <section id="expanded">
+                <div id="inputer_baap">
+                    <i class="fas fa-times-circle"
+                        style="color: #fc424a;font-size: 50px;float: right;margin: 30px 40px 0px 0px;cursor: pointer;"
+                        onclick="stop()"></i>
+
+                    <div style="height: 250px;">
+                        <!-- Image Rounder -->
+
+                        <div id="round_image" class="wrapper" style="display: flex;justify-content: center;"
+                            onclick="haa()">
+                            <img src="{% static 'images/male.jpg'%}" alt="" height="150" id="add_profile"
+                                style="border: 2px dashed black; padding: 4px;">
+                        </div>
+                        <input type="file" name="pic" id="taking_image"
+                            onchange="change_profile(event,this,'add_profile')" style="display: none;" accept="image/*"
+                            required="">
+
+                        <!-- partial -->
+
+
+                    </div>
+
+
+
+                    <form action="#">
+
+
+
+                        <div id="jutta">
+                            <h2 style="width: 100%;margin: 20px;">Personal Information</h2>
+                            <p>
+                                <label>
+                                    NAME<br>
+                                    <input type="text" placeholder="Name" id="add_name" class="design_input"
+                                        maxlength="70">
+                                </label>
+                            </p>
+
+
+                            <p>
+                                <label>
+                                    Father Name<br>
+                                    <input type="text" placeholder="Father Name" id="add_father" class="design_input"
+                                        maxlength="70">
+                                </label>
+                            </p>
+
+
+                            <p>
+                                <label>
+                                    CNIC<br>
+                                    <input type="text" placeholder="CNIC" id="add_cnic" class="design_input"
+                                        maxlength="15">
+                                </label>
+                            </p>
+
+
+
+
+                            <p>
+                                <label>
+                                    Blood Group<br>
+                                    <input type="text" list="blood" class="design_input" placeholder="Blood Group"
+                                        id="add_blood" maxlength="4">
+                                    <datalist id="blood">
+                                        <option>A+</option>
+                                        <option>A-</option>
+                                        <option>B+</option>
+                                        <option>B-</option>
+                                        <option>O+</option>
+                                        <option>O-</option>
+                                        <option>AB+</option>
+                                        <option>AB-</option>
+                                    </datalist>
+                                </label>
+                            </p>
+
+
+
+                            <p>
+                                <label>
+                                    Religion<br>
+                                    <input type="text" list="religion" class="design_input" placeholder="Religion"
+                                        id="add_religion" maxlength="15">
+                                    <datalist id="religion">
+                                        <option>Muslim</option>
+                                        <option>Christian</option>
+                                        <option>Hindu</option>
+                                        <option>Sikh</option>
+                                        <option>Other</option>
+                                    </datalist>
+                                </label>
+                            </p>
+
+                            <p>
+                                <label>
+                                    Gender<br>
+                                    <input type="text" list="gender" class="design_input" placeholder="Gender"
+                                        id="add_gender" maxlength="10">
+                                    <datalist id="gender">
+                                        <option>Male</option>
+                                        <option>Female</option>
+                                        <option>Others</option>
+                                    </datalist>
+                                </label>
+                            </p>
+                            <p>
+                                <label>
+                                    Address<br>
+                                    <input type="text" class="design_input" placeholder="Home Address" id="add_address"
+                                        maxlength="150">
+                                </label>
+                            </p>
+                            <h2 style="width: 100%;margin: 40px 20px 20px 20px;">Employee Information</h2>
+                            <p>
+                                <label>
+                                    Department<br>
+                                    <input type="text" class="design_input" list="dept" placeholder="Department"
+                                        id="add_department" maxlength="60">
+                                    <datalist id="dept" class="asker">
+                                        {%for a in department%}
+                                        {% if a.department != none %}
+                                        <option>{{a.department}}</option>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </datalist>
+                                </label>
+                            </p>
+
+
+                            <p>
+                                <label>
+                                    Designation<br>
+                                    <input type="text" class="design_input" list="desi" placeholder="Designation"
+                                        id="add_designation" maxlength="30">
+                                    <datalist id="desi" class="asker">
+                                        {%for a in designation%}
+                                        {% if a.designation != none %}
+                                        <option>{{a.designation}}</option>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </datalist>
+                                </label>
+                            </p>
+
+
+                            <p>
+                                <label>
+                                    Salary<br>
+                                    <input type="number" class="design_input" placeholder="Salary" id="add_salary"
+                                        maxlength="18">
+                                </label>
+                            </p>
+
+
+                            <p>
+                                <label>
+                                    Salary Type<br>
+                                    <input type="text" class="design_input" list="salary_type" placeholder="Salary Type"
+                                        id="add_salary_type">
+                                    <datalist id="salary_type">
+                                        <option>Monthly</option>
+                                        <option>Weekly</option>
+                                        <option>Daily</option>
+                                    </datalist>
+                                </label>
+                            </p>
+
+
+                            <p>
+                                <label>
+                                    Phone Number<br>
+                                    <input type="text" class="design_input" placeholder="Phone Number" id="add_number"
+                                        maxlength="12">
+                                </label>
+                            </p>
+
+                            <p>
+                                <label>
+                                    Other Number<br>
+                                    <input type="text" class="design_input" placeholder="Other Number"
+                                        id="add_other_number" maxlength="12">
+                                </label>
+                            </p>
+                            <p>
+                                <label>
+                                    Bank Account NO:<br>
+                                    <input type="text" class="design_input" placeholder="Other Number" id="add_acc_no"
+                                        maxlength="30">
+                                </label>
+                            </p>
+
+                        </div>
+                        <div style="display: flex;justify-content: center;padding-bottom: 20px;">
+                            <!-- Sending Button of Employee -->
+
+
+
+
+
+                            <a href="#" class="boton" id="addEmp">
+                                ADD Employee
+                            </a>
+                            <!-- partial -->
+
+
+
+                        </div>
+                    </form>
+                </div>
+
+                <!-- end of inputer baap right here -->
+            </section>
+        </section>
+
+
+        <!-- Employee List -->
+        <section class="color_tables">
+            <div id="order_status" style="padding:20px 0px 20px 0px;">
+                <p><i class="fas fa-sync-alt" id="fetching_data" onclick="data_after_srch(0)"></i></p>
+                <div>
+                    <div>
+                        <table id="order_table">
+
+                            <tr class="table_head">
+                                <th id="th_1">
+                                    <p class="just_chk_12">Name</p>
+                                </th>
+                                <th id="th_2">
+                                    <p class="just_chk_12">Designation</p>
+                                </th>
+                                <th id="th_3">
+                                    <p class="just_chk_150 extra">Salary</p>
+                                </th>
+                                <th id="th_4">
+                                    <p class="just_chk_456">Salary Paid</p>
+                                </th>
+                                <th id="th_5">
+                                    <p class="just_chk_456">Salary Left</p>
+                                </th>
+                                <th id="th_6">
+                                    <p class="just_chk_456">Salary Type</p>
+                                </th>
+                                <th id="th_7">
+                                    <p class="just_chk">Leaves</p>
+                                </th>
+                                <th id="th_8">
+                                    <p class="just_chk">Actions</p>
+                                </th>
+                            </tr>
+                            {% if list%}
+                            {% for data in list%}
+                            <tr class="table_properties" id="d{{data.id}}">
+                                <td id="name{{data.id}}" class="capi">{{data.name}}</td>
+                                <td id="desi{{data.id}}" class="capi">{{data.designation}}</td>
+                                <td>{{data.salary}}</td>
+                                <td>{{data.salary_paid}}</td>
+                                <td>{{data.salary_left}}</td>
+                                <td>
+                                    <div class="monthly">
+                                        {{data.salary_type}}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div id="leave{{data.id}}" class="leaves" onclick="chckleave({{data.id}})">
+                                        0
+                                    </div>
+                                </td>
+                                <td><span class="actions_border">
+                                        <i class="far fa-edit" id="action_edit"
+                                            onclick="full_screen({{data.id}}); everyone();"></i>
+                                        <i class="fas fa-trash" id="action_delete" onclick="deleting({{data.id}})"></i>
+                                    </span></td>
+                            </tr>
+                            {% endfor %}
+                            {% endif %}
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </section>
+
+    <!-- partial:index.partial.html -->
+    <div class="page-wrapper chiller-theme toggled">
+        <a id="show-sidebar" class="btn btn-sm btn-dark" href="#">
+            <i class="fas fa-bars"></i>
+        </a>
+        <nav id="sidebar" class="sidebar-wrapper">
+            <div class="sidebar-content">
+                <div class="sidebar-brand">
+                    <a href="#">AZAAD DEVELOPERS</a>
+                    <div id="close-sidebar">
+                        <i class="fas fa-times"></i>
+                    </div>
+                </div>
+                <div class="sidebar-header">
+                    <div class="user-pic">
+                        <img class="img-responsive img-rounded"
+                            src="/media/{{image}}"
+                            alt="User picture">
+                    </div>
+                    <div class="user-info">
+                        <span class="user-name capi">{{request.user.first_name}}</span>
+                        <span class="user-role">
+                            {% if request.user.is_staff == True %}
+                                Admin
+                            {% elif request.user.is_staff == False %}
+                                User
+                            {% endif%}
+                        </span>
+                        <span class="user-status">
+                            <i class="fa fa-circle"></i>
+                            <span>Online</span>
+                        </span>
+                    </div>
+                </div>
+                <!-- sidebar-header  -->
+                <div class="sidebar-search">
+                    <div>
+                        <div class="input-group">
+                            <input type="text" class="form-control search-menu" placeholder="Search...">
+                            <div class="input-group-append">
+                                <span class="input-group-text">
+                                    <i class="fa fa-search" aria-hidden="true"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- sidebar-search  -->
+                <div class="sidebar-menu">
+                    <ul>
+                        <li class="header-menu">
+                            <span>General</span>
+                        </li>
+                        <li class="sidebar-dropdown">
+                            <a href="#">
+                                <i class="fa fa-tachometer-alt"></i>
+                                <span>Dashboard</span>
+                                <span class="badge badge-pill badge-warning">New</span>
+                            </a>
+                            <div class="sidebar-submenu">
+                                <ul>
+                                    <li>
+                                        <a href="#">Dashboard 1
+                                            <span class="badge badge-pill badge-success">Pro</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Dashboard 2</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Dashboard 3</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="sidebar-dropdown">
+                            <a href="#">
+                                <i class="fa fa-shopping-cart"></i>
+                                <span>E-commerce</span>
+                                <span class="badge badge-pill badge-danger">3</span>
+                            </a>
+                            <div class="sidebar-submenu">
+                                <ul>
+                                    <li>
+                                        <a href="#">Products
+
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Orders</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Credit cart</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="sidebar-dropdown">
+                            <a href="#">
+                                <i class="far fa-gem"></i>
+                                <span>Components</span>
+                            </a>
+                            <div class="sidebar-submenu">
+                                <ul>
+                                    <li>
+                                        <a href="#">General</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Panels</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Tables</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Icons</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Forms</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="sidebar-dropdown">
+                            <a href="#">
+                                <i class="fa fa-chart-line"></i>
+                                <span>Charts</span>
+                            </a>
+                            <div class="sidebar-submenu">
+                                <ul>
+                                    <li>
+                                        <a href="#">Pie chart</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Line chart</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Bar chart</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Histogram</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="sidebar-dropdown">
+                            <a href="#">
+                                <i class="fa fa-globe"></i>
+                                <span>Maps</span>
+                            </a>
+                            <div class="sidebar-submenu">
+                                <ul>
+                                    <li>
+                                        <a href="#">Google maps</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Open street map</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="header-menu">
+                            <span>Extra</span>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="fa fa-book"></i>
+                                <span>Documentation</span>
+                                <span class="badge badge-pill badge-primary">Beta</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="fa fa-calendar"></i>
+                                <span>Calendar</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="fa fa-folder"></i>
+                                <span>Examples</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <!-- sidebar-menu  -->
+            </div>
+            <!-- sidebar-content  -->
+            <div class="sidebar-footer">
+                <a href="#">
+                    <i class="fa fa-bell"></i>
+                    <span class="badge badge-pill badge-warning notification">3</span>
+                </a>
+                <a href="#">
+                    <i class="fa fa-envelope"></i>
+                    <span class="badge badge-pill badge-success notification">7</span>
+                </a>
+                <a href="#">
+                    <i class="fa fa-cog"></i>
+                    <span class="badge-sonar"></span>
+                </a>
+                <a onclick="logOut()" style="cursor: pointer;">
+                    <i class="fa fa-power-off"></i>
+                </a>
+            </div>
+        </nav>
+        <!-- sidebar-wrapper  -->
+        <main class="page-content">
+
+
+        </main>
+        <!-- page-content" -->
+    </div>
+    <!-- page-wrapper -->
+    <!-- partial -->
+
+
+
+    <script>
+        daily_leaves = {}
+        {% for a in list %}
+            {% if a.daily_leaves is not none %}
+                daily_leaves[{{a.id}}] = "{{a.daily_leaves}}"
+            {% elif a.daily_leaves is none %}
+                daily_leaves[{{a.id}}] = null
+            {% endif %}
+        {% endfor %}
+
+
+        var preloader = document.getElementById("loading");
+        usua = "{{request.user.id}}"
+        function myFunction() {
+            calculate_leaves = Object.keys(daily_leaves);
+            for(i=0; i<calculate_leaves.length; i++){
+                id = calculate_leaves[i];
+                if(daily_leaves[id] == null || daily_leaves[id] == "null"){
+                    document.getElementById("leave"+id).innerHTML = 0;
+                }else{
+                    document.getElementById("leave"+id).innerHTML = daily_leaves[id].split('Nov').length - 1;
+                }
+            }
+            preloader.style.display = 'none';
+        };
+
+    </script>
+
+    <section>
+        <audio src="{% static 'sounds/added_successfully.mp3'%}" id="add_suc"></audio>
+        <audio src="{% static 'sounds/adding_employee.mp3'%}" id="add_emp"></audio>
+        <audio src="{% static 'sounds/employee_removed.mp3'%}" id="emp_rem"></audio>
+        <audio src="{% static 'sounds/searching_employee.mp3'%}" id="sr_emp"></audio>
+        <audio src="{% static 'sounds/updated_successfully.mp3'%}" id="up_suc"></audio>
+        <audio src="{% static 'sounds/error.mp3'%}" id="eror"></audio>
+        <audio src="{% static 'sounds/no match found.mp3'%}" id="no_match"></audio>
+        <audio src="{% static 'sounds/sorry for facing this problem.mp3'%}" id="sorry"></audio>
+        <audio src="{% static 'sounds/refreshing_data.mp3'%}" id="refreshing"></audio>
+        <audio src="{% static 'sounds/this feature will be available.mp3'%}" id="feature"></audio>
+        <audio src="{% static 'sounds/specify.mp3'%}" id="specify"></audio>
+        <audio src="{% static 'sounds/required_fields.mp3'%}" id="require"></audio>
+    </section>
+
+    <!-- Scripts -->
+    <section>
+        <script src='{% static "3rd_party/push.min.js" %}'></script>
+        <script src='{% static "3rd_party/sweetalert2.all.min.js" %}'></script>
+        <script src='{% static "3rd_party/jquery.min.js" %}'></script>
+        <script src="{% static '3rd_party/jquery.min.js' %}"></script>
+        <script src="{% static '3rd_party/jquery.js' %}"></script>
+        <script src="{% static '3rd_party/popper.js' %}"></script>
+        <script src="{% static '3rd_party/bootstrap.js' %}"></script>
+        <script src='{% static "3rd_party/jquery-latest.min.js" %}' type="text/javascript"></script>
+        <script src="{% static 'js/employee/emp.js' %}"></script>
+    </section>
+</body>
+
+</html>
