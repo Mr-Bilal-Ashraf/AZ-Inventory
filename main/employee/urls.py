@@ -10,3 +10,5 @@ urlpatterns = [
     path('logout/', views.logOut, name="LogOut"),
     path('leave/', views.mark_leave, name="leaves"),
 ]
+
+# abcdef
