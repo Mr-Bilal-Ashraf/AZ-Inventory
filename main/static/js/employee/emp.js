@@ -277,9 +277,8 @@ function data_after_srch(a) {
                         absent = daily_leaves[received["data"][i].id].split(mon[today.getMonth()]).length - 1;
                     else
                         absent = 0;
-                    console.log(absent)
                     td7 = document.createElement("td");
-                    td7.innerHTML = `<div id="leave${received.id}" class="leaves" onclick="chckleave(${received.id})">${absent}</div>`
+                    td7.innerHTML = `<div id="leave${received["data"][i].id}" class="leaves" onclick="chckleave(${received["data"][i].id})">${absent}</div>`
 
                     td8 = document.createElement("td");
                     td8.innerHTML = `<span class="actions_border"><i class="far fa-edit" id="action_edit" onclick="full_screen(${received["data"][i].id}); everyone();"></i><i class="fas fa-trash" id="action_delete" onclick="deleting(${received["data"][i].id})"></i></span>`;
