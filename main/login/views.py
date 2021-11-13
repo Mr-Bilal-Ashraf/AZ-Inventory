@@ -75,9 +75,9 @@ def Userdetails(request):
                 cnt = form.cleaned_data["contact"]
                 adrs = form.cleaned_data["address"]
                 User.objects.filter(username=request.user).update(first_name=fn, last_name= ln)
-                id = User.objects.get(username=request.user).id
+                id = request.user.id
                 userDetail.objects.update_or_create(user_id=id, defaults={'contact':cnt, 'address': adrs, 'image':request.FILES["pic"]})
-                return HttpResponseRedirect(reverse('homepage'))
+                return HttpResponseRedirect('/emp/')
             else:
                 return HttpResponseRedirect(reverse('accounts'))
         else:
