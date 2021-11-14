@@ -10,3 +10,5 @@ urlpatterns = [
     path('<int:n>', views.b),
 
 ]
+
+#abcdefg
