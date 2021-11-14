@@ -13,5 +13,3 @@ urlpatterns = [
     path('del/contact/<int:n>', views.storeContact, name="delete_contact"),
     path('ser/', views.abcd.as_view()),
 ]
-
-#abcdefg
