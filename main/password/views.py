@@ -139,7 +139,3 @@ def delete(request, n):
 
 def storeContact(request):
     pass
-
-
-
-#abcdefg
