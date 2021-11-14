@@ -132,3 +132,6 @@ def logOut(request):
         return Response({'x':True})
     except:
         return Response({'x':False})
+
+
+#abcdefg
