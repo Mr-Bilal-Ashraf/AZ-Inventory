@@ -133,5 +133,5 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT =  os.path.join(BASE_DIR, 'media/') 
 
 REST_FRAMEWORK = {
-	# 'DEFAULT_RENDERER_CLASSES' : ('rest_framework.renderers.JSONRenderer',)
+	'DEFAULT_RENDERER_CLASSES' : ('rest_framework.renderers.JSONRenderer',),
 }

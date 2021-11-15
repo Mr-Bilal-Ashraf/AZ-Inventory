@@ -1,7 +1,9 @@
-from django.http.response import HttpResponse
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 from django.shortcuts import render
 from django.contrib.auth import logout
-from django.contrib.auth.models import User
+
+
 
 from .models import employees
 from login.models import userDetail
@@ -10,7 +12,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
-from rest_framework.authentication import BasicAuthentication, SessionAuthentication
+from rest_framework.authentication import SessionAuthentication
 from rest_framework.permissions import IsAuthenticated
 from .serializer import SerEmp
 
@@ -23,7 +25,10 @@ class employee(APIView):
     def get(self, request, pk = None, format=None):
         # try:
         if pk == None:
-            img = userDetail.objects.values("image").get(user_id = request.user.id)
+            try:
+                img = userDetail.objects.values("image").get(user_id = request.user.id)
+            except:
+                return HttpResponseRedirect(reverse('SignUpDetails'))
             emps = employees.objects.values("id","name","designation","salary","salary_paid","salary_left","salary_type","daily_leaves").filter(employee_of = request.user.id)
             data = SerEmp(emps, many=True)
             dis_name = employees.objects.values("name").filter(employee_of = request.user.id).distinct()
