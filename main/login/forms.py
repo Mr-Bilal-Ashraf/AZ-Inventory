@@ -3,7 +3,7 @@ from django.forms.widgets import EmailInput, FileInput, PasswordInput, TextInput
 
 
 class userform(forms.Form):
-    pic = forms.ImageField(widget=FileInput(attrs={'id':'taking_image', 'onchange':"change_profile(event,this,'profile_pic')", 'style': "display: none;"}))
+    pic = forms.ImageField(widget=FileInput(attrs={'id':'taking_image', 'onchange':"change_profile(event,this,'profile_pic')", 'style': "display: none;"}), required=False)
     firstname = forms.CharField(widget= TextInput(attrs={'class': 'form-style', 'placeholder': 'Enter First Name'}))
     lastname = forms.CharField(widget= TextInput(attrs={'class': 'form-style', 'placeholder': 'Enter Last Name'}))
     contact = forms.CharField(widget= TextInput(attrs={'class': 'form-style', 'placeholder': 'Enter Contact Number'}))

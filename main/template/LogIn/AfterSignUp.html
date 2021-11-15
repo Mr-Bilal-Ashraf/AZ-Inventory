@@ -19,13 +19,25 @@
             var file = document.getElementById(ele_id).files;
             if (file.length > 0) {
                 var filereader = new FileReader()
-                filereader.onload = function(event) {
+                filereader.onload = function (event) {
                     prf_pic.setAttribute("src", event.target.result);
                 }
                 filereader.readAsDataURL(file[0]);
             }
-        }        
+        }
+
+        function chck() {
+            if (document.getElementById("taking_image").files.length == 0) {
+                alert("Please Upload A Profile Picture");
+                return false;
+            } else {
+                return true;
+            }
+        }
     </script>
+</head>
+
+<body>
 
     <!-- partial:index.partial.html -->
     <a href="#" class="logo" id="logo">
@@ -43,14 +55,16 @@
                                     <div class="center-wrap">
                                         <div class="section text-center">
                                             <!-- Edit by Farooq -->
-                                            <form action="/acc/sign/details/" method="POST" enctype="multipart/form-data">
+                                            <form action="/acc/sign/details/" method="POST"
+                                                enctype="multipart/form-data" onsubmit="return chck();">
                                                 {% csrf_token %}
                                                 <div id="round_image" style="display: flex;justify-content: center;">
-                                                    <img src="{% static 'images/male.jpg'%}" alt="" height="120" id="profile_pic">
+                                                    <img src="{% static 'images/male.jpg'%}" alt="" height="120"
+                                                        id="profile_pic">
                                                 </div>{{form.pic}}
                                                 <label for="taking_image" class="btn mt-4">Select Picture</label>
                                                 <!-- Edit by Farooq -->
-                                                
+
                                                 <div class="form-group">
                                                     {{form.firstname}}
                                                     <i class="input-icon uil uil-user-circle"></i>
@@ -68,9 +82,9 @@
                                                     <i class="input-icon uil uil-at"></i>
                                                 </div><br>
                                                 {% if messages %}
-                                                    {% for msg in messages %}
-                                                        <div {% if msg.tags %} class="{{msg.tags}}" {% endif %}>{{msg}}</div>
-                                                    {% endfor %}
+                                                {% for msg in messages %}
+                                                <div {% if msg.tags %} class="{{msg.tags}}" {% endif %}>{{msg}}</div>
+                                                {% endfor %}
                                                 {% endif %}
                                                 <button type="submit" class="btn mt-4">Start Working</button>
                                             </form>
@@ -86,6 +100,6 @@
         </div>
     </div>
     <!-- partial -->
-    </body>
+</body>
 
 </html>
