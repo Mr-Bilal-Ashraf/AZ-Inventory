@@ -3,6 +3,10 @@ from django.urls import reverse
 from django.shortcuts import render
 from django.contrib.auth import logout
 
+import sys
+from PIL import Image
+from io import BytesIO
+from django.core.files.uploadedfile import InMemoryUploadedFile
 
 
 from .models import employees
@@ -61,6 +65,15 @@ class employee(APIView):
             for x in request.data:
                 if request.data[x] == "null":
                     request.data[x] = None
+                if x == "profile" and request.data[x] != "null":
+                    imageTemproary = Image.open(request.data[x])
+                    outputIoStream = BytesIO()
+                    imageTemproary = imageTemproary.resize((150,150))
+                    imageTemproary.save(outputIoStream , format='webp', quality=90)
+                    outputIoStream.seek(0)
+                    request.data[x] = InMemoryUploadedFile(outputIoStream,'ImageField', "%s.webp" % request.data[x].name.split('.')[0], 'image/webp', sys.getsizeof(outputIoStream), None)
+
+                
             
             ser_emp = SerEmp(data=request.data)
             if ser_emp.is_valid():

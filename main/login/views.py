@@ -4,6 +4,12 @@ from django.urls import reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.models import User
 from django.contrib import messages, auth
+import sys
+from PIL import Image
+from io import BytesIO
+from django.core.files.uploadedfile import InMemoryUploadedFile
+
+
 
 from .forms import SignUp, SignIn, userform
 from .models import userDetail
@@ -76,7 +82,13 @@ def Userdetails(request):
                 adrs = form.cleaned_data["address"]
                 User.objects.filter(username=request.user).update(first_name=fn, last_name= ln)
                 id = request.user.id
-                userDetail.objects.update_or_create(user_id=id, defaults={'contact':cnt, 'address': adrs, 'image':request.FILES["pic"]})
+                imageTemproary = Image.open(request.FILES["pic"])
+                outputIoStream = BytesIO()
+                imageTemproary = imageTemproary.resize((150,150))
+                imageTemproary.save(outputIoStream , format='webp', quality=90)
+                outputIoStream.seek(0)
+                uploadedImage = InMemoryUploadedFile(outputIoStream,'ImageField', "%s.webp" % request.FILES["pic"].name.split('.')[0], 'image/webp', sys.getsizeof(outputIoStream), None)
+                userDetail.objects.update_or_create(user_id=id, defaults={'contact':cnt, 'address': adrs, 'image':uploadedImage})
                 return HttpResponseRedirect('/emp/')
             else:
                 return HttpResponseRedirect(reverse('accounts'))
