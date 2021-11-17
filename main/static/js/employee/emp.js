@@ -294,6 +294,7 @@ function data_after_srch(a) {
 }
 
 
+
 // Adding new employee
 
 document.getElementById("addEmp").addEventListener('click', () => {
