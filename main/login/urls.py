@@ -8,5 +8,6 @@ urlpatterns = [
     path('sign/details/', views.Userdetails, name="SignUpDetails"),
     path('home/', views.home, name="homepage"),
     path('<int:n>', views.b),
-
 ]
+
+#abcdef
