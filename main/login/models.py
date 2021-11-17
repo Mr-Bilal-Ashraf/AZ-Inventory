@@ -9,3 +9,4 @@ class userDetail(models.Model):
     address = models.CharField(max_length=150)
 
 
+#abcdef

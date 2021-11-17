@@ -6,3 +6,5 @@ class SerEmp(serializers.ModelSerializer):
         model = employees
         fields = "__all__"
 
+
+#abcdef
