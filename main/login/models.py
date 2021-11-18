@@ -7,6 +7,3 @@ class userDetail(models.Model):
     image = models.ImageField(upload_to="users/", null= True, blank= True)
     contact = models.CharField(max_length=11)
     address = models.CharField(max_length=150)
-
-
-#abcdef

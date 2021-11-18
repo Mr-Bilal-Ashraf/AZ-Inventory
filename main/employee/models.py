@@ -1,4 +1,6 @@
 from django.db import models
+from django.contrib.auth.models import User
+
 
 class employees(models.Model):
 
@@ -10,7 +12,7 @@ class employees(models.Model):
     department = models.CharField(max_length=60, blank=True, null=True)
     designation = models.CharField(max_length=30, blank=True, null=True)
     email = models.CharField(max_length=30 ,blank=True, null=True)
-    employee_of = models.IntegerField(blank=True, null=True)
+    employee_of = models.ForeignKey(User, on_delete=models.CASCADE, default=0)
     father_name = models.CharField(max_length=70, blank=True, null=True)
     gender = models.CharField(max_length=10, blank=True, null=True)
     mobile = models.CharField(max_length=12, blank=True, null=True)
