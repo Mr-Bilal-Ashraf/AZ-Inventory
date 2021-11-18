@@ -4,11 +4,53 @@ from django.shortcuts import render
 from django.contrib.auth.models import User
 from .models import SecureNote
 from .forms import storepass, storenote
-import random
 
-from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializers import firstse
+from rest_framework.views import APIView
+from rest_framework.decorators import api_view
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
+from rest_framework.authentication import SessionAuthentication
+from rest_framework.permissions import IsAuthenticated
+
+from .serializers import PassWord
+
+class PASSWORD(APIView):
+    parser_classes = (FormParser, JSONParser)
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, pk = None, format=None):
+        user_id = User.objects.get(username=request.user).id
+        data = SecureNote.objects.filter(user_id = user_id, letter = "p")
+        # for a in data:
+        #     re_hash = Fernet(a.key)
+        #     a.encrypt =re_hash.decrypt(a.encrypt).decode()
+
+        return render(request,'password/password.html', {'pass': data})
+
+    def post(self, request, format=None):
+        a = PassWord(data=request.data)
+        if a.is_valid():
+            key = Fernet.generate_key()
+            hasher = Fernet(key)
+            msg = request.data["code"]
+            msg = hasher.encrypt(msg.encode())
+            instance = User.objects.get(id=request.user.id)
+            data = SecureNote(user_id= instance, email=request.data["email"], encrypt = msg, key = key, account_for = request.data["used_for"], letter ="p")
+            data.save()
+            obj = SecureNote.objects.values("id").filter(user_id=instance, email=request.data["email"])
+            return Response({"x":True, "id": obj[len(obj)-1]["id"]})
+        else:
+            print(a.errors)
+            return Response({"x":False})
+
+    def patch(self, request, pk, format=None):
+        pass
+
+    def delete(self, request, pk, format=None):
+        SecureNote.objects.filter(id=pk).delete()
+        return Response({"x":True})
+
 
 
 class abcd(APIView):
@@ -24,57 +66,6 @@ class abcd(APIView):
             return Response({'a': "data valid"})
         return Response(da.data)
 
-        
-
-def gen_pass(request, l,u,n,s, num):
-
-    char = ""
-    numbers = "0123456789"
-    lowchar = "abcdefghijklmnopqrstuvwxyz"
-    upchar = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    symbols = "!()-.?[]_'~:;@#$%^&*+="
-    if l == 0:
-        char = char + lowchar
-    if u == 0:
-        char = char + upchar
-    if n == 0:
-        char = char + numbers
-    if s == 0:
-        char = char + symbols
-
-    password = ""
-
-    for x in range(0, num):
-        a = random.randint(0, len(char)-1)
-        password = password + char[a]
-    return HttpResponse(password)
-
-
-def StorePass(request):
-    if request.method == "POST":
-        form = storepass(request.POST)
-        if form.is_valid():
-            if request.user.is_authenticated:
-                user_id = User.objects.get(username=request.user).id
-                letter = "p"
-                key = Fernet.generate_key()
-                hasher = Fernet(key)
-                msg = form.cleaned_data["hashed"]
-                msg = hasher.encrypt(msg.encode())
-                account_for = form.cleaned_data["account_for"]
-                data = SecureNote(user_id= user_id, encrypt = msg, key = key, account_for = account_for, letter = letter)
-                data.save()
-
-                return HttpResponse("All GOod")
-            else:
-                return HttpResponse("Not Valid")
-        else:
-            return HttpResponse("Not Valid")
-    else:
-        if request.user.is_authenticated:
-            return render(request, 'checking.html', {'form': storepass()})
-        else:
-            return HttpResponse("Not Logged In")
 
 
 def StoreNote(request):

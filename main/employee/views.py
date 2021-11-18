@@ -74,8 +74,6 @@ class employee(APIView):
                     outputIoStream.seek(0)
                     request.data[x] = InMemoryUploadedFile(outputIoStream,'ImageField', "%s.webp" % request.data[x].name.split('.')[0], 'image/webp', sys.getsizeof(outputIoStream), None)
 
-                
-            
             ser_emp = SerEmp(data=request.data)
             if ser_emp.is_valid():
                 obj = ser_emp.save()
