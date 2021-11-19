@@ -48,9 +48,21 @@ class PASSWORD(APIView):
         pass
 
     def delete(self, request, pk, format=None):
-        SecureNote.objects.filter(id=pk).delete()
-        return Response({"x":True})
+        try:
+            SecureNote.objects.filter(id=pk).delete()
+            return Response({"x":True})
+        except:
+            return Response({"x":False})
 
+import time
+
+@api_view(['POST'])
+def return_password(request):
+    data = SecureNote.objects.values("id","encrypt","key").filter(user_id = request.user.id, letter = "p")
+    for a in data:
+        re_hash = Fernet(a["key"])
+        a["encrypt"] =re_hash.decrypt(a["encrypt"]).decode()
+    return Response({"x": True, "data":data})
 
 
 class abcd(APIView):

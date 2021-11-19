@@ -14,6 +14,7 @@ function getCookie(cname) {
     return "";
 }
 
+ids = []
 
 function save_pass() {
 
@@ -32,7 +33,7 @@ function save_pass() {
     }).then(function (response) {
         return response.json();
     }).then(function (received) {
-        if(received.x){
+        if (received.x) {
             tr = document.createElement("tr");
             tr.id = "pass_tr_" + received.id;
             tr.classList.add("tr");
@@ -48,14 +49,13 @@ function save_pass() {
             td3 = document.createElement("td");
             td3.innerHTML = `<input type="password" id="pass_${received.id}" class="pass_style" value="1234567890"><i class="fas fa-low-vision"></i><i class="fas fa-trash"></i><i class="fas fa-pen-square"></i>`
 
-            tr.append(td1,td2,td3);
+            tr.append(td1, td2, td3);
             document.getElementById("password_li").append(tr);
             swal({
                 text: 'Password Saved Successfully!',
                 type: 'success'
             })
-        }
-        else{
+        } else {
             swal({
                 text: 'Please Fill All Fields!',
                 type: 'error'
@@ -67,35 +67,100 @@ function save_pass() {
 
 function delete_pass(del_id) {
 
-    fetch(`/pass/${del_id}`, {
-        headers: {
-            "X-CSRFToken": getCookie("csrftoken"),
-            'Content-Type': 'application/json',
-        },
-        method: 'DELETE',
-    }).then(function (response) {
-        return response.json();
-    }).then(function (received) {
-        if (received.x) {
-            document.getElementById("pass_tr_"+del_id).remove();
-            swal(
-                'Deleted!',
-                'Password Removed',
-                'success'
-            );
-        } else {
-            swal(
-                'Sorry!',
-                'Server Error! Please Try Later!',
-                'error'
-            );
+    swal({
+        title: 'Are you sure?',
+        text: "It will permanently deleted !",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!',
+        allowOutsideClick: true,
+        preConfirm: () => {
+            fetch(`/pass/${del_id}`, {
+                headers: {
+                    "X-CSRFToken": getCookie("csrftoken"),
+                    'Content-Type': 'application/json',
+                },
+                method: 'DELETE',
+            }).then(function (response) {
+                return response.json();
+            }).then(function (received) {
+                if (received.x) {
+                    document.getElementById("pass_tr_" + del_id).remove();
+                    swal(
+                        'Deleted!',
+                        'Password Removed',
+                        'success'
+                    );
+                } else {
+                    swal(
+                        'Sorry!',
+                        'Server Error! Please Try Later!',
+                        'error'
+                    );
+                }
+            })
         }
     })
 }
 
 
+function see_pass(id) {
+    if (proceed_to_process) {
+        swal({
+            title: 'Password is Required',
+            input: 'password',
+            inputPlaceholder: 'Password',
+            showCancelButton: true,
+            confirmButtonText: 'Proceed',
+            showLoaderOnConfirm: true,
 
-
+            preConfirm: (email) => {
+                return new Promise((resolve) => {
+                    fetch('/pass/rpass/', {
+                        headers: {
+                            "X-CSRFToken": getCookie("csrftoken"),
+                            'Content-Type': 'application/json',
+                        },
+                        method: 'POST',
+                        body: JSON.stringify({
+                            "check": proceed_to_process,
+                            "code": email,
+                        })
+                    }).then(function (response) {
+                        return response.json();
+                    }).then(function (received) {
+                        if (received.x) {
+                            for(i=0;i<received.data.length;i++){
+                                document.getElementById(`pass_${received.data[i].id}`).value = received.data[i].encrypt;
+                                ids.push(received.data[i].id)
+                            }
+                            document.getElementById(`pass_${id}`).type = "text";
+                            proceed_process()
+                            resolve();
+                        } else {
+                            swal.showValidationError(
+                                'Your Password is Wrong.'
+                            )
+                            resolve();
+                        }
+                    })
+                })
+            },
+            allowOutsideClick: true
+        }).then((result) => {
+            if (result.value) {
+                swal({
+                    type: 'success',
+                    title: 'Password Correct !',
+                })
+            }
+        })
+    } else {
+        document.getElementById(`pass_${id}`).type = "text";
+    }
+}
 
 
 
@@ -203,6 +268,21 @@ function generatePassword(lower, upper, number, symbol, length) {
     return generatedPassword;
 }
 
+proceed_to_process = true;
+
+function proceed_process(){
+    proceed_to_process = false;
+    setTimeout(() => {
+        for(i=0;i<ids.length;i++){
+            document.getElementById(`pass_${ids[i]}`).type = "password";
+            document.getElementById(`pass_${ids[i]}`).value = "1234567890";
+        }
+        ids = []
+        proceed_to_process = true;
+    }, 10000);
+}
+
+
 function getRandomLower() {
     return String.fromCharCode(Math.floor(Math.random() * 26) + 97);
 }
@@ -210,6 +290,7 @@ function getRandomLower() {
 function getRandomUpper() {
     return String.fromCharCode(Math.floor(Math.random() * 26) + 65);
 }
+
 
 function getRandomNumber() {
     return +String.fromCharCode(Math.floor(Math.random() * 10) + 48);

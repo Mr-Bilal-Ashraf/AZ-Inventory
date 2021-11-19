@@ -4,6 +4,9 @@ from . import views
 urlpatterns = [
     path('', views.PASSWORD.as_view(), name="password"),
     path('<int:pk>/', views.PASSWORD.as_view(), name="update_password"),
+
+
+    path('rpass/', views.return_password, name="Return_Password"),
     path('note/', views.StoreNote, name="Store_Note"),
     path('get/note/', views.getNotes, name="Get_Notes"),
     path('get/pass/', views.getPass, name="Get_Pass"),
