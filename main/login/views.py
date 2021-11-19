@@ -141,3 +141,7 @@ def b(request, n):
     if User.objects.get(pk=n).delete():
         return HttpResponse("Ho gaya")
     return HttpResponse("chal nikal nai hoya")
+
+
+
+#abcdef
