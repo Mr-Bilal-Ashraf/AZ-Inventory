@@ -1,3 +1,5 @@
+//  get cookie
+
 function getCookie(cname) {
     let name = cname + "=";
     let decodedCookie = decodeURIComponent(document.cookie);
@@ -14,7 +16,8 @@ function getCookie(cname) {
     return "";
 }
 
-ids = []
+
+//  save passwords
 
 function save_pass() {
 
@@ -47,7 +50,8 @@ function save_pass() {
             td2.innerText = document.getElementById("save_email").value;
 
             td3 = document.createElement("td");
-            td3.innerHTML = `<input type="password" id="pass_${received.id}" class="pass_style" value="1234567890"><i class="fas fa-low-vision"></i><i class="fas fa-trash"></i><i class="fas fa-pen-square"></i>`
+            td3.className = "password_td"
+            td3.innerHTML = `<input type="password" id="pass_${received.id}" class="pass_style" value="1234567890"> <i class="fas fa-low-vision" onclick="see_pass(${received.id})"></i> <i class="fas fa-trash" onclick="delete_pass(${received.id})"></i> <i class="fas fa-pen-square" onclick="update_pass(${received.id})"></i>`
 
             tr.append(td1, td2, td3);
             document.getElementById("password_li").append(tr);
@@ -63,6 +67,9 @@ function save_pass() {
         }
     })
 }
+
+
+//  delete password
 
 
 function delete_pass(del_id) {
@@ -106,6 +113,10 @@ function delete_pass(del_id) {
 }
 
 
+ids = []
+
+//  Show password
+
 function see_pass(id) {
     if (proceed_to_process) {
         swal({
@@ -132,7 +143,7 @@ function see_pass(id) {
                         return response.json();
                     }).then(function (received) {
                         if (received.x) {
-                            for(i=0;i<received.data.length;i++){
+                            for (i = 0; i < received.data.length; i++) {
                                 document.getElementById(`pass_${received.data[i].id}`).value = received.data[i].encrypt;
                                 ids.push(received.data[i].id)
                             }
@@ -158,12 +169,69 @@ function see_pass(id) {
             }
         })
     } else {
-        document.getElementById(`pass_${id}`).type = "text";
+        if (document.getElementById(`pass_${id}`).type == "text") {
+            document.getElementById(`pass_${id}`).type = "password";
+        } else {
+            document.getElementById(`pass_${id}`).type = "text";
+        }
     }
 }
 
 
+//  update password
 
+function update_pass(id) {
+
+    swal({
+        title: 'Password is Required',
+        input: 'password',
+        inputPlaceholder: 'Password',
+        showCancelButton: true,
+        confirmButtonText: 'Proceed',
+        showLoaderOnConfirm: true,
+
+        preConfirm: (email) => {
+            return new Promise((resolve) => {
+                fetch(`/pass/${id}/`, {
+                    headers: {
+                        "X-CSRFToken": getCookie("csrftoken"),
+                        'Content-Type': 'application/json',
+                    },
+                    method: 'PATCH',
+                    body: JSON.stringify({
+                        "check": document.getElementById(`pass_${id}`).value,
+                        "code": email,
+                    })
+                }).then(function (response) {
+                    return response.json();
+                }).then(function (received) {
+                    if (received.x) {
+                        if(proceed_to_process){
+                            document.getElementById(`pass_${id}`).value = "1234567890";
+                        }else{
+                            document.getElementById(`pass_${id}`).type = "password";
+                        }
+                        resolve();
+                    } else {
+                        swal.showValidationError(
+                            'Your Password is Wrong.'
+                        )
+                        resolve();
+                    }
+                })
+            })
+        },
+        allowOutsideClick: true
+    }).then((result) => {
+        if (result.value) {
+            swal({
+                type: 'success',
+                title: 'Password update !',
+            })
+        }
+    })
+
+}
 
 
 
@@ -270,16 +338,16 @@ function generatePassword(lower, upper, number, symbol, length) {
 
 proceed_to_process = true;
 
-function proceed_process(){
+function proceed_process() {
     proceed_to_process = false;
     setTimeout(() => {
-        for(i=0;i<ids.length;i++){
+        for (i = 0; i < ids.length; i++) {
             document.getElementById(`pass_${ids[i]}`).type = "password";
             document.getElementById(`pass_${ids[i]}`).value = "1234567890";
         }
         ids = []
         proceed_to_process = true;
-    }, 10000);
+    }, 120000);
 }
 
 
