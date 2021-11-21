@@ -84,6 +84,7 @@ function delete_pass(del_id) {
         confirmButtonText: 'Yes, delete it!',
         allowOutsideClick: true,
         preConfirm: () => {
+
             fetch(`/pass/${del_id}`, {
                 headers: {
                     "X-CSRFToken": getCookie("csrftoken"),
@@ -108,6 +109,8 @@ function delete_pass(del_id) {
                     );
                 }
             })
+
+
         }
     })
 }
@@ -206,9 +209,9 @@ function update_pass(id) {
                     return response.json();
                 }).then(function (received) {
                     if (received.x) {
-                        if(proceed_to_process){
+                        if (proceed_to_process) {
                             document.getElementById(`pass_${id}`).value = "1234567890";
-                        }else{
+                        } else {
                             document.getElementById(`pass_${id}`).type = "password";
                         }
                         resolve();
@@ -234,12 +237,105 @@ function update_pass(id) {
 }
 
 
+//  save contact
+
+function save_con() {
+    gender = "male"
+
+    if (document.getElementById("dot-1").checked) {
+        gender = "Male";
+    } else if (document.getElementById("dot-2").checked) {
+        gender = "Female";
+    } else if (document.getElementById("dot-3").checked) {
+        gender = "Other";
+    }
+
+    data = {
+        'name': document.getElementById("con_name").value,
+        'number': document.getElementById("con_number").value,
+        'email': document.getElementById("con_email").value,
+        'company': document.getElementById("con_company").value,
+        'department': document.getElementById("con_department").value,
+        'designation': document.getElementById("con_designation").value,
+        'address': document.getElementById("con_address").value,
+        'relationship': document.getElementById("con_relationship").value,
+        'gender': gender
+    }
+
+
+    swal({
+        title: 'Create Contact?',
+        type: 'info',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!',
+        allowOutsideClick: true,
+        preConfirm: () => {
+            fetch(`/pass/con/`, {
+                headers: {
+                    "X-CSRFToken": getCookie("csrftoken"),
+                    'Content-Type': 'application/json',
+                },
+                method: 'POST',
+                body: JSON.stringify(data)
+            }).then(function (response) {
+                return response.json();
+            }).then(function (received) {
+                if (received.x) {
+                    swal({
+                        title: "Contact Created Successfully!",
+                        type: 'success'
+                    });
+                } else {
+                    swal(
+                        'Sorry!',
+                        'Server Error! Please Try Later!',
+                        'error'
+                    );
+                }
+            })
+        }
+    })
+
+}
 
 
 
 
 
+//  logout
 
+function logOut() {
+    swal({
+        title: 'Logout',
+        text: "Are You Sure ?",
+        type: 'info',
+        showCancelButton: true,
+        confirmButtonText: 'Log Out',
+        showLoaderOnConfirm: true,
+        preConfirm: () => {
+            fetch('/emp/logout/')
+                .then(function (response) {
+                    return response.json();
+                }).then(function (received) {
+                    if (received.x) {
+                        window.location.href = "/acc"
+                    } else {
+                        var ring = document.getElementById("eror");
+                        ring.autoplay = true;
+                        ring.load();
+                        swal(
+                            'Sorry!',
+                            'Server Error! Please Try Later!',
+                            'error'
+                        );
+                    }
+                })
+        },
+        allowOutsideClick: true
+    })
+}
 
 
 
