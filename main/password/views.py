@@ -1,19 +1,20 @@
-import time
+from django.http import HttpResponseRedirect
 from django.http.response import HttpResponse
 from cryptography.fernet import Fernet
 from django.shortcuts import render
+from django.urls import reverse
 from django.contrib.auth.models import User
-from .models import SecureNote
-from .forms import storepass, storenote
+from login.models import userDetail
+from .models import SecureNote, SecureContacts
 
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
-from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
+from rest_framework.parsers import FormParser, JSONParser
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.permissions import IsAuthenticated
 
-from .serializers import PassWord
+from .serializers import SerPass, SerCon
 
 #   password manager starts from here
 
@@ -23,11 +24,15 @@ class PASSWORD(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, pk=None, format=None):
-        data = SecureNote.objects.values("email","account_for").filter(user_id=request.user.id, letter="p")
-        return render(request, 'password/password.html', {'pass': data})
+        try:
+            img = userDetail.objects.values("image").get(user_id = request.user.id)
+        except:
+            return HttpResponseRedirect(reverse('SignUpDetails'))
+        data = SecureNote.objects.values("id","email","account_for").filter(user_id=request.user.id, letter="p")
+        return render(request, 'password/password.html', {'pass': data, "image": img["image"]})
 
     def post(self, request, format=None):
-        a = PassWord(data=request.data)
+        a = SerPass(data=request.data)
         if a.is_valid():
             key = Fernet.generate_key()
             hasher = Fernet(key)
@@ -77,80 +82,24 @@ def return_password(request):
 
 #   password manager ends here
 
-class abcd(APIView):
-    def get(self, request):
-        a = SecureNote.objects.all()
-        serialized_data = firstse(a, many=True)
-        return Response(serialized_data.data)
+
+
+#   contact management starts here
+
+class CONTACT(APIView):
+    parser_classes = (FormParser, JSONParser)
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, pk=None, format=None):
+        pass
 
     def post(self, request, format=None):
-        da = firstse(data=request.data)
-        if da.is_valid():
-            da.save()
-            return Response({'a': "data valid"})
-        return Response(da.data)
+        pass
 
+    def patch(self, request, pk, format=None):
+        pass
 
-def StoreNote(request):
-    if request.method == "POST":
-        form = storenote(request.POST)
-        if form.is_valid():
-            if request.user.is_authenticated:
-                user_id = User.objects.get(username=request.user).id
-                letter = "n"
-                key = Fernet.generate_key()
-                hasher = Fernet(key)
-                msg = form.cleaned_data["hashed"]
-                msg = hasher.encrypt(msg.encode())
-                account_for = form.cleaned_data["account_for"]
-                data = SecureNote(user_id=user_id, encrypt=msg,
-                                  key=key, account_for=account_for, letter=letter)
-                data.save()
+    def delete(self, request, pk, format=None):
+        pass
 
-                return HttpResponse("All GOod")
-            else:
-                return HttpResponse("Not Valid")
-        else:
-            return HttpResponse("Not Valid")
-    else:
-        if request.user.is_authenticated:
-            return render(request, 'checking.html', {'form': storenote()})
-        else:
-            return HttpResponse("Not Logged In")
-
-
-def getNotes(request):
-    try:
-        user_id = User.objects.get(username=request.user).id
-        data = SecureNote.objects.filter(user_id=user_id, letter="n")
-        for a in data:
-            re_hash = Fernet(a.key)
-            a.encrypt = re_hash.decrypt(a.encrypt).decode()
-        return render(request, 'checking.html', {'data': data})
-    except:
-        return render(request, '404.html')
-
-
-def getPass(request):
-    try:
-        user_id = User.objects.get(username=request.user).id
-        data = SecureNote.objects.filter(user_id=user_id, letter="p")
-        for a in data:
-            re_hash = Fernet(a.key)
-            a.encrypt = re_hash.decrypt(a.encrypt).decode()
-        return render(request, 'checking.html', {'data': data})
-    except:
-        return render(request, '404.html')
-
-
-def delete(request, n):
-    if request.user.is_authenticated:
-        user_id = User.objects.get(username=request.user).id
-        SecureNote.objects.filter(id=n, user_id=user_id).delete()
-        return HttpResponse("Ho gaya")
-    else:
-        return HttpResponse("Invalid Query")
-
-
-def storeContact(request):
-    pass
