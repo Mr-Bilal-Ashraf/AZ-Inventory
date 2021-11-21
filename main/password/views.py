@@ -24,12 +24,16 @@ class PASSWORD(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, pk=None, format=None):
-        try:
-            img = userDetail.objects.values("image").get(user_id = request.user.id)
-        except:
-            return HttpResponseRedirect(reverse('SignUpDetails'))
-        data = SecureNote.objects.values("id","email","account_for").filter(user_id=request.user.id, letter="p")
-        return render(request, 'password/password.html', {'pass': data, "image": img["image"]})
+        if pk == None:
+            try:
+                img = userDetail.objects.values("image").get(user_id = request.user.id)
+            except:
+                return HttpResponseRedirect(reverse('SignUpDetails'))
+            contacts = SecureContacts.objects.values("id","name","relationship","company","number").filter(user_id=request.user.id)
+            data = SecureNote.objects.values("id","email","account_for").filter(user_id=request.user.id, letter="p")
+            return render(request, 'password/password.html', {'pass': data, "contacts":contacts, "image": img["image"]})
+        else:
+            return Response({'x': "Nothing To Show....!"})
 
     def post(self, request, format=None):
         a = SerPass(data=request.data)
@@ -92,14 +96,27 @@ class CONTACT(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, pk=None, format=None):
-        pass
+        if pk==None:
+            pass
+        else:
+            pass
 
     def post(self, request, format=None):
-        pass
+        data = SerCon(data=request.data)
+        if data.is_valid():
+            obj = data.save()
+            return Response({"x":True, "id":obj.id})
+        else:
+            return Response({"x":False})
+
 
     def patch(self, request, pk, format=None):
         pass
 
     def delete(self, request, pk, format=None):
-        pass
+        try:
+            SecureContacts.objects.filter(id=pk).delete()
+            return Response({"x": True})
+        except:
+            return Response({"x": False})
 
