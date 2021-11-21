@@ -26,6 +26,7 @@ function save_pass() {
         'used_for': document.getElementById("save_for").value,
         'code': document.getElementById("save_password").value
     }
+
     fetch('/pass/', {
         headers: {
             "X-CSRFToken": getCookie("csrftoken"),
@@ -59,6 +60,12 @@ function save_pass() {
                 text: 'Password Saved Successfully!',
                 type: 'success'
             })
+            setTimeout(() => {
+                document.getElementById("save_email").value = "";
+                document.getElementById("save_for").value = "";
+                document.getElementById("save_password").value = "";
+            }, 2000);
+
         } else {
             swal({
                 text: 'Please Fill All Fields!',
@@ -251,6 +258,7 @@ function save_con() {
     }
 
     data = {
+        'user_id': usua,
         'name': document.getElementById("con_name").value,
         'number': document.getElementById("con_number").value,
         'email': document.getElementById("con_email").value,
@@ -269,7 +277,7 @@ function save_con() {
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!',
+        confirmButtonText: 'Create',
         allowOutsideClick: true,
         preConfirm: () => {
             fetch(`/pass/con/`, {
@@ -283,10 +291,41 @@ function save_con() {
                 return response.json();
             }).then(function (received) {
                 if (received.x) {
+                    tr = document.createElement("tr");
+                    tr.id = "con_tr_" + received.id;
+                    tr.classList.add("tr");
+
+                    td1 = document.createElement("td");
+                    td1.className = "for_td";
+                    td1.innerText = document.getElementById("con_name").value;
+
+                    td2 = document.createElement("td");
+                    td2.className = "mail_td";
+                    td2.innerText = document.getElementById("con_relationship").value;
+
+                    td3 = document.createElement("td");
+                    td3.innerText = document.getElementById("con_company").value;
+
+                    td4 = document.createElement("td");
+                    td4.className = "password_td";
+                    td4.innerHTML = `<input type="text" class="pass_style" value="${data.number}"> <i class="fas fa-low-vision" onclick="see_con(${received.id})"></i> <i class="fas fa-trash" onclick="delete_con(${received.id})"></i> <i class="fas fa-pen-square" onclick="update_con(${received.id})"></i>`
+
+                    tr.append(td1, td2, td3, td4);
+                    document.getElementById("contacts_li").append(tr);
                     swal({
                         title: "Contact Created Successfully!",
                         type: 'success'
                     });
+                    setTimeout(() => {
+                        document.getElementById("con_name").value = "";
+                        document.getElementById("con_number").value = "";
+                        document.getElementById("con_email").value = "";
+                        document.getElementById("con_company").value = "";
+                        document.getElementById("con_department").value = "";
+                        document.getElementById("con_designation").value = "";
+                        document.getElementById("con_address").value = "";
+                        document.getElementById("con_relationship").value = "";
+                    }, 2000);
                 } else {
                     swal(
                         'Sorry!',
@@ -302,7 +341,63 @@ function save_con() {
 
 
 
+//  delete contact
 
+function delete_con(del_id) {
+    swal({
+        title: 'Are you sure?',
+        text: "It will permanently deleted !",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!',
+        allowOutsideClick: true,
+        preConfirm: () => {
+
+            fetch(`/pass/con/${del_id}`, {
+                headers: {
+                    "X-CSRFToken": getCookie("csrftoken"),
+                    'Content-Type': 'application/json',
+                },
+                method: 'DELETE',
+            }).then(function (response) {
+                return response.json();
+            }).then(function (received) {
+                if (received.x) {
+                    document.getElementById("con_tr_" + del_id).remove();
+                    swal(
+                        'Deleted!',
+                        'Contact Removed',
+                        'success'
+                    );
+                } else {
+                    swal(
+                        'Sorry!',
+                        'Server Error! Please Try Later!',
+                        'error'
+                    );
+                }
+            })
+        }
+    })
+}
+
+
+
+//  see contact full detail
+
+function see_con(id) {
+    alert(id);
+}
+
+
+
+//  update contact
+
+function update_con(id) {
+    alert(id);
+}
 
 //  logout
 
