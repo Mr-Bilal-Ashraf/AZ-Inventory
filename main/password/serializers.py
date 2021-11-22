@@ -10,3 +10,5 @@ class SerCon(serializers.ModelSerializer):
     class Meta:
         model = SecureContacts
         fields = "__all__"
+
+#aaaa
