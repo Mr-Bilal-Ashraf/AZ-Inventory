@@ -10,3 +10,5 @@ urlpatterns = [
     path('con/<int:pk>/', views.CONTACT.as_view(), name="update_contact"),
 
 ]
+
+#aaaa

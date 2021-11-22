@@ -22,3 +22,5 @@ class SecureContacts(models.Model):
     address = models.CharField(max_length=200, null= True, blank= True)
     relationship = models.CharField(max_length=30, null= True, blank= True)
     gender = models.CharField(max_length=6, null= True, blank= True)
+
+#aaaa
