@@ -121,5 +121,3 @@ class CONTACT(APIView):
             return Response({"x": False})
 
 
-
-#aaaa

@@ -11,4 +11,3 @@ class SerCon(serializers.ModelSerializer):
         model = SecureContacts
         fields = "__all__"
 
-#aaaa
