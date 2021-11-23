@@ -96,10 +96,12 @@ class CONTACT(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, pk=None, format=None):
-        if pk==None:
-            pass
+        if pk!=None:
+            data = SecureContacts.objects.get(user_id=request.user.id, id=pk)
+            data = SerCon(data)
+            return Response(data.data)
         else:
-            pass
+            return Response({"x":False})
 
     def post(self, request, format=None):
         data = SerCon(data=request.data)
@@ -111,7 +113,14 @@ class CONTACT(APIView):
 
 
     def patch(self, request, pk, format=None):
-        pass
+        if request.user.check_password(request.data["code"]):
+            con = SecureContacts.objects.get(id=pk)
+            data = SerCon(con, data=request.data, partial=True)
+            if data.is_valid():
+                data.save()
+                return Response({"x": True})
+        else:
+            return Response({"x": False})
 
     def delete(self, request, pk, format=None):
         try:

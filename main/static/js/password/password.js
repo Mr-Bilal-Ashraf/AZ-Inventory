@@ -297,18 +297,21 @@ function save_con() {
 
                     td1 = document.createElement("td");
                     td1.className = "for_td";
+                    td1.id = `cont_name${received.id}`;
                     td1.innerText = document.getElementById("con_name").value;
 
                     td2 = document.createElement("td");
                     td2.className = "mail_td";
+                    td2.id = `cont_relationship${received.id}`;
                     td2.innerText = document.getElementById("con_relationship").value;
 
                     td3 = document.createElement("td");
+                    td3.id = `cont_company${received.id}`;
                     td3.innerText = document.getElementById("con_company").value;
 
                     td4 = document.createElement("td");
                     td4.className = "password_td";
-                    td4.innerHTML = `<input type="text" class="pass_style" value="${data.number}"> <i class="fas fa-low-vision" onclick="see_con(${received.id})"></i> <i class="fas fa-trash" onclick="delete_con(${received.id})"></i> <i class="fas fa-pen-square" onclick="update_con(${received.id})"></i>`
+                    td4.innerHTML = `<input type="text" id="cont_number${received.id}" class="pass_style" value="${data.number}"> <i class="fas fa-pen-square" onclick="update_con(${received.id})"></i> <i class="fas fa-trash" onclick="delete_con(${received.id})"></i>`
 
                     tr.append(td1, td2, td3, td4);
                     document.getElementById("contacts_li").append(tr);
@@ -387,16 +390,98 @@ function delete_con(del_id) {
 
 //  see contact full detail
 
+yamla = 0;
+
 function see_con(id) {
-    alert(id);
+    fetch(`/pass/con/${id}/`)
+        .then(function (response) {
+            return response.json();
+        }).then(function (received) {
+            yamla = id;
+            document.getElementById("show_name").value = received.name;
+            document.getElementById("show_number").value = received.number;
+            document.getElementById("show_mail").value = received.email;
+            document.getElementById("show_company").value = received.company;
+            document.getElementById("show_department").value = received.department;
+            document.getElementById("show_designation").value = received.designation;
+            document.getElementById("show_gender").value = received.gender;
+            document.getElementById("show_relationship").value = received.relationship;
+            document.getElementById("show_address").value = received.address;
+        })
+
+    document.getElementById("detail").style.height = "100vh";
+    document.querySelector("body").style.overflow = "hidden";
 }
 
+
+function close_con() {
+    yamla = 0;
+    document.getElementById("detail").style.height = "00vh";
+    document.querySelector("body").style.overflow = "auto";
+}
 
 
 //  update contact
 
-function update_con(id) {
-    alert(id);
+function update_con() {
+
+    swal({
+        title: 'Password is Required',
+        input: 'password',
+        inputPlaceholder: 'Password',
+        showCancelButton: true,
+        confirmButtonText: 'Proceed',
+        showLoaderOnConfirm: true,
+
+        preConfirm: (email) => {
+            return new Promise((resolve) => {
+                fetch(`/pass/con/${yamla}/`, {
+                    headers: {
+                        "X-CSRFToken": getCookie("csrftoken"),
+                        'Content-Type': 'application/json',
+                    },
+                    method: 'PATCH',
+                    body: JSON.stringify({
+                        'code': email,
+                        'user_id': usua,
+                        'name': document.getElementById("show_name").value,
+                        'number': document.getElementById("show_number").value,
+                        'email': document.getElementById("show_mail").value,
+                        'company': document.getElementById("show_company").value,
+                        'department': document.getElementById("show_department").value,
+                        'designation': document.getElementById("show_designation").value,
+                        'address': document.getElementById("show_address").value,
+                        'relationship': document.getElementById("show_relationship").value,
+                        'gender': document.getElementById("show_gender").value
+                    })
+                }).then(function (response) {
+                    return response.json();
+                }).then(function (received) {
+                    if (received.x) {
+                        document.getElementById(`cont_name${yamla}`).innerHTML = document.getElementById("show_name").value;
+                        document.getElementById(`cont_relatioship${yamla}`).innerHTML = document.getElementById("show_relationship").value;
+                        document.getElementById(`cont_company${yamla}`).innerHTML = document.getElementById("show_company").value;
+                        document.getElementById(`cont_number${yamla}`).value = document.getElementById("show_number").value;
+                        close_con();
+                        resolve();
+                    } else {
+                        swal.showValidationError(
+                            'Your Password is Wrong.'
+                        )
+                        resolve();
+                    }
+                })
+            })
+        },
+        allowOutsideClick: true
+    }).then((result) => {
+        if (result.value) {
+            swal({
+                type: 'success',
+                title: 'Contact Updated Successfully !',
+            })
+        }
+    })
 }
 
 //  logout
@@ -559,16 +644,3 @@ function getRandomSymbol() {
     const symbols = '!@#$%^&*(){}[]=<>/,.'
     return symbols[Math.floor(Math.random() * symbols.length)];
 }
-
-// SOCIAL PANEL JS
-const floating_btn = document.querySelector('.floating-btn');
-const close_btn = document.querySelector('.close-btn');
-const social_panel_container = document.querySelector('.social-panel-container');
-
-floating_btn.addEventListener('click', () => {
-    social_panel_container.classList.toggle('visible')
-});
-
-close_btn.addEventListener('click', () => {
-    social_panel_container.classList.remove('visible')
-});
