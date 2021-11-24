@@ -60,6 +60,8 @@ function save_pass() {
                 text: 'Password Saved Successfully!',
                 type: 'success'
             })
+            blocks_heights["password_shower"] = blocks_heights["password_shower"] + 42;
+            opener("password_shower");
             setTimeout(() => {
                 document.getElementById("save_email").value = "";
                 document.getElementById("save_for").value = "";
@@ -102,6 +104,9 @@ function delete_pass(del_id) {
                 return response.json();
             }).then(function (received) {
                 if (received.x) {
+                    blocks_heights["password_shower"] = blocks_heights["password_shower"] - 42;
+                    closer();
+                    opener("password_shower");
                     document.getElementById("pass_tr_" + del_id).remove();
                     swal(
                         'Deleted!',
@@ -319,6 +324,8 @@ function save_con() {
                         title: "Contact Created Successfully!",
                         type: 'success'
                     });
+                    blocks_heights["contact_shower"] = blocks_heights["contact_shower"] + 42;
+                    opener("contact_shower");
                     setTimeout(() => {
                         document.getElementById("con_name").value = "";
                         document.getElementById("con_number").value = "";
@@ -369,6 +376,9 @@ function delete_con(del_id) {
             }).then(function (received) {
                 if (received.x) {
                     document.getElementById("con_tr_" + del_id).remove();
+                    blocks_heights["contact_shower"] = blocks_heights["contact_shower"] - 42;
+                    closer();
+                    opener("contact_shower");
                     swal(
                         'Deleted!',
                         'Contact Removed',
@@ -517,13 +527,65 @@ function logOut() {
     })
 }
 
+document.addEventListener("keydown", e => {
+    if (e.altKey && e.key === 'q') {
+        logOut()
+    }
+})
 
+document.addEventListener("keydown", e => {
+    if (e.key === "Escape") {
+        closer();
+    }
+})
 
+blocks = {
+    "create_password": 0,
+    "password_shower": 0,
+    "contact_shower": 0,
+    "create_contact": 0,
+    "save_password_block": 0
+}
+blocks_heights = {
+    "create_password": 0,
+    "password_shower": 0,
+    "contact_shower": 0,
+    "create_contact": 0,
+    "save_password_block": 0
+}
+blocks_txt = {
+    "create_password": "Generate Password",
+    "password_shower": "Password List",
+    "contact_shower": "Contact List",
+    "create_contact": "Create Contact",
+    "save_password_block": "Save Password"
+}
 
+for (key in blocks_heights) {
+    blocks_heights[key] = document.getElementById(key).offsetHeight;
+}
 
+function closer() {
+    document.getElementById("fa-times-circle").style.display = "none";
+    document.getElementById("typer").innerText = "Allah Is Great!";
+    for (key in blocks) {
+        document.getElementById(key).style.height = "0px";
+        blocks[key] = 0;
+    }
+}
 
-
-
+function opener(id) {
+    if (blocks[id] == 1) {
+        closer();
+    } else {
+        closer();
+        document.getElementById("typer").innerText = blocks_txt[id];
+        document.getElementById(id).style.height = `${blocks_heights[id]}px`;
+        blocks[id] = 1;
+        document.getElementById("fa-times-circle").style.display = "block";
+    }
+}
+closer();
 
 
 
@@ -623,7 +685,7 @@ function proceed_process() {
         }
         ids = []
         proceed_to_process = true;
-    }, 120000);
+    }, 12000);
 }
 
 
