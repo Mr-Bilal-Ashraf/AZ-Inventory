@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Main Panel</title>
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/css/bootstrap.css'>
+    <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.0.13/css/all.css'>
+    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="./mafia.css">
+
+</head>
+
+<body>
+    <section id="topbar">
+        <a href="#az_dev" id="dv_dev"></a>
+        <h3 id="az_dev">AZAAD DEV</h3>
+        <h3 id="shop_name">Feminism Ki Dukaan</h3>
+    </section>
+
+    <section class="centering">
+        <section>
+
+            <div class="containers buttons_container">
+
+                <!-- search Employee -->
+                <div class="button_div" id="generate_password" onclick="opener('fun')">
+                    <h4 class="em_btn_search" id="search_employee">Generate Password</h4>
+                    <i class="fab fa-searchengin" id="em_btn_1"></i>
+                </div>
+
+                <!-- Add new Employee -->
+                <div class="button_div" id="add_new_password" onclick="opener('cun')">
+                    <h4 class="em_btn_add" id="add_employee">Save Password</h4>
+                    <i class="fas fa-plus-circle" id="em_btn_2"></i>
+                </div>
+
+                <!-- Who are on duty today -->
+                <div class="button_div" id="password_list" onclick="opener('yun')">
+                    <h4 class="em_btn_title">Password List</h4>
+                    <i class="fas fa-eye" id="em_btn_4"></i>
+                </div>
+
+
+                <!-- Who are not on duty today -->
+                <div class="button_div" id="add_new_contact" onclick="opener('chun')">
+                    <h4 class="em_btn_title">Save Contact</h4>
+                    <i class="fas fa-eye-slash" id="em_btn_5"></i>
+
+                </div>
+
+                <!-- Update Employee -->
+                <!-- employeeLock() function is used to show report page,,, use it in next version -->
+                <div class="button_div" id="contact_list" onclick="opener('wun')">
+                    <h4 class="em_btn_title">Contact List</h4>
+                    <i class="fas fa-wrench" id="em_btn_3"></i>
+                </div>
+
+            </div>
+        </section>
+
+
+
+
+
+        <section class="containers" style="height:80px;">
+            <div style="padding-top: 20px;">
+                <div class="khatam">
+                    <h2 id="typer">
+
+                    </h2>
+                </div>
+                <i class="fas fa-times-circle" id="fa-times-circle" onclick="closer()"></i>
+            </div>
+        </section>
+
+
+
+        <!-- Password Generator -->
+        <div class="hider" id="fun">
+            <section class="containers gen_pass">
+
+                <section class="khoti" style="margin: 0% auto;">
+                    <section>
+                        <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.min.css'>
+                        <link rel="stylesheet" href="imported/pass.css">
+                        <div class="container">
+                            <h2>Password Generator</h2>
+                            <div class="result-container">
+                                <span id="result"></span>
+                                <button class="btn" style=" background-color: #3B3B98;color: white;" id="clipboard">
+        <i class="far fa-clipboard"></i>
+      </button>
+                            </div>
+                            <div class="settings">
+                                <div class="setting">
+                                    <label>Password length</label>
+                                    <input type="number" id="length" min='4' max='20' value='20' />
+                                </div>
+                                <div class="setting">
+                                    <label>Include uppercase letters </label>
+                                    <input type="checkbox" id="uppercase" checked />
+                                </div>
+                                <div class="setting">
+                                    <label>Include lowercase letters</label>
+                                    <input type="checkbox" id="lowercase" checked />
+                                </div>
+                                <div class="setting">
+                                    <label>Include numbers</label>
+                                    <input type="checkbox" id="numbers" checked />
+                                </div>
+                                <div class="setting">
+                                    <label>Include symbols</label>
+                                    <input type="checkbox" id="symbols" checked />
+                                </div>
+                            </div>
+                            <button class="gen_btn btn-large" id="generate">
+                Generate password
+            </button>
+                        </div>
+                        <script src="imported/pass.js"></script>
+                    </section>
+                </section>
+            </section>
+        </div>
+
+
+        <div class="hider" id="cun">
+            <!-- Password Saver -->
+            <section class="containers" style=" margin-bottom: 20px;">
+                <div>
+                    <div class="contact_container">
+                        <div class="title">Registration</div>
+                        <div class="content">
+                            <form action="#">
+                                <div class="user-details">
+
+                                    <div class="input-box">
+                                        <span class="details">Department</span>
+                                        <input type="text" placeholder="Enter Department" required>
+                                    </div>
+                                    <div class="input-box">
+                                        <span class="details">Designation</span>
+                                        <input type="text" placeholder="Confirm Designation" required>
+                                    </div>
+                                </div>
+
+
+                                <div class="input-box-out">
+                                    <span class="details"><Address></Address></span>
+                                    <input type="text" placeholder="Confirm Address" style="width: 100%;" required>
+                                </div>
+
+
+
+                                <div class="button">
+                                    <input type="submit" value="Register">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+
+                </div>
+
+
+            </section>
+        </div>
+
+        <div class="hider" id="yun">
+            <!-- Password List -->
+            <section class="containers" id="pass_list">
+                <div class="tb_1">
+                    <table class="pass_list_table">
+                        <thead>
+                            <tr>
+                                <td class="head_for">For</td>
+                                <td class="head_num">Email/Number</td>
+                                <td class="head_pass">Password</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="tr">
+                                <td class="for_td">Google</td>
+                                <td class="mail_td">mr.farooqazaad2066@gmail.com</td>
+                                <td class="password_td">
+                                    <input type="text" placeholder="**********" class="pass_style">
+                                    <i class="fas fa-low-vision"></i>
+                                    <i class="fas fa-trash"></i>
+                                    <i class="fas fa-pen-square"></i>
+                                </td>
+                            </tr>
+                            <tr class="tr">
+                                <td class="for_td">Google</td>
+                                <td class="mail_td">mr.farooqazaad2066@gmail.com</td>
+                                <td class="password_td">
+                                    <input type="text" placeholder="**********" class="pass_style">
+                                    <i class="fas fa-low-vision"></i>
+                                    <i class="fas fa-trash"></i>
+                                    <i class="fas fa-pen-square"></i>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+
+
+        <div class="hider" id="chun">
+            <!-- Contact Saver -->
+            <section class="containers" style="margin-bottom:20px;">
+                <div class="contact_container">
+                    <div class="title">Registration</div>
+                    <div class="content">
+                        <form action="#">
+                            <div class="user-details">
+                                <div class="input-box">
+                                    <span class="details">Name</span>
+                                    <input type="text" placeholder="Enter Name" required>
+                                </div>
+                                <div class="input-box">
+                                    <span class="details">Phone Number</span>
+                                    <input type="tel" placeholder="Enter Phone Number" required>
+                                </div>
+                                <div class="input-box">
+                                    <span class="details">Email</span>
+                                    <input type="email" placeholder="Enter E-mail" required>
+                                </div>
+                                <div class="input-box">
+                                    <span class="details">Company</span>
+                                    <input type="text" placeholder="Enter Company" required>
+                                </div>
+                                <div class="input-box">
+                                    <span class="details">Department</span>
+                                    <input type="text" placeholder="Enter Department" required>
+                                </div>
+                                <div class="input-box">
+                                    <span class="details">Designation</span>
+                                    <input type="text" placeholder="Confirm Designation" required>
+                                </div>
+                                <div class="input-box">
+                                    <span class="details"><Address></Address></span>
+                                    <input type="text" placeholder="Confirm Address" required>
+                                </div>
+                                <div class="input-box">
+                                    <span class="details">Relationship</span>
+                                    <input type="text" placeholder="Confirm Relationship" required>
+                                </div>
+                            </div>
+                            <div class="gender-details">
+                                <input type="radio" name="gender" id="dot-1">
+                                <input type="radio" name="gender" id="dot-2">
+                                <input type="radio" name="gender" id="dot-3">
+                                <span class="gender-title">Gender</span>
+                                <div class="category">
+                                    <label for="dot-1">
+                        <span class="dot one"></span>
+                        <span class="gender">Male</span>
+                      </label>
+                                    <label for="dot-2">
+                        <span class="dot two"></span>
+                        <span class="gender">Female</span>
+                      </label>
+                                    <label for="dot-3">
+                        <span class="dot three"></span>
+                        <span class="gender">Prefer not to say</span>
+                        </label>
+                                </div>
+                            </div>
+                            <div class="button">
+                                <input type="submit" value="Register">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+
+        <div class="hider" id="wun">
+            <!-- Contact List -->
+            <section class="containers ">
+                <div class="tb_1">
+                    <table class="pass_list_table">
+                        <thead>
+                            <tr>
+                                <td class="head_for">Name</td>
+                                <td class="head_relation">Relationship</td>
+                                <td class="head_company">Company</td>
+                                <td class="head_number">Contact Number</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="tr">
+                                <td class="for_td">M.Farooq Ashraf Abdullah</td>
+                                <td class="mail_td">Brother</td>
+                                <td>SitsBook Lanat</td>
+                                <td class="password_td">
+                                    <input type="text" placeholder="**********" class="pass_style">
+                                    <i class="fas fa-low-vision"></i>
+                                    <i class="fas fa-trash"></i>
+                                    <i class="fas fa-pen-square"></i>
+                                </td>
+                            </tr>
+                            <tr class="tr">
+                                <td class="for_td">M.Farooq Ashraf Abdullah</td>
+                                <td class="mail_td">Brother</td>
+                                <td>SitsBook Lanat</td>
+                                <td class="password_td">
+                                    <input type="text" placeholder="**********" class="pass_style">
+                                    <i class="fas fa-low-vision"></i>
+                                    <i class="fas fa-trash"></i>
+                                    <i class="fas fa-pen-square"></i>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+        </div>
+
+
+
+
+    </section>
+
+
+
+
+
+
+    <div class="page-wrapper chiller-theme toggled">
+        <a id="show-sidebar" class="btn btn-sm btn-dark" style="color: white;">
+            <i class="fas fa-bars"></i>
+        </a>
+        <nav id="sidebar" class="sidebar-wrapper">
+            <div class="sidebar-content">
+                <div class="sidebar-brand">
+                    <a href="#">pro sidebar</a>
+                    <div id="close-sidebar">
+                        <i class="fas fa-times"></i>
+                    </div>
+                </div>
+                <div class="sidebar-header">
+                    <div class="user-pic">
+                        <img class="img-responsive img-rounded" src="https://raw.githubusercontent.com/azouaoui-med/pro-sidebar-template/gh-pages/src/img/user.jpg" alt="User picture">
+                    </div>
+                    <div class="user-info">
+                        <span class="user-name">Jhon
+            <strong>Smith</strong>
+          </span>
+                        <span class="user-role">Administrator</span>
+                        <span class="user-status">
+            <i class="fa fa-circle"></i>
+            <span>Online</span>
+                        </span>
+                    </div>
+                </div>
+                <!-- sidebar-header  -->
+                <div class="sidebar-search">
+                    <div>
+                        <div class="input-group">
+                            <input type="text" class="form-control search-menu" placeholder="Search...">
+                            <div class="input-group-append">
+                                <span class="input-group-text">
+                <i class="fa fa-search" aria-hidden="true"></i>
+              </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- sidebar-search  -->
+                <div class="sidebar-menu">
+                    <ul>
+                        <li class="header-menu">
+                            <span>General</span>
+                        </li>
+                        <li class="sidebar-dropdown">
+                            <a href="#">
+                                <i class="fa fa-tachometer-alt"></i>
+                                <span>Dashboard</span>
+                                <span class="badge badge-pill badge-warning">New</span>
+                            </a>
+                            <div class="sidebar-submenu">
+                                <ul>
+                                    <li>
+                                        <a href="#">Dashboard 1
+                    <span class="badge badge-pill badge-success">Pro</span>
+                  </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Dashboard 2</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Dashboard 3</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="sidebar-dropdown">
+                            <a href="#">
+                                <i class="fa fa-shopping-cart"></i>
+                                <span>E-commerce</span>
+                                <span class="badge badge-pill badge-danger">3</span>
+                            </a>
+                            <div class="sidebar-submenu">
+                                <ul>
+                                    <li>
+                                        <a href="#">Products
+
+                  </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Orders</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Credit cart</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="sidebar-dropdown">
+                            <a href="#">
+                                <i class="far fa-gem"></i>
+                                <span>Components</span>
+                            </a>
+                            <div class="sidebar-submenu">
+                                <ul>
+                                    <li>
+                                        <a href="#">General</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Panels</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Tables</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Icons</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Forms</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="sidebar-dropdown">
+                            <a href="#">
+                                <i class="fa fa-chart-line"></i>
+                                <span>Charts</span>
+                            </a>
+                            <div class="sidebar-submenu">
+                                <ul>
+                                    <li>
+                                        <a href="#">Pie chart</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Line chart</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Bar chart</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Histogram</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="sidebar-dropdown">
+                            <a href="#">
+                                <i class="fa fa-globe"></i>
+                                <span>Maps</span>
+                            </a>
+                            <div class="sidebar-submenu">
+                                <ul>
+                                    <li>
+                                        <a href="#">Google maps</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Open street map</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="header-menu">
+                            <span>Extra</span>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="fa fa-book"></i>
+                                <span>Documentation</span>
+                                <span class="badge badge-pill badge-primary">Beta</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="fa fa-calendar"></i>
+                                <span>Calendar</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="fa fa-folder"></i>
+                                <span>Examples</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <!-- sidebar-menu  -->
+            </div>
+            <!-- sidebar-content  -->
+            <div class="sidebar-footer">
+                <a href="#">
+                    <i class="fa fa-bell"></i>
+                    <span class="badge badge-pill badge-warning notification">3</span>
+                </a>
+                <a href="#">
+                    <i class="fa fa-envelope"></i>
+                    <span class="badge badge-pill badge-success notification">7</span>
+                </a>
+                <a href="#">
+                    <i class="fa fa-cog"></i>
+                    <span class="badge-sonar"></span>
+                </a>
+                <a href="#">
+                    <i class="fa fa-power-off"></i>
+                </a>
+            </div>
+        </nav>
+        <!-- sidebar-wrapper  -->
+        <main class="page-content">
+
+
+        </main>
+
+
+
+
+
+
+        <!-- page-content" -->
+    </div>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/esm/popper.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/js/bootstrap.js'></script>
+    <script src="./script.js"></script>
+    <script src="mafia.js"></script>
+
+</body>
+
+</html>
