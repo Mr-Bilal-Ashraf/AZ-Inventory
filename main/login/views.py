@@ -119,7 +119,7 @@ def Signin(request):
                 user = auth.authenticate(request, username= name, password= passw)
                 if user is not None:
                     auth.login(request, user)
-                    return HttpResponseRedirect('/pass/')
+                    return HttpResponseRedirect('/emp/')
                 else:
                     messages.error(request, "Password Incorrect")
 
