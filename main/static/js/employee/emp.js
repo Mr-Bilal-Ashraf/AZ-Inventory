@@ -102,13 +102,14 @@ function logOut() {
     })
 }
 
+
 mon = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 /// get today date
 
 function today() {
     var today = new Date();
     var dd = String(today.getDate()).padStart(2, '0');
-    var mm =  mon[today.getMonth()]
+    var mm = mon[today.getMonth()]
     var yyyy = today.getFullYear();
 
     return (dd + '/' + mm + '/' + yyyy);
@@ -116,7 +117,7 @@ function today() {
 
 function absent_month() {
     var today = new Date();
-    var mm =  mon[today.getMonth()]
+    var mm = mon[today.getMonth()]
     var yyyy = today.getFullYear();
 
     return (mm + '/' + yyyy);
@@ -125,16 +126,16 @@ function absent_month() {
 function absent_day() {
     var today = new Date();
     var dd = String(today.getDate()).padStart(2, '0');
-    var mm =  mon[today.getMonth()];
+    var mm = mon[today.getMonth()];
 
-    return (dd + '/' + mm );
+    return (dd + '/' + mm);
 }
 
-function cal_leaves(id){
+function cal_leaves(id) {
     var today = new Date();
-    document.getElementById("leave"+id).innerHTML = daily_leaves[id].split(mon[today.getMonth()]).length - 1;
+    document.getElementById("leave" + id).innerHTML = daily_leaves[id].split(mon[today.getMonth()]).length - 1;
     swal({
-        'title':'TODAY\'s ABSENT MARKED',
+        'title': 'TODAY\'s ABSENT MARKED',
         'type': 'success'
     })
 }
@@ -142,13 +143,13 @@ function cal_leaves(id){
 // console.table((daily_leaves[6].slice(0,daily_leaves[6].length-1)).split(" "))
 
 
-function chckleave(id){
+function chckleave(id) {
 
     form = new FormData()
-    if(daily_leaves[id] == null || daily_leaves[id] == 'null'){
+    if (daily_leaves[id] == null || daily_leaves[id] == 'null') {
 
         today = absent_day() + " ";
-        form.append("id",id);
+        form.append("id", id);
         form.append("leaves", today);
 
         fetch('/emp/leave/', {
@@ -160,18 +161,18 @@ function chckleave(id){
         }).then(function (response) {
             return response.json();
         }).then(function (received) {
-            if(received.x){
+            if (received.x) {
                 daily_leaves[id] = absent_day() + " ";
                 cal_leaves(id);
             }
         })
 
 
-    }else if(daily_leaves[id].indexOf(absent_day()) < 0 ){
+    } else if (daily_leaves[id].indexOf(absent_day()) < 0) {
 
         today = daily_leaves[id];
         today += absent_day() + " ";
-        form.append("id",id);
+        form.append("id", id);
         form.append("leaves", today);
 
         fetch('/emp/leave/', {
@@ -183,21 +184,82 @@ function chckleave(id){
         }).then(function (response) {
             return response.json();
         }).then(function (received) {
-            if(received.x){
+            if (received.x) {
                 daily_leaves[id] += absent_day() + " ";
                 cal_leaves(id);
             }
 
         })
-    }else{
+    } else {
         swal({
-            'title':'ABSENT ALREADY MARKED',
+            'title': 'ABSENT ALREADY MARKED',
             'type': 'info'
         })
     }
 }
 
+function show_attendance() {
 
+    document.getElementById("mon_attendance").innerHTML = `<tr class="text_center">
+    <th width="auto">Index</th>
+    <td width="2%"> </td>
+    <th width="30%">Date</th>
+    <th width="auto">Index</th>
+    <td width="2%"> </td>
+    <th width="30%">Date</th>
+    </tr>`;
+    tr = document.createElement("tr");
+    th = document.createElement("th");
+    th.colSpan = 6;
+    th.className = "text_center";
+    th.innerText = "Please Select An Employee!"
+    tr.append(th);
+    document.getElementById("mon_attendance").append(tr);
+    document.getElementById("pr_attendance").innerHTML = `<tr style="text-align: center;">
+    <th width="auto">Month</th>
+    <td width="2%"> </td>
+    <th width="30%">Absents</th>
+    <th width="auto">Month</th>
+    <td width="2%"> </td>
+    <th width="30%">Absents</th>
+    </tr>`;
+    tr1 = document.createElement("tr");
+    th1 = document.createElement("th");
+    th1.colSpan = 6;
+    th1.className = "text_center";
+    th1.innerText = "Please Select An Employee!"
+    tr1.append(th1);
+    document.getElementById("pr_attendance").append(tr1);
+
+
+    // th1 = document.createElement("th");
+    // th1.style.width = "auto";
+    // th1.className = "text_center";
+    // td2 = document.createElement("td");
+    // d21.style.width = "2%";
+
+    // td3 = document.createElement("td");
+    // td3.style.width = "30%";
+
+    // th4 = document.createElement("th");
+    // th4.style.width = "auto";
+    // th4.className = "text_center";
+    // td5 = document.createElement("td");
+    // td5.style.width = "2%";
+
+    // td6 = document.createElement("td");
+    // td6.style.width = "30%";
+    
+
+
+
+
+
+
+
+    document.getElementById("attendance").style.height = "100vh";
+    document.querySelector("body").style.overflow = "hidden";
+}
 
 
 
@@ -273,7 +335,7 @@ function data_after_srch(a) {
                     div6.innerText = received["data"][i].salary_type;
                     td6.append(div6);
                     var today = new Date();
-                    if(daily_leaves[received["data"][i].id] != null && daily_leaves[received["data"][i].id] != "null")
+                    if (daily_leaves[received["data"][i].id] != null && daily_leaves[received["data"][i].id] != "null")
                         absent = daily_leaves[received["data"][i].id].split(mon[today.getMonth()]).length - 1;
                     else
                         absent = 0;
@@ -344,7 +406,9 @@ document.getElementById("addEmp").addEventListener('click', () => {
         ring.load();
 
         fetch('/emp/', {
-            headers: {"X-CSRFToken": getCookie("csrftoken")},
+            headers: {
+                "X-CSRFToken": getCookie("csrftoken")
+            },
             method: 'POST',
             body: formdata
         }).then(function (response) {
@@ -768,14 +832,22 @@ function full_screen(id) {
             document.getElementById("update_commission").value = received.commission ? `${received.commission}` : `---------`;
         })
 
-    detailed.style.height = "100vh"
+    detailed.style.height = "100vh";
+    document.querySelector("body").style.overflow = "hidden";
     stop()
     s_stop()
 
 }
 
+
+function close_attendance() {
+    document.getElementById("attendance").style.height = "0vh";
+    document.querySelector("body").style.overflow = "auto";
+}
+
 function p_stop() {
-    detailed.style.height = "00vh"
+    detailed.style.height = "00vh";
+    document.querySelector("body").style.overflow = "auto";
 }
 
 var merjan;
