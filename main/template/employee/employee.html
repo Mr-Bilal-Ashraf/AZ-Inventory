@@ -154,7 +154,7 @@
             }
         }
 
-        #detail {
+        #detail{
             transition: .4s ease;
             overflow: scroll;
             background-color: black;
@@ -164,6 +164,18 @@
             top: 0%;
             z-index: 2;
         }
+
+        #attendance{
+            transition: .4s ease;
+            overflow: scroll;
+            background-color: black;
+            height: 100vh;
+            width: 100%;
+            position: fixed;
+            top: 0%;
+            z-index: 2;
+        }
+        
 
         .table input {
             border: none;
@@ -405,30 +417,127 @@
                                                 <span onclick="p_stop()" id="close_detail">CLOSE</span>
                                             </div>
                                         </div>
-
                                     </div>
-
                                 </div>
                             </div>
                         </div>
                     </div>
-
-
-
-                    <section>
-
-                        <!-- SweetAlert2 -->
-
-
-
-                    </section>
-
-
                 </div>
             </div>
     </section>
 
+    <section id="attendance">
 
+        <div class="rt-container">
+            <div class="col-rt-12">
+                <div class="Scriptcontent">
+                    <!-- Student Profile -->
+                    <div class="student-profile py-4">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-lg-4" style="margin-bottom:20px;">
+                                    <div class="card shadow-sm">
+                                        <table class="table table-bordered" style="width: 90%; margin: 20px auto;">
+
+                                            <tr>
+                                                <th width="auto">Muhammad Bilal</th>
+                                                <td width="5%" onclick="alert('hy')"><i class="fas fa-greater-than"></i>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th width="auto">Muhammad Bilal Ashraf</th>
+                                                <td width="5%" onclick="alert('hy')"><i class="fas fa-greater-than"></i>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th width="auto">Muhammad Bilal Azaad</th>
+                                                <td width="5%" onclick="alert('hy')"><i class="fas fa-greater-than"></i>
+                                                </td>
+                                            </tr>
+
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-8">
+                                    <div class="card shadow-sm">
+                                        <div class="card-header bg-transparent border-0">
+                                            <h3 class="mb-0"><i class="far fa-clone pr-1"></i><span>Month's</span>
+                                                Attendance</h3>
+                                        </div>
+                                        <div class="card-body pt-0">
+
+                                            <table class="table table-bordered">
+                                                <tr style="text-align: center;">
+                                                    <th width="auto">Index</th>
+                                                    <td width="2%"> </td>
+                                                    <td width="30%">Date</td>
+                                                    <th width="auto">Index</th>
+                                                    <td width="2%"> </td>
+                                                    <td width="30%">Date</td>
+                                                </tr>
+                                                <section>
+                                                    <tr>
+                                                        <th width="auto" style="text-align: center;">1</th>
+                                                        <td width="2%">:</td>
+                                                        <td width="30%">05/Nov</td>
+                                                        <th width="auto" style="text-align: center;">2</th>
+                                                        <td width="2%">:</td>
+                                                        <td width="30%">09/Nov</td>
+                                                    </tr>
+                                                </section>
+
+                                            </table>
+                                            <div style="height: 55px;">
+                                                <div style="display: flex;justify-content: center;">
+                                                    <span onclick="notif()" id="subscribe"
+                                                        style="background-color: #008ee741; border: 2px solid rgba(0, 0, 0, 0.125);padding: 10px;font-weight: 600;cursor:pointer;padding: 8px 20px 8px 20px;border-radius: 5px;margin-right: 4px;">UPDATE</span>
+                                                    <span onclick="p_stop()"
+                                                        style="background-color: #fc424b44; border: 2px solid rgba(0, 0, 0, 0.125);padding: 10px;font-weight: 600;cursor:pointer;padding: 8px 20px 8px 20px;border-radius: 5px;margin-left: 4px;">CLOSE</span>
+                                                </div>
+                                            </div>
+
+                                            <h3 class="mb-0"><i class="fas fa-book-open"
+                                                    style="margin-bottom: 20px;"></i> Previous Attendances</h3>
+
+                                            <table class="table table-bordered">
+                                                <tr style="text-align: center;">
+                                                    <th width="auto">Month</th>
+                                                    <td width="2%"> </td>
+                                                    <td width="30%">Absents</td>
+                                                    <th width="auto">Month</th>
+                                                    <td width="2%"> </td>
+                                                    <td width="30%">Absents</td>
+                                                </tr>
+                                                <section>
+                                                    <tr>
+                                                        <th width="auto" style="text-align: center;">November</th>
+                                                        <td width="2%">:</td>
+                                                        <td width="30%">15</td>
+                                                        <th width="auto" style="text-align: center;">December</th>
+                                                        <td width="2%">:</td>
+                                                        <td width="30%">09</td>
+                                                    </tr>
+                                                </section>
+                                            </table>
+
+                                        </div>
+                                        <div style="height: 55px;">
+                                            <div style="display: flex;justify-content: center;">
+                                                <span onclick="notif()" id="subscribe"
+                                                    style="background-color: #008ee741; border: 2px solid rgba(0, 0, 0, 0.125);padding: 10px;font-weight: 600;cursor:pointer;padding: 8px 20px 8px 20px;border-radius: 5px;margin-right: 4px;">UPDATE</span>
+                                                <span onclick="p_stop()"
+                                                    style="background-color: #fc424b44; border: 2px solid rgba(0, 0, 0, 0.125);padding: 10px;font-weight: 600;cursor:pointer;padding: 8px 20px 8px 20px;border-radius: 5px;margin-left: 4px;">CLOSE</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </section>
 
     <section id="centering">
 

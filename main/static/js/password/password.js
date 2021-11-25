@@ -620,11 +620,10 @@ clipboard.addEventListener('click', () => {
     textarea.select();
     document.execCommand('copy');
     textarea.remove();
-    swal(
-        'Employee Added!',
-        'New Employee Has Been Added !',
-        'success'
-    )
+    swal({
+        'text':'Password Copied!',
+        'type': 'success'
+    })
 });
 
 document.getElementById("length").addEventListener("click", () => {
@@ -685,7 +684,7 @@ function proceed_process() {
         }
         ids = []
         proceed_to_process = true;
-    }, 12000);
+    }, 120000);
 }
 
 
