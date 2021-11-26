@@ -65,7 +65,7 @@ class employee(APIView):
             for x in request.data:
                 if request.data[x] == "null":
                     request.data[x] = None
-                if x == "profile" and request.data[x] != "null":
+                if x == "profile" and request.data[x] != None:
                     imageTemproary = Image.open(request.data[x])
                     outputIoStream = BytesIO()
                     imageTemproary = imageTemproary.resize((150,150))

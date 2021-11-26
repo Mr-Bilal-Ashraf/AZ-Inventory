@@ -431,7 +431,7 @@
                                             {% for a in list %}
                                             <tr>
                                                 <th width="auto" class="capi">{{a.name}}</th>
-                                                <td width="5%" class="pointer"><i class="fas fa-greater-than"></i>
+                                                <td width="5%" class="pointer" onclick="cal_attendance('{{a.id}}')"><i class="fas fa-greater-than"></i>
                                                 </td>
                                             </tr>
                                             {% endfor %}
@@ -442,13 +442,13 @@
                                 <div class="col-lg-8">
                                     <div class="card shadow-sm">
                                         <div class="card-header bg-transparent border-0">
-                                            <h3 class="mb-0"><i class="far fa-clone pr-1"></i><span>Month's</span>
+                                            <h3 class="mb-0"><i class="far fa-clone pr-1"></i><span>Monthly</span>
                                                 Attendance</h3>
                                         </div>
                                         <div class="card-body pt-0">
 
                                             <table class="table table-bordered" id="mon_attendance">
-                                                <tr class="text_center">
+                                                <!-- <tr class="text_center">
                                                     <th width="auto">Index</th>
                                                     <td width="2%"> </td>
                                                     <th width="30%">Date</th>
@@ -463,20 +463,20 @@
                                                     <th width="auto" class="text_center">2</th>
                                                     <td width="2%">:</td>
                                                     <td width="30%">09/Nov</td>
-                                                </tr>
+                                                </tr> -->
 
                                             </table>
                                             <div style="height: 55px;">
                                                 <div style="display: flex;justify-content: center;">
-                                                    <span class="update" id="subscribe">UPDATE</span>
+                                                    <button class="update" id="clear_attendance">Clear</button>
                                                 </div>
                                             </div>
 
                                             <h3 class="mb-0"><i class="fas fa-book-open"
-                                                    style="margin-bottom: 20px;"></i> Previous Attendances</h3>
+                                                    style="margin-bottom: 20px;"></i> Previous Record</h3>
 
                                             <table class="table table-bordered" id="pr_attendance">
-                                                <tr style="text-align: center;">
+                                                <!-- <tr style="text-align: center;">
                                                     <th width="auto">Month</th>
                                                     <td width="2%"> </td>
                                                     <th width="30%">Absents</th>
@@ -491,7 +491,7 @@
                                                     <th width="auto" style="text-align: center;">December</th>
                                                     <td width="2%">:</td>
                                                     <td width="30%">09</td>
-                                                </tr>
+                                                </tr> -->
                                             </table>
 
                                         </div>
@@ -537,7 +537,7 @@
                     </div>
 
                     <!-- Who are on duty today -->
-                    <div class="employee_btn" id="active" onclick="show_attendance()">
+                    <div class="employee_btn" id="active" onclick="show_attendance('Please Select An Employee!')">
                         <h4 class="em_btn_title">ATTENDANCE</h4>
                         <i class="fas fa-eye" id="em_btn_4"></i>
                     </div>
@@ -1160,6 +1160,15 @@
                 daily_leaves[{{a.id}}] = "{{a.daily_leaves}}"
             {% elif a.daily_leaves is none %}
                 daily_leaves[{{a.id}}] = null
+            {% endif %}
+        {% endfor %}
+
+        monthly_leaves = {}
+        {% for a in list %}
+            {% if a.monthly_leaves is not none %}
+                monthly_leaves[{{a.id}}] = "{{a.monthly_leaves}}"
+            {% elif a.monthly_leaves is none %}
+                monthly_leaves[{{a.id}}] = null
             {% endif %}
         {% endfor %}
 

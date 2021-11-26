@@ -104,6 +104,7 @@ function logOut() {
 
 
 mon = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
 /// get today date
 
 function today() {
@@ -198,7 +199,7 @@ function chckleave(id) {
     }
 }
 
-function show_attendance() {
+function show_attendance(text_to_show) {
 
     document.getElementById("mon_attendance").innerHTML = `<tr class="text_center">
     <th width="auto">Index</th>
@@ -212,7 +213,7 @@ function show_attendance() {
     th = document.createElement("th");
     th.colSpan = 6;
     th.className = "text_center";
-    th.innerText = "Please Select An Employee!"
+    th.innerText = text_to_show;
     tr.append(th);
     document.getElementById("mon_attendance").append(tr);
     document.getElementById("pr_attendance").innerHTML = `<tr style="text-align: center;">
@@ -227,43 +228,154 @@ function show_attendance() {
     th1 = document.createElement("th");
     th1.colSpan = 6;
     th1.className = "text_center";
-    th1.innerText = "Please Select An Employee!"
+    th1.innerText = text_to_show;
     tr1.append(th1);
     document.getElementById("pr_attendance").append(tr1);
-
-
-    // th1 = document.createElement("th");
-    // th1.style.width = "auto";
-    // th1.className = "text_center";
-    // td2 = document.createElement("td");
-    // d21.style.width = "2%";
-
-    // td3 = document.createElement("td");
-    // td3.style.width = "30%";
-
-    // th4 = document.createElement("th");
-    // th4.style.width = "auto";
-    // th4.className = "text_center";
-    // td5 = document.createElement("td");
-    // td5.style.width = "2%";
-
-    // td6 = document.createElement("td");
-    // td6.style.width = "30%";
-    
-
-
-
-
-
-
 
     document.getElementById("attendance").style.height = "100vh";
     document.querySelector("body").style.overflow = "hidden";
 }
 
+function cal_attendance(id) {
 
+    // add first line to show monthly attendance
+    document.getElementById("mon_attendance").innerHTML = `<tr class="text_center"> 
+    <th width="auto">Index</th>
+    <td width="2%"> </td>
+    <th width="30%">Date</th>
+    <th width="auto">Index</th>
+    <td width="2%"> </td>
+    <th width="30%">Date</th>
+    </tr>`;
 
+    num = 0; //    to get attendance of employees 
 
+    if (daily_leaves[id] != null) {
+        a = (daily_leaves[id].slice(0, daily_leaves[id].length - 1)).split(" "); // getting attendance of a specified employee
+
+        var today = new Date();
+        mon_to_show = a[0].slice(a[0].indexOf('/') + 1); //    getting first month from employee attendance to show that month list
+
+        if (mon_to_show == mon[today.getMonth()]) { //  disable clear button if the current month is same as mon_to_show
+            document.getElementById("clear_attendance").disabled = true;
+        } else {
+            document.getElementById("clear_attendance").disabled = false;
+        }
+
+        // add employee attendance to the table
+        for (i = 0; i < (a.length) / 2; i++) {
+            tr = document.createElement("tr")
+
+            th1 = document.createElement("th");
+            th1.style.width = "auto";
+            th1.className = "text_center";
+            th1.innerText = num + 1;
+
+            td2 = document.createElement("td");
+            td2.style.width = "2%";
+            td2.innerText = ":";
+
+            td3 = document.createElement("td");
+            td3.style.width = "30%";
+            if (a[num].indexOf(mon_to_show) > 0) { // this will show the attendance of only first month from employee attendance
+                td3.innerText = " " + a[num++] + " ";
+            } else {
+                num++;
+            }
+
+            th4 = document.createElement("th");
+            th4.style.width = "auto";
+            th4.className = "text_center";
+            aw = (a[num] == undefined) ? " " : num + 1; // checking if the last index is empty
+            th4.innerText = aw;
+
+            td5 = document.createElement("td");
+            td5.style.width = "2%";
+            td5.innerText = ":";
+
+            td6 = document.createElement("td");
+            td6.style.width = "30%";
+
+            if (aw != " ") {
+                if (a[num].indexOf(mon_to_show) > 0) { // this will show the attendance of only first month from employee attendance
+                    td6.innerText = " " + a[num++] + " ";
+                    tr.append(th1, td2, td3, th4, td5, td6);
+                } else {
+                    num++;
+                    if (td3.innerText.length > 1)
+                        tr.append(th1, td2, td3);
+                }
+            } else {
+                tr.append(th1, td2, td3);
+            }
+
+            document.getElementById("mon_attendance").append(tr); // adding attendance to the table
+        }
+    } else { // the employee which have no leaves this month;
+        show_attendance("This Employee Has No Leaves");
+    }
+
+    if (monthly_leaves[id] != null) {
+        document.getElementById("pr_attendance").innerHTML = `<tr style="text-align: center;">
+        <th width="auto">Month</th>
+        <td width="2%"> </td>
+        <th width="30%">Absents</th>
+        <th width="auto">Month</th>
+        <td width="2%"> </td>
+        <th width="30%">Absents</th>
+        </tr>`;
+        numb = 0;
+        a = (monthly_leaves[id].slice(0, monthly_leaves[id].length - 1)).split(" ");
+        for (i = 0; i < (a.length)/2; i++) {
+            tr = document.createElement("tr")
+
+            th1 = document.createElement("th");
+            th1.style.width = "auto";
+            th1.className = "text_center";
+            th1.innerText = a[numb].slice(0, a[numb].indexOf("="));
+
+            td2 = document.createElement("td");
+            td2.style.width = "2%";
+            td2.innerText = ":";
+
+            td3 = document.createElement("td");
+            td3.style.width = "30%";
+            td3.innerText = " " + a[numb].slice(a[numb].indexOf("=") + 1) + " ";
+            numb++;
+
+            th4 = document.createElement("th");
+            th4.style.width = "auto";
+            th4.className = "text_center";
+            if(a[numb]!=undefined)
+                th4.innerText = a[numb].slice(0, a[numb].indexOf("="));;
+
+            td5 = document.createElement("td");
+            td5.style.width = "2%";
+            td5.innerText = ":";
+
+            td6 = document.createElement("td");
+            td6.style.width = "30%";
+            if(a[numb]!=undefined)
+                td6.innerText = " " + a[numb].slice(a[numb].indexOf("=") + 1) + " ";
+            numb++;
+            tr.append(th1, td2, td3, th4, td5, td6);
+            document.getElementById("pr_attendance").append(tr);
+        }
+    } else {
+        document.getElementById("pr_attendance").innerHTML = `<tr style="text-align: center;">
+    <th width="auto">Month</th>
+    <td width="2%"> </td>
+    <th width="30%">Absents</th>
+    <th width="auto">Month</th>
+    <td width="2%"> </td>
+    <th width="30%">Absents</th>
+</tr><tr style="text-align: center;"><th colspan="6">This Employee Has No Previous Record...!</th></tr>`;
+    }
+}
+
+document.getElementById("clear_attendance").addEventListener("click", () => {
+    console.log("hy")
+})
 
 
 // Refresh data after serach
