@@ -248,6 +248,8 @@ function cal_attendance(id) {
     <th width="30%">Date</th>
     </tr>`;
 
+    document.getElementById("qwerty").value = id;
+
     num = 0; //    to get attendance of employees 
 
     if (daily_leaves[id] != null) {
@@ -256,7 +258,7 @@ function cal_attendance(id) {
         var today = new Date();
         mon_to_show = a[0].slice(a[0].indexOf('/') + 1); //    getting first month from employee attendance to show that month list
 
-        if (mon_to_show == mon[today.getMonth()]) { //  disable clear button if the current month is same as mon_to_show
+        if (mon_to_show == mon[today.getMonth()] || daily_leaves[id].length==0) { //  disable clear button if the current month is same as mon_to_show
             document.getElementById("clear_attendance").disabled = true;
         } else {
             document.getElementById("clear_attendance").disabled = false;
@@ -326,7 +328,7 @@ function cal_attendance(id) {
         </tr>`;
         numb = 0;
         a = (monthly_leaves[id].slice(0, monthly_leaves[id].length - 1)).split(" ");
-        for (i = 0; i < (a.length)/2; i++) {
+        for (i = 0; i < (a.length) / 2; i++) {
             tr = document.createElement("tr")
 
             th1 = document.createElement("th");
@@ -346,7 +348,7 @@ function cal_attendance(id) {
             th4 = document.createElement("th");
             th4.style.width = "auto";
             th4.className = "text_center";
-            if(a[numb]!=undefined)
+            if (a[numb] != undefined)
                 th4.innerText = a[numb].slice(0, a[numb].indexOf("="));;
 
             td5 = document.createElement("td");
@@ -355,7 +357,7 @@ function cal_attendance(id) {
 
             td6 = document.createElement("td");
             td6.style.width = "30%";
-            if(a[numb]!=undefined)
+            if (a[numb] != undefined)
                 td6.innerText = " " + a[numb].slice(a[numb].indexOf("=") + 1) + " ";
             numb++;
             tr.append(th1, td2, td3, th4, td5, td6);
@@ -374,7 +376,85 @@ function cal_attendance(id) {
 }
 
 document.getElementById("clear_attendance").addEventListener("click", () => {
-    console.log("hy")
+
+    var id = document.getElementById("qwerty").value;
+    var at = absent_month() + "=";
+    var a = (daily_leaves[id].slice(0, daily_leaves[id].length - 1)).split(" ");
+    var mon_to_show = a[0].slice(a[0].indexOf('/') + 1);
+    var num = 0;
+    for (i = 0; i < a.length; i++) {
+        if (a[i].indexOf(mon_to_show) > 0)
+            num++;
+    }
+    at += num + " ";
+    form = new FormData()
+    if (monthly_leaves[id] == null || monthly_leaves[id] == 'null') {
+        today = at;
+        let daily__leaves = daily_leaves[id].slice(daily_leaves[id].lastIndexOf(mon_to_show)+4);
+        form.append("id", id);
+        form.append("leaves", today);
+        form.append("daily_le", daily__leaves);
+
+        fetch('/emp/mon/', {
+            headers: {
+                "X-CSRFToken": getCookie("csrftoken")
+            },
+            method: 'POST',
+            body: form
+        }).then(function (response) {
+            return response.json();
+        }).then(function (received) {
+            if (received.x) {
+                monthly_leaves[id] = at;
+                daily_leaves[id] = daily__leaves;
+                swal({
+                    'title': 'Attendance Cleared!',
+                    'type': 'success'
+                })
+                cal_attendance(id);
+            } else {
+                swal({
+                    'title': 'There is a Server Error!',
+                    'type': 'error'
+                })
+            }
+
+        })
+    } else if (monthly_leaves[id].indexOf(at) < 0) {
+        let daily__leaves = daily_leaves[id].slice(daily_leaves[id].lastIndexOf(mon_to_show)+4);
+        today = monthly_leaves[id];
+        today += at;
+        form.append("id", id);
+        form.append("leaves", today);
+        form.append("daily_le", daily__leaves);
+
+        fetch('/emp/mon/', {
+            headers: {
+                "X-CSRFToken": getCookie("csrftoken")
+            },
+            method: 'POST',
+            body: form
+        }).then(function (response) {
+            return response.json();
+        }).then(function (received) {
+            if (received.x) {
+                monthly_leaves[id] += at;
+                daily_leaves[id] = daily__leaves;
+                swal({
+                    'title': 'Attendance Cleared!',
+                    'type': 'success'
+                })
+                cal_attendance(id);
+            } else {
+                swal({
+                    'title': 'There is a Server Error!',
+                    'type': 'error'
+                })
+            }
+
+        })
+        console.log(today);
+    }
 })
 
 
@@ -955,6 +1035,8 @@ function full_screen(id) {
 function close_attendance() {
     document.getElementById("attendance").style.height = "0vh";
     document.querySelector("body").style.overflow = "auto";
+    document.getElementById("qwerty").value = 0;
+
 }
 
 function p_stop() {
