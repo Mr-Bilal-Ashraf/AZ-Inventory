@@ -33,7 +33,7 @@ class employee(APIView):
                     img = userDetail.objects.values("image").get(user_id = request.user.id)
                 except:
                     return HttpResponseRedirect(reverse('SignUpDetails'))
-                emps = employees.objects.values("id","name","designation","salary","salary_paid","salary_left","salary_type","daily_leaves").filter(employee_of = request.user.id)
+                emps = employees.objects.values("id","name","designation","salary","salary_paid","salary_left","salary_type","daily_leaves","monthly_leaves").filter(employee_of = request.user.id)
                 data = SerEmp(emps, many=True)
                 dis_name = employees.objects.values("name").filter(employee_of = request.user.id).distinct()
                 dis_department = employees.objects.values("department").filter(employee_of = request.user.id).distinct()
@@ -134,9 +134,18 @@ def get_extra(request):
     except:
         return Response({'x': False})
 
+
 @api_view(['POST'])
 def mark_leave(request):
     employees.objects.filter(id=request.POST["id"], employee_of = request.user.id).update(daily_leaves = request.POST["leaves"])
+
+    return Response({"x": True})
+
+
+@api_view(['POST'])
+def mark_monthly(request):
+    print(request.POST["daily_le"])
+    employees.objects.filter(id=request.POST["id"], employee_of = request.user.id).update(monthly_leaves = request.POST["leaves"], daily_leaves = request.POST["daily_le"])
 
     return Response({"x": True})
 
