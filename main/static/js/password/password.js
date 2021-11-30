@@ -572,6 +572,8 @@ function closer() {
         document.getElementById(key).style.height = "0px";
         blocks[key] = 0;
     }
+    document.querySelector('body').scrollIntoView();
+
 }
 
 function opener(id) {
@@ -583,10 +585,11 @@ function opener(id) {
         document.getElementById(id).style.height = `${blocks_heights[id]}px`;
         blocks[id] = 1;
         document.getElementById("fa-times-circle").style.display = "block";
+        document.getElementById("typer").scrollIntoView();
     }
+    close_sidebar();
 }
 closer();
-
 
 
 //  password generator javascript starts from here

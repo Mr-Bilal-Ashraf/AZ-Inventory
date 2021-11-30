@@ -18,6 +18,95 @@ function getCookie(cname) {
     return "";
 }
 
+var preloader = document.getElementById("loading");
+
+function myFunction() {
+    var today = new Date();
+    calculate_leaves = Object.keys(daily_leaves);
+    for (i = 0; i < calculate_leaves.length; i++) {
+        id = calculate_leaves[i];
+        if (daily_leaves[id] == null || daily_leaves[id] == "null") {
+            document.getElementById("leave" + id).innerHTML = 0;
+        } else {
+            document.getElementById("leave" + id).innerHTML = daily_leaves[id].split(mon[today.getMonth()]).length - 1;
+        }
+    }
+    preloader.style.display = 'none';
+};
+
+document.addEventListener("keydown", e => {
+    if (e.altKey && e.key === 'q') {
+        logOut()
+    }
+})
+
+document.addEventListener("keydown", e => {
+    if (e.key === "Escape") {
+        closer();
+    }
+})
+
+blocks = {
+    "show_adding": 0,
+    "show_search": 0
+}
+blocks_heights = {
+    "show_adding": 0,
+    "show_search": 0
+}
+blocks_txt = {
+    "show_adding": "Add Employee",
+    "show_search": "Search Employee"
+}
+
+for (key in blocks_heights) {
+    blocks_heights[key] = document.getElementById(key).offsetHeight;
+}
+
+function closer() {
+    document.getElementById("fa-times-circle").style.display = "none";
+    document.getElementById("typer").innerText = "Allah Is Great!";
+    for (key in blocks) {
+        document.getElementById(key).style.height = "0px";
+        blocks[key] = 0;
+    }
+    document.querySelector('body').scrollIntoView();
+    close_sidebar();
+}
+
+function opener(id) {
+    if (blocks[id] == 1) {
+        closer();
+    } else {
+        closer();
+        document.getElementById("typer").innerText = blocks_txt[id];
+        document.getElementById(id).style.height = `${blocks_heights[id]}px`;
+        blocks[id] = 1;
+        document.getElementById("fa-times-circle").style.display = "block";
+        document.getElementById("typer").scrollIntoView();
+    }
+    close_sidebar();
+}
+closer();
+
+
+function open_report() {
+    document.getElementById("report_issue").style.display = "block";
+    setTimeout(() => {
+        document.getElementById("report_issue").style.opacity = "1";
+    }, 1);
+    document.querySelector("body").style.overflow = "hidden";
+}
+
+
+function close_report() {
+    document.getElementById("report_issue").style.opacity = "0"
+    setTimeout(() => {
+        document.getElementById("report_issue").style.display = "none";
+    }, 900);
+    document.querySelector("body").style.overflow = "auto";
+}
+
 
 /* Sidebar Opening and closing Script */
 
@@ -50,13 +139,19 @@ $(".page-wrapper").removeClass("toggled").click();
 $("#close-sidebar").click(function () {
     $(".page-wrapper").removeClass("toggled");
 });
+
 $("#show-sidebar").click(function () {
     $(".page-wrapper").addClass("toggled");
 });
 
+function close_sidebar() {
+    $(".page-wrapper").removeClass("toggled");
+}
+
 function haa() {
     document.getElementById("taking_image").click();
 }
+
 
 // features not available right now
 
@@ -236,6 +331,14 @@ function show_attendance(text_to_show) {
     document.querySelector("body").style.overflow = "hidden";
 }
 
+function att_color(id) {
+    var p = document.getElementById("att_emp_names").children[0].children;
+    for (i = 0; i < p.length; i++) {
+        p[i].className = "";
+    }
+    document.getElementById(`att_emp_${id}`).className = "att_color";
+}
+
 function cal_attendance(id) {
 
     // add first line to show monthly attendance
@@ -247,7 +350,7 @@ function cal_attendance(id) {
     <td width="2%"> </td>
     <th width="30%">Date</th>
     </tr>`;
-
+    att_color(id);
     document.getElementById("qwerty").value = id;
 
     num = 0; //    to get attendance of employees 
@@ -258,7 +361,7 @@ function cal_attendance(id) {
         var today = new Date();
         mon_to_show = a[0].slice(a[0].indexOf('/') + 1); //    getting first month from employee attendance to show that month list
 
-        if (mon_to_show == mon[today.getMonth()] || daily_leaves[id].length==0) { //  disable clear button if the current month is same as mon_to_show
+        if (mon_to_show == mon[today.getMonth()] || daily_leaves[id].length == 0) { //  disable clear button if the current month is same as mon_to_show
             document.getElementById("clear_attendance").disabled = true;
         } else {
             document.getElementById("clear_attendance").disabled = false;
@@ -375,85 +478,106 @@ function cal_attendance(id) {
     }
 }
 
-document.getElementById("clear_attendance").addEventListener("click", () => {
 
+function close_attendance() {
+
+    var p = document.getElementById("att_emp_names").children[0].children;
+    for (i = 0; i < p.length; i++) {
+        p[i].className = "";
+    }
+    document.getElementById("attendance").style.height = "0vh";
+    document.querySelector("body").style.overflow = "auto";
+    document.getElementById("qwerty").value = 0;
+
+}
+
+
+document.getElementById("clear_attendance").addEventListener("click", () => {
+    var today = new Date();
     var id = document.getElementById("qwerty").value;
-    var at = absent_month() + "=";
     var a = (daily_leaves[id].slice(0, daily_leaves[id].length - 1)).split(" ");
     var mon_to_show = a[0].slice(a[0].indexOf('/') + 1);
-    var num = 0;
-    for (i = 0; i < a.length; i++) {
-        if (a[i].indexOf(mon_to_show) > 0)
-            num++;
-    }
-    at += num + " ";
-    form = new FormData()
-    if (monthly_leaves[id] == null || monthly_leaves[id] == 'null') {
-        today = at;
-        let daily__leaves = daily_leaves[id].slice(daily_leaves[id].lastIndexOf(mon_to_show)+4);
-        form.append("id", id);
-        form.append("leaves", today);
-        form.append("daily_le", daily__leaves);
-
-        fetch('/emp/mon/', {
-            headers: {
-                "X-CSRFToken": getCookie("csrftoken")
-            },
-            method: 'POST',
-            body: form
-        }).then(function (response) {
-            return response.json();
-        }).then(function (received) {
-            if (received.x) {
-                monthly_leaves[id] = at;
-                daily_leaves[id] = daily__leaves;
-                swal({
-                    'title': 'Attendance Cleared!',
-                    'type': 'success'
-                })
-                cal_attendance(id);
-            } else {
-                swal({
-                    'title': 'There is a Server Error!',
-                    'type': 'error'
-                })
-            }
-
+    if (mon_to_show == mon[today.getMonth()] || daily_leaves[id].length == 0) { //  disable clear button if the current month is same as mon_to_show
+        swal({
+            'title': 'Wait For The Next Month To Start!',
+            'type': 'info'
         })
-    } else if (monthly_leaves[id].indexOf(at) < 0) {
-        let daily__leaves = daily_leaves[id].slice(daily_leaves[id].lastIndexOf(mon_to_show)+4);
-        today = monthly_leaves[id];
-        today += at;
-        form.append("id", id);
-        form.append("leaves", today);
-        form.append("daily_le", daily__leaves);
+    } else {
+        var at = absent_month() + "=";
+        var num = 0;
+        for (i = 0; i < a.length; i++) {
+            if (a[i].indexOf(mon_to_show) > 0)
+                num++;
+        }
+        at += num + " ";
+        form = new FormData()
+        if (monthly_leaves[id] == null || monthly_leaves[id] == 'null') {
+            today = at;
+            let daily__leaves = daily_leaves[id].slice(daily_leaves[id].lastIndexOf(mon_to_show) + 4);
+            form.append("id", id);
+            form.append("leaves", today);
+            form.append("daily_le", daily__leaves);
 
-        fetch('/emp/mon/', {
-            headers: {
-                "X-CSRFToken": getCookie("csrftoken")
-            },
-            method: 'POST',
-            body: form
-        }).then(function (response) {
-            return response.json();
-        }).then(function (received) {
-            if (received.x) {
-                monthly_leaves[id] += at;
-                daily_leaves[id] = daily__leaves;
-                swal({
-                    'title': 'Attendance Cleared!',
-                    'type': 'success'
-                })
-                cal_attendance(id);
-            } else {
-                swal({
-                    'title': 'There is a Server Error!',
-                    'type': 'error'
-                })
-            }
+            fetch('/emp/mon/', {
+                headers: {
+                    "X-CSRFToken": getCookie("csrftoken")
+                },
+                method: 'POST',
+                body: form
+            }).then(function (response) {
+                return response.json();
+            }).then(function (received) {
+                if (received.x) {
+                    monthly_leaves[id] = at;
+                    daily_leaves[id] = daily__leaves;
+                    swal({
+                        'title': 'Attendance Cleared!',
+                        'type': 'success'
+                    })
+                    cal_attendance(id);
+                } else {
+                    swal({
+                        'title': 'There is a Server Error!',
+                        'type': 'error'
+                    })
+                }
 
-        })
-        console.log(today);
+            })
+        } else if (monthly_leaves[id].indexOf(at) < 0) {
+            let daily__leaves = daily_leaves[id].slice(daily_leaves[id].lastIndexOf(mon_to_show) + 4);
+            today = monthly_leaves[id];
+            today += at;
+            form.append("id", id);
+            form.append("leaves", today);
+            form.append("daily_le", daily__leaves);
+
+            fetch('/emp/mon/', {
+                headers: {
+                    "X-CSRFToken": getCookie("csrftoken")
+                },
+                method: 'POST',
+                body: form
+            }).then(function (response) {
+                return response.json();
+            }).then(function (received) {
+                if (received.x) {
+                    monthly_leaves[id] += at;
+                    daily_leaves[id] = daily__leaves;
+                    swal({
+                        'title': 'Attendance Cleared!',
+                        'type': 'success'
+                    })
+                    cal_attendance(id);
+                } else {
+                    swal({
+                        'title': 'There is a Server Error!',
+                        'type': 'error'
+                    })
+                }
+
+            })
+            console.log(today);
+        }
     }
 })
 
@@ -535,7 +659,7 @@ function data_after_srch(a) {
                     td7.innerHTML = `<div id="leave${received["data"][i].id}" class="leaves" onclick="chckleave(${received["data"][i].id})">${absent}</div>`
 
                     td8 = document.createElement("td");
-                    td8.innerHTML = `<span class="actions_border"><i class="far fa-edit" id="action_edit" onclick="full_screen(${received["data"][i].id}); everyone();"></i><i class="fas fa-trash" id="action_delete" onclick="deleting(${received["data"][i].id})"></i></span>`;
+                    td8.innerHTML = `<span class="actions_border"><i class="far fa-edit" id="action_edit" onclick="full_screen(${received["data"][i].id});"></i><i class="fas fa-trash" id="action_delete" onclick="deleting(${received["data"][i].id})"></i></span>`;
                     tr.append(td1, td2, td3, td4, td5, td6, td7, td8);
                     document.getElementById("order_table").append(tr);
                 }
@@ -548,10 +672,9 @@ function data_after_srch(a) {
 }
 
 
-
 // Adding new employee
 
-document.getElementById("addEmp").addEventListener('click', () => {
+function add_employee() {
 
     let formdata = new FormData();
     add_profile = document.getElementById("taking_image").files[0] ? document.getElementById("taking_image").files[0] : null;
@@ -641,7 +764,7 @@ document.getElementById("addEmp").addEventListener('click', () => {
                 td7.innerHTML = `<div id="leave${received.id}" class="leaves" onclick="chckleave(${received.id})">0</div>`
 
                 td8 = document.createElement("td");
-                td8.innerHTML = `<span class="actions_border"><i class="far fa-edit" id="action_edit" onclick="full_screen(${received.id}); everyone();"></i><i class="fas fa-trash" id="action_delete" onclick="deleting(${received.id})"></i></span>`;
+                td8.innerHTML = `<span class="actions_border"><i class="far fa-edit" id="action_edit" onclick="full_screen(${received.id});"></i><i class="fas fa-trash" id="action_delete" onclick="deleting(${received.id})"></i></span>`;
                 tr.append(td1, td2, td3, td4, td5, td6, td7, td8);
                 document.getElementById("order_table").append(tr);
                 setTimeout(() => {
@@ -653,7 +776,7 @@ document.getElementById("addEmp").addEventListener('click', () => {
                         'New Employee Has Been Added !',
                         'success'
                     )
-                    stop();
+                    closer();
                 }, 700);
 
                 document.getElementById("taking_image").value = null;
@@ -684,7 +807,7 @@ document.getElementById("addEmp").addEventListener('click', () => {
                         'Server Error! Please Try Later!',
                         'error'
                     )
-                    stop();
+                    closer();
                 }, 700);
 
             }
@@ -712,7 +835,7 @@ document.getElementById("addEmp").addEventListener('click', () => {
         });
     }
 
-})
+}
 
 
 /* Popup ...Asking for permission to update employee */
@@ -768,7 +891,7 @@ document.getElementById("subscribe").addEventListener('click', () => {
                     );
                     document.getElementById("name" + up_id).innerHTML = received.name ? `${received.name}` : `None`;
                     document.getElementById("desi" + up_id).innerHTML = received.designation ? `${received.designation}` : `None`;
-                    p_stop();
+                    close_profile_detail();
                 } else {
                     var ring = document.getElementById("eror");
                     ring.autoplay = true;
@@ -778,7 +901,7 @@ document.getElementById("subscribe").addEventListener('click', () => {
                         'Server Error! Please Try Later!',
                         'error'
                     );
-                    p_stop();
+                    close_profile_detail();
                 }
             })
         },
@@ -956,14 +1079,16 @@ function searcher() {
                     div6.innerText = received["data"][i].salary_type;
                     td6.append(div6);
 
+                    var today = new Date();
+                    if (daily_leaves[received["data"][i].id] != null && daily_leaves[received["data"][i].id] != "null")
+                        absent = daily_leaves[received["data"][i].id].split(mon[today.getMonth()]).length - 1;
+                    else
+                        absent = 0;
                     td7 = document.createElement("td");
-                    div7 = document.createElement("div");
-                    div7.classList.add("leaves");
-                    div7.innerText = 0;
-                    td7.append(div7);
+                    td7.innerHTML = `<div id="leave${received["data"][i].id}" class="leaves" onclick="chckleave(${received["data"][i].id})">${absent}</div>`
 
                     td8 = document.createElement("td");
-                    td8.innerHTML = `<span class="actions_border"><i class="far fa-edit" id="action_edit" onclick="full_screen(${received["data"][i].id}); everyone();"></i><i class="fas fa-trash" id="action_delete" onclick="deleting(${received["data"][i].id})"></i></span>`;
+                    td8.innerHTML = `<span class="actions_border"><i class="far fa-edit" id="action_edit" onclick="full_screen(${received["data"][i].id});"></i><i class="fas fa-trash" id="action_delete" onclick="deleting(${received["data"][i].id})"></i></span>`;
                     tr.append(td1, td2, td3, td4, td5, td6, td7, td8);
                     document.getElementById("order_table").append(tr);
                 }
@@ -990,7 +1115,6 @@ function searcher() {
 }
 
 
-/* All Option Expander and hider */
 
 var detailed = document.getElementById("detail");
 
@@ -1026,246 +1150,67 @@ function full_screen(id) {
 
     detailed.style.height = "100vh";
     document.querySelector("body").style.overflow = "hidden";
-    stop()
-    s_stop()
-
+    closer();
 }
 
 
-function close_attendance() {
-    document.getElementById("attendance").style.height = "0vh";
-    document.querySelector("body").style.overflow = "auto";
-    document.getElementById("qwerty").value = 0;
+//  send issue to the server
 
+function submit_report() {
+    form = new FormData();
+
+    id = usua;
+    com_name = document.getElementById("complain_name").value;
+    complain_issue = document.getElementById("complain_issue").value;
+    complain_password = document.getElementById("complain_password").value;
+    complain_page = document.getElementById("complain_page").value;
+
+
+
+    form.append("user_id", id);
+    form.append("name", com_name);
+    form.append("complain", complain_issue);
+    form.append("page", complain_page);
+    form.append("complain_password", complain_password);
+
+    fetch('/emp/complain/', {
+        headers: {
+            "X-CSRFToken": getCookie("csrftoken")
+        },
+        method: 'POST',
+        body: form
+    }).then(function (response) {
+        return response.json();
+    }).then(function (received) {
+        if (received.x == true) {
+            swal({
+                text: "Complain Sent!",
+                type: 'success',
+            })
+            close_report();
+        } else if (received.x == '2') {
+            swal({
+                text: "Wrong Password!",
+                type: 'error',
+            })
+        } else {
+            swal({
+                text: "Server Error!",
+                type: 'error',
+            })
+            close_report();
+        }
+        document.getElementById("complain_name").value = "";
+        document.getElementById("complain_issue").value = "";
+        document.getElementById("complain_password").value = "";
+    })
 }
 
-function p_stop() {
+
+function close_profile_detail() {
     detailed.style.height = "00vh";
     document.querySelector("body").style.overflow = "auto";
 }
-
-var merjan;
-var yes_no = 0;
-box_height = document.getElementById("expanded").offsetHeight;
-box_height = String(box_height + "px");
-document.getElementById("expanded").style.height = "0px";
-document.getElementById("inputer_baap").style.display = "none"
-
-
-
-
-/* Running Function of Everyone */
-
-function everyone() {
-    if (merjan == "add_new_employee") {
-        add_new_employee()
-    } else if (merjan == "search_run") {
-        search_run()
-    } else if (merjan == "employeeLock") {
-        add_new_employee()
-        search_run()
-    }
-}
-
-function run() {
-    /* overview = document.getElementById("overview") */
-    var headingDiv = document.getElementById("overview");
-    headingDiv.innerHTML = "<H3>Adding New Employee</H3>";
-
-    var main_btn = document.getElementById("add_employee");
-    main_btn.innerHTML = "<H4>Stop Process</H4>";
-
-    document.getElementById("jutta").style.transition = "1.5s ease"
-    document.getElementById("jutta").style.marginTop = "30px"
-    document.getElementById("inputer_baap").style.display = "block"
-    document.getElementById("jutta").style.opacity = "0"
-
-    setTimeout(() => {
-        document.getElementById("jutta").style.opacity = "1"
-        document.getElementById("jutta").style.marginTop = "0px"
-
-    }, 1000);
-    document.getElementById("expanded").style.height = box_height;
-    var yes_no = 1;
-
-
-    everyone()
-    merjan = "add_new_employee"
-    setTimeout(() => {
-        document.getElementById("clicked").click()
-    }, 500);
-
-
-
-}
-
-function stop() {
-    document.getElementById("expanded").style.height = "0px";
-    document.getElementById("inputer_baap").style.display = "none"
-    var headingDiv = document.getElementById("overview");
-    headingDiv.innerHTML = "<H3>Allah is Best</H3>";
-
-
-    setTimeout(() => {
-        document.getElementById("dv_dev").click()
-    }, 200);
-
-
-
-
-    var main_btn = document.getElementById("add_employee");
-    main_btn.innerHTML = "<H4>ADD EMPLOYEE</H4>";
-
-    merjan = ""
-}
-
-function add_new_employee() {
-    document.getElementById("expanded").style.transition = ".4s ease"
-
-    if (yes_no == 0) {
-        run()
-        yes_no = 1
-    } else if (yes_no == 1) {
-        stop()
-        yes_no = 0
-    }
-}
-
-
-/* Employee Update option */
-
-var employee_update_lock = document.getElementById("employee_update_lock")
-dlose()
-emp = 0;
-
-function employeeLock() {
-    if (emp == 0) {
-        topen()
-    } else if (emp == 1) {
-        dlose()
-    }
-}
-
-function topen() {
-    if (yes_no == 1) {
-        stop()
-        setTimeout(() => {
-            employee_update_lock.style.display = "flex"
-            setTimeout(() => {
-                employee_update_lock.style.opacity = "1"
-            }, 10);
-        }, 300);
-
-
-    } else if (yes_no == 0) {
-        employee_update_lock.style.display = "flex"
-        setTimeout(() => {
-            employee_update_lock.style.opacity = "1"
-        }, 10);
-    }
-    emp = 1
-    merjan = "employeeLock  "
-}
-
-function dlose() {
-
-    employee_update_lock.style.transition = ".7s ease"
-    employee_update_lock.style.opacity = "0"
-
-    setTimeout(() => {
-        employee_update_lock.style.display = "none"
-    }, 600);
-
-    emp = 0
-    merjan = ""
-}
-
-
-/* Search Expander */
-
-search_html = 0;
-
-function search_run() {
-    if (search_html == 0) {
-        s_run()
-    } else if (search_html == 1) {
-        s_stop()
-    }
-}
-
-
-search_height = document.getElementById("search_expander").offsetHeight;
-search_height = String(search_height + "px");
-document.getElementById("search_expander").style.transition = ".3s ease";
-document.getElementById("search_hider").style.transition = "1s ease";
-document.getElementById("search_expander").style.height = "0px";
-document.getElementById("search_hider").style.display = "none";
-
-function s_run() {
-
-    var search_employee = document.getElementById("search_employee");
-    search_employee.innerHTML = "<H4>Stop Process</H4>";
-
-
-    document.getElementById("search_expander").style.height = search_height;
-    document.getElementById("search_hider").style.display = "none";
-    document.getElementById("search_hider").style.display = "block"
-    document.getElementById("search_hider").style.opacity = "0"
-    var headingDiv = document.getElementById("overview");
-    headingDiv.innerHTML = "<H3>Searching Employee</H3>";
-
-    setTimeout(() => {
-        document.getElementById("search_hider").style.opacity = "1"
-        document.getElementById("search_hider").style.marginTop = "0px"
-
-    }, 500);
-    search_html = 1;
-
-
-
-    everyone()
-    merjan = "search_run"
-
-    setTimeout(() => {
-        document.getElementById("search_clicked").click()
-    }, 500);
-
-}
-
-function s_stop() {
-
-    var search_employee = document.getElementById("search_employee");
-    search_employee.innerHTML = "<H4>SEARCH EMPLOYEE</H4>";
-
-    document.getElementById("search_expander").style.height = "0px";
-    document.getElementById("search_hider").style.display = "none"
-
-    setTimeout(() => {
-        document.getElementById("dv_dev").click()
-    }, 200);
-
-
-
-    var headingDiv = document.getElementById("overview");
-    headingDiv.innerHTML = "<H3>Allah Can make you Anything</H3>";
-    search_html = 0
-    merjan = ""
-
-
-}
-
-
-/* Asking Permission for updating user */
-
-function ask_permission() {
-    var permissioning = document.getElementById("update_permission")
-    permissioning.style.right = "0px"
-}
-
-
-
-
-
 
 
 /* Button of Add new Employee */

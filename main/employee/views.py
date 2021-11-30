@@ -1,4 +1,5 @@
 from django.http import HttpResponseRedirect
+from django.http.response import HttpResponse
 from django.urls import reverse
 from django.shortcuts import render
 from django.contrib.auth import logout
@@ -9,7 +10,7 @@ from io import BytesIO
 from django.core.files.uploadedfile import InMemoryUploadedFile
 
 
-from .models import employees
+from .models import employees, complains
 from login.models import userDetail
 
 from rest_framework.response import Response
@@ -18,7 +19,7 @@ from rest_framework.decorators import api_view
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.permissions import IsAuthenticated
-from .serializer import SerEmp
+from .serializer import SerEmp, SerComplain
 
 
 class employee(APIView):
@@ -137,18 +138,36 @@ def get_extra(request):
 
 @api_view(['POST'])
 def mark_leave(request):
-    employees.objects.filter(id=request.POST["id"], employee_of = request.user.id).update(daily_leaves = request.POST["leaves"])
-
-    return Response({"x": True})
+    try:
+        employees.objects.filter(id=request.POST["id"], employee_of = request.user.id).update(daily_leaves = request.POST["leaves"])
+        return Response({"x": True})
+    except:
+        return Response({"x": False})
 
 
 @api_view(['POST'])
 def mark_monthly(request):
-    print(request.POST["daily_le"])
-    employees.objects.filter(id=request.POST["id"], employee_of = request.user.id).update(monthly_leaves = request.POST["leaves"], daily_leaves = request.POST["daily_le"])
+    try:
+        employees.objects.filter(id=request.POST["id"], employee_of = request.user.id).update(monthly_leaves = request.POST["leaves"], daily_leaves = request.POST["daily_le"])
+        return Response({"x": True})
+    except:
+        return Response({"x": False})
 
-    return Response({"x": True})
 
+@api_view(['POST'])
+def complain(request):
+    try:
+        if(request.user.check_password(request.data["complain_password"])):
+            a = SerComplain(data=request.data)
+            if a.is_valid():
+                a.save()
+                return Response({"x": True})
+            else:
+                return Response({"x": False})
+        else:
+            return Response({"x": '2'})
+    except:
+        return Response({"x": False})
 
 @api_view(['GET'])
 def logOut(request):
@@ -158,3 +177,7 @@ def logOut(request):
     except:
         return Response({'x':False})
 
+@api_view(['GET'])
+def show_complains(request):
+    data = complains.objects.all()
+    return render(request, 'employee/complains.html',{'data':data})

@@ -17,15 +17,7 @@
 
         <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
         <link rel="stylesheet" href="{% static 'css/employee/emp.css' %}">
-        <!-- 
-        <link rel="stylesheet" href="order_status.css">
-        <link rel="stylesheet" href="topbar.css">
-        <link rel="stylesheet" href="profile.css">
-        <link rel="stylesheet" href="employeebtn.css">
-        <link rel="stylesheet" href="./img.css">
-        <link rel="stylesheet" href="expander.css">
-        <link rel="stylesheet" href="./submitbtn.css">
- -->
+
     </Section>
     <style>
         #loading {
@@ -36,25 +28,16 @@
             z-index: 99999;
         }
 
-        #employee_update_lock {
-            display: none;
-            position: fixed;
-            top: 0;
-            height: 100vh;
-            width: 100%;
-            background-color: black;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 2;
-            transition: .1s ease;
-        }
-
         .capi {
             text-transform: capitalize;
         }
 
+        .att_color {
+            background-color: rgb(163, 163, 163);
+        }
+
         #fetching_data {
+            cursor: pointer;
             font-size: 30px;
             color: #0090e7;
             float: right;
@@ -118,7 +101,7 @@
             border-right: 1.5px solid white;
         }
 
-        #report_button {
+        .report_button {
             border: 1px solid rgb(182, 179, 179);
             width: 100px;
             padding: 7px;
@@ -129,13 +112,13 @@
             overflow: hidden;
         }
 
-        #report_button:hover {
+        .report_button:hover {
             padding: 4px;
             width: 90px;
             border-color: greenyellow;
         }
 
-        #report_button:active {
+        .report_button:active {
             background-color: greenyellow;
             padding: 7px;
             width: 50px;
@@ -154,7 +137,7 @@
             }
         }
 
-        #detail{
+        #detail {
             transition: .4s ease;
             overflow: scroll;
             background-color: black;
@@ -165,7 +148,7 @@
             z-index: 2;
         }
 
-        #attendance{
+        #attendance {
             transition: .4s ease;
             overflow: scroll;
             background-color: black;
@@ -175,7 +158,7 @@
             top: 0%;
             z-index: 2;
         }
-        
+
 
         .table input {
             border: none;
@@ -212,8 +195,6 @@
             border-radius: 5px;
             margin-right: 4px;
         }
-
-        
     </style>
 
 </head>
@@ -230,46 +211,44 @@
         <h3 id="shop_name">Feminism Ki Dukaan</h3>
     </section>
 
+<!-- Report Issue -->
 
-    <!-- Expanding Update Employee -->
-    <section id="employee_update_lock">
-        <i class="fas fa-times-circle"
-            style="color: #fc424a;font-size: 50px;position:absolute;top:10px;right: 10px; cursor: pointer;"
-            onclick="dlose()"></i>
-
-        <div style="background-color: #191C24;width: 500px;" id="bt">
-            <div>
-                <h3 style="text-align: center;margin: 20px 0px; ">Report Page</h3>
-                <p>
-                    Lisence_number: <br>
-                    <input type="text">
-                </p>
-                <p>
-                    Password: <br>
-                    <input type="text">
-                </p>
-                <p>
-                    Issuse Starting Date: <br>
-                    <input type="text">
-                </p>
-                <p>
-                    Explain Your Issue Below: <br>
-                    <textarea name="" id="" cols="30" rows="10"></textarea>
-                </p>
-                <div id="report_button">
-                    SUBMIT
+    <div id="report_issue" style="opacity: 0; transition: opacity 1s ease; display: none;">
+        <div style="position: fixed; top: 0; height: 100vh; width: 100%; background-color: rgb(7, 7, 7); z-index: 2; transition: .1s ease; color: rgb(221, 219, 219);">
+            <div style="background-color: #191C24; width: 500px; border-radius: 10px; margin: 0 auto; margin-top: 50px;" id="bt">
+                <div>
+                    <h3 style="text-align: center;margin: 20px 0px;">Report Page</h3>
+                    <p>
+                        User Name: <br>
+                        <input type="text" id="complain_name">
+                    </p>
+                    <p>
+                        Explain Your Issue Below: <br>
+                        <textarea name="" id="complain_issue" cols="30" rows="10" id="complain_issue"></textarea>
+                    </p>
+                    <p>
+                        Password: <br>
+                        <input type="password" id="complain_password">
+                    </p>
+                    <p>
+                        Complaining Page: <br>
+                        <input type="text" value="" id="complain_page" disabled>
+                        <script>
+                            document.getElementById("complain_page").value = window.location.href;
+                        </script>
+                    </p>
+                    <div style="text-align: center;">
+                        <button class="report_button" onclick="submit_report()">Submit</button>
+                        <button class="report_button" onclick="close_report()">Close</button>
+                    </div>
                 </div>
             </div>
         </div>
+    </div>
 
-    </section>
 
     <!-- Full Screen Detail of Employee -->
-
-    <!-- user  Profile -->
     <section id="detail">
-
-
         <div class="rt-container">
             <div class="col-rt-12">
                 <div class="Scriptcontent">
@@ -404,7 +383,8 @@
                                         <div style="height: 55px;">
                                             <div style="display: flex;justify-content: center;">
                                                 <span id="subscribe" class="update">UPDATE</span>
-                                                <span onclick="p_stop()" style="background-color: #fc424b44; border: 2px solid rgba(0, 0, 0, 0.125);padding: 10px;font-weight: 600;cursor:pointer;padding: 8px 20px 8px 20px;border-radius: 5px;margin-left: 4px;">CLOSE</span>
+                                                <span onclick="close_profile_detail()"
+                                                    style="background-color: #fc424b44; border: 2px solid rgba(0, 0, 0, 0.125);padding: 10px;font-weight: 600;cursor:pointer;padding: 8px 20px 8px 20px;border-radius: 5px;margin-left: 4px;">CLOSE</span>
                                             </div>
                                         </div>
                                     </div>
@@ -416,6 +396,8 @@
             </div>
     </section>
 
+
+    <!-- attendance management page -->
     <section id="attendance">
 
         <div class="rt-container">
@@ -427,11 +409,25 @@
                             <div class="row">
                                 <div class="col-lg-4" style="margin-bottom:20px;">
                                     <div class="card shadow-sm">
-                                        <table class="table table-bordered" style="width: 90%; margin: 20px auto;">
-                                            {% for a in list %}
+                                        <table class="table table-bordered" style="width: 90%; margin: 20px auto;"
+                                            id="att_emp_names">
                                             <tr>
+                                                <td colspan="2">
+                                                    <input type="text" id="att_srch_name" list="search_name"
+                                                        placeholder="Search Name"
+                                                        onchange="cal_attendance(att_names[this.value])">
+                                                    <datalist id="search_name">
+                                                        {% for a in list %}
+                                                        <option>{{a.name}}</option>
+                                                        {% endfor %}
+                                                    </datalist>
+                                                </td>
+                                            </tr>
+                                            {% for a in list %}
+                                            <tr id="att_emp_{{a.id}}">
                                                 <th width="auto" class="capi">{{a.name}}</th>
-                                                <td width="5%" class="pointer" onclick="cal_attendance('{{a.id}}')"><i class="fas fa-greater-than"></i>
+                                                <td width="5%" class="pointer" onclick="cal_attendance('{{a.id}}')"><i
+                                                        class="fas fa-greater-than"></i>
                                                 </td>
                                             </tr>
                                             {% endfor %}
@@ -516,22 +512,19 @@
 
             <!-- More options of employee management -->
             <section>
-
-
-
                 <div id="employee_btn_container">
 
                     <!-- search Employee -->
                     <a href="#overview" id="search_clicked"></a>
 
-                    <div class="employee_btn" id="search" onclick="search_run()">
+                    <div class="employee_btn" id="search" onclick="opener('show_search')">
                         <h4 class="em_btn_search" id="search_employee">SEARCH EMPLOYEE</h4>
                         <i class="fab fa-searchengin" id="em_btn_1"></i>
                     </div>
 
                     <!-- Add new Employee -->
                     <a href="#overview" id="clicked"></a>
-                    <div class="employee_btn" id="add_new" onclick="add_new_employee()">
+                    <div class="employee_btn" id="add_new" onclick="opener('show_adding')">
                         <h4 class="em_btn_add" id="add_employee">ADD EMPLOYEE</h4>
                         <i class="fas fa-plus-circle" id="em_btn_2"></i>
                     </div>
@@ -552,44 +545,29 @@
 
                     <!-- Update Employee -->
                     <!-- employeeLock() function is used to show report page,,, use it in next version -->
-                    <div class="employee_btn" id="report" onclick="features()" style="background-color: #3fc5f0;">
+                    <div class="employee_btn" id="report" onclick="open_report()" style="background-color: #3fc5f0;">
                         <h4 class="em_btn_title">REPORT ISSUE</h4>
                         <i class="fas fa-wrench" id="em_btn_3"></i>
                     </div>
-
-                </div>
-
                 </div>
             </section>
-            <!-- Heading and Shareef Line -->
-            <section id="heading_shareef">
-                <h3 id="overview">Allah Ho</h3>
+
+            <!-- main heading line changing everytime when display change -->
+
+            <section class="containers" style="height:80px;">
+                <div style="padding-top: 20px;">
+                    <div class="khatam">
+                        <h2 id="typer">
+                            Allah Is Great!
+                        </h2>
+                    </div>
+                    <i class="fas fa-times-circle" id="fa-times-circle" onclick="closer()"></i>
+                </div>
             </section>
 
-
-            <!-- Expanding Search Menu -->
-            <section id="search_expander">
-                <style>
-                    #haq_baho {
-                        color: #fc424a;
-                        font-size: 50px;
-                        float: right;
-                        position: relative;
-                        top: 20px;
-                        right: 20px;
-                        cursor: pointer;
-                    }
-
-                    @media(max-width:380px) {
-                        #haq_baho {
-                            top: 10px;
-                            right: 10px;
-                        }
-                    }
-                </style>
-                <div id="search_hider">
-                    <i class="fas fa-times-circle" id="haq_baho" onclick="s_stop(); data_after_srch(1);"></i>
-
+            <!-- Display Search Employee Container -->
+            <div id="show_search" class="hider">
+                <section id="search_expander" style="border-radius: 10px; margin-bottom: 20px;">
                     <div id="searcher">
                         <h2 style="width: 100%;margin: 20px;">Searching Employee</h2>
                         <p>
@@ -598,14 +576,13 @@
                                 <input type="text" id="s_name" list="name" class="search_fields" placeholder="Name">
                                 <datalist id="name" class="asker">
                                     {%for a in name%}
-                                        {% if a.name != none %}
-                                            <option>{{a.name}}</option>
-                                        {% endif%}
+                                    {% if a.name != none %}
+                                    <option>{{a.name}}</option>
+                                    {% endif%}
                                     {% endfor %}
                                 </datalist>
                             </label>
                         </p>
-
 
                         <p>
                             <label>
@@ -641,230 +618,209 @@
                     <div style="display: flex;justify-content: center;padding: 10px 0px 30px 0px;">
                         <button onclick="searcher()"
                             style="background-color: red; border: 2px solid rgba(0, 0, 0, 0.125);padding: 10px;font-weight: 600;cursor:pointer;padding: 8px 20px 8px 20px;border-radius: 5px;margin-left: 4px;">SEARCH</button>
-
-
                     </div>
-
-                </div>
-            </section>
+                </section>
+            </div>
 
 
 
             <!-- Expanding Add New Employee -->
-            <section id="expanded">
-                <div id="inputer_baap">
-                    <i class="fas fa-times-circle"
-                        style="color: #fc424a;font-size: 50px;float: right;margin: 30px 40px 0px 0px;cursor: pointer;"
-                        onclick="stop()"></i>
+            <div id="show_adding" class="hider">
+                <section id="expanded">
+                    <div id="inputer_baap">
 
-                    <div style="height: 250px;">
-                        <!-- Image Rounder -->
+                        <div style="height: 250px;">
+                            <!-- Image Rounder -->
 
-                        <div id="round_image" class="wrapper" style="display: flex;justify-content: center;"
-                            onclick="haa()">
-                            <img src="{% static 'images/male.jpg'%}" alt="" height="150" id="add_profile"
-                                style="border: 2px dashed black; padding: 4px;">
+                            <div id="round_image" class="wrapper" style="text-align: center;" onclick="haa()">
+                                <img src="{% static 'images/male.jpg'%}" alt="" height="150" id="add_profile"
+                                    style="border: 2px dashed black; padding: 4px;">
+                            </div>
+                            <input type="file" name="pic" id="taking_image"
+                                onchange="change_profile(event,this,'add_profile')" style="display: none;"
+                                accept="image/*" required="">
                         </div>
-                        <input type="file" name="pic" id="taking_image"
-                            onchange="change_profile(event,this,'add_profile')" style="display: none;" accept="image/*"
-                            required="">
-
-                        <!-- partial -->
 
 
+
+                        <form action="#">
+
+
+
+                            <div id="jutta">
+                                <h2 style="width: 100%;margin: 20px;">Personal Information</h2>
+                                <p>
+                                    <label>
+                                        NAME<br>
+                                        <input type="text" placeholder="Name" id="add_name" class="design_input"
+                                            maxlength="70">
+                                    </label>
+                                </p>
+
+
+                                <p>
+                                    <label>
+                                        Father Name<br>
+                                        <input type="text" placeholder="Father Name" id="add_father"
+                                            class="design_input" maxlength="70">
+                                    </label>
+                                </p>
+
+
+                                <p>
+                                    <label>
+                                        CNIC<br>
+                                        <input type="text" placeholder="CNIC" id="add_cnic" class="design_input"
+                                            maxlength="15">
+                                    </label>
+                                </p>
+
+
+
+
+                                <p>
+                                    <label>
+                                        Blood Group<br>
+                                        <input type="text" list="blood" class="design_input" placeholder="Blood Group"
+                                            id="add_blood" maxlength="4">
+                                        <datalist id="blood">
+                                            <option>A+</option>
+                                            <option>A-</option>
+                                            <option>B+</option>
+                                            <option>B-</option>
+                                            <option>O+</option>
+                                            <option>O-</option>
+                                            <option>AB+</option>
+                                            <option>AB-</option>
+                                        </datalist>
+                                    </label>
+                                </p>
+
+
+
+                                <p>
+                                    <label>
+                                        Religion<br>
+                                        <input type="text" list="religion" class="design_input" placeholder="Religion"
+                                            id="add_religion" maxlength="15">
+                                        <datalist id="religion">
+                                            <option>Muslim</option>
+                                            <option>Christian</option>
+                                            <option>Hindu</option>
+                                            <option>Sikh</option>
+                                            <option>Other</option>
+                                        </datalist>
+                                    </label>
+                                </p>
+
+                                <p>
+                                    <label>
+                                        Gender<br>
+                                        <input type="text" list="gender" class="design_input" placeholder="Gender"
+                                            id="add_gender" maxlength="10">
+                                        <datalist id="gender">
+                                            <option>Male</option>
+                                            <option>Female</option>
+                                            <option>Others</option>
+                                        </datalist>
+                                    </label>
+                                </p>
+                                <p>
+                                    <label>
+                                        Address<br>
+                                        <input type="text" class="design_input" placeholder="Home Address"
+                                            id="add_address" maxlength="150">
+                                    </label>
+                                </p>
+                                <h2 style="width: 100%;margin: 40px 20px 20px 20px;">Employee Information</h2>
+                                <p>
+                                    <label>
+                                        Department<br>
+                                        <input type="text" class="design_input" list="dept" placeholder="Department"
+                                            id="add_department" maxlength="60">
+                                        <datalist id="dept" class="asker">
+                                            {%for a in department%}
+                                            {% if a.department != none %}
+                                            <option>{{a.department}}</option>
+                                            {% endif %}
+                                            {% endfor %}
+                                        </datalist>
+                                    </label>
+                                </p>
+
+
+                                <p>
+                                    <label>
+                                        Designation<br>
+                                        <input type="text" class="design_input" list="desi" placeholder="Designation"
+                                            id="add_designation" maxlength="30">
+                                        <datalist id="desi" class="asker">
+                                            {%for a in designation%}
+                                            {% if a.designation != none %}
+                                            <option>{{a.designation}}</option>
+                                            {% endif %}
+                                            {% endfor %}
+                                        </datalist>
+                                    </label>
+                                </p>
+
+
+                                <p>
+                                    <label>
+                                        Salary<br>
+                                        <input type="number" class="design_input" placeholder="Salary" id="add_salary"
+                                            maxlength="18">
+                                    </label>
+                                </p>
+
+
+                                <p>
+                                    <label>
+                                        Salary Type<br>
+                                        <input type="text" class="design_input" list="salary_type"
+                                            placeholder="Salary Type" id="add_salary_type">
+                                        <datalist id="salary_type">
+                                            <option>Monthly</option>
+                                            <option>Weekly</option>
+                                            <option>Daily</option>
+                                        </datalist>
+                                    </label>
+                                </p>
+
+
+                                <p>
+                                    <label>
+                                        Phone Number<br>
+                                        <input type="text" class="design_input" placeholder="Phone Number"
+                                            id="add_number" maxlength="12">
+                                    </label>
+                                </p>
+
+                                <p>
+                                    <label>
+                                        Other Number<br>
+                                        <input type="text" class="design_input" placeholder="Other Number"
+                                            id="add_other_number" maxlength="12">
+                                    </label>
+                                </p>
+                                <p>
+                                    <label>
+                                        Bank Account NO:<br>
+                                        <input type="text" class="design_input" placeholder="Other Number"
+                                            id="add_acc_no" maxlength="30">
+                                    </label>
+                                </p>
+
+                            </div>
+                            <div style="display: flex;justify-content: center;padding-bottom: 20px;">
+                                <span class="report_button" style="width: 200px; background-color: rgb(87, 60, 60);" onclick="add_employee()"> ADD Employee</span>
+                            </div>
+                        </form>
                     </div>
 
-
-
-                    <form action="#">
-
-
-
-                        <div id="jutta">
-                            <h2 style="width: 100%;margin: 20px;">Personal Information</h2>
-                            <p>
-                                <label>
-                                    NAME<br>
-                                    <input type="text" placeholder="Name" id="add_name" class="design_input"
-                                        maxlength="70">
-                                </label>
-                            </p>
-
-
-                            <p>
-                                <label>
-                                    Father Name<br>
-                                    <input type="text" placeholder="Father Name" id="add_father" class="design_input"
-                                        maxlength="70">
-                                </label>
-                            </p>
-
-
-                            <p>
-                                <label>
-                                    CNIC<br>
-                                    <input type="text" placeholder="CNIC" id="add_cnic" class="design_input"
-                                        maxlength="15">
-                                </label>
-                            </p>
-
-
-
-
-                            <p>
-                                <label>
-                                    Blood Group<br>
-                                    <input type="text" list="blood" class="design_input" placeholder="Blood Group"
-                                        id="add_blood" maxlength="4">
-                                    <datalist id="blood">
-                                        <option>A+</option>
-                                        <option>A-</option>
-                                        <option>B+</option>
-                                        <option>B-</option>
-                                        <option>O+</option>
-                                        <option>O-</option>
-                                        <option>AB+</option>
-                                        <option>AB-</option>
-                                    </datalist>
-                                </label>
-                            </p>
-
-
-
-                            <p>
-                                <label>
-                                    Religion<br>
-                                    <input type="text" list="religion" class="design_input" placeholder="Religion"
-                                        id="add_religion" maxlength="15">
-                                    <datalist id="religion">
-                                        <option>Muslim</option>
-                                        <option>Christian</option>
-                                        <option>Hindu</option>
-                                        <option>Sikh</option>
-                                        <option>Other</option>
-                                    </datalist>
-                                </label>
-                            </p>
-
-                            <p>
-                                <label>
-                                    Gender<br>
-                                    <input type="text" list="gender" class="design_input" placeholder="Gender"
-                                        id="add_gender" maxlength="10">
-                                    <datalist id="gender">
-                                        <option>Male</option>
-                                        <option>Female</option>
-                                        <option>Others</option>
-                                    </datalist>
-                                </label>
-                            </p>
-                            <p>
-                                <label>
-                                    Address<br>
-                                    <input type="text" class="design_input" placeholder="Home Address" id="add_address"
-                                        maxlength="150">
-                                </label>
-                            </p>
-                            <h2 style="width: 100%;margin: 40px 20px 20px 20px;">Employee Information</h2>
-                            <p>
-                                <label>
-                                    Department<br>
-                                    <input type="text" class="design_input" list="dept" placeholder="Department"
-                                        id="add_department" maxlength="60">
-                                    <datalist id="dept" class="asker">
-                                        {%for a in department%}
-                                        {% if a.department != none %}
-                                        <option>{{a.department}}</option>
-                                        {% endif %}
-                                        {% endfor %}
-                                    </datalist>
-                                </label>
-                            </p>
-
-
-                            <p>
-                                <label>
-                                    Designation<br>
-                                    <input type="text" class="design_input" list="desi" placeholder="Designation"
-                                        id="add_designation" maxlength="30">
-                                    <datalist id="desi" class="asker">
-                                        {%for a in designation%}
-                                        {% if a.designation != none %}
-                                        <option>{{a.designation}}</option>
-                                        {% endif %}
-                                        {% endfor %}
-                                    </datalist>
-                                </label>
-                            </p>
-
-
-                            <p>
-                                <label>
-                                    Salary<br>
-                                    <input type="number" class="design_input" placeholder="Salary" id="add_salary"
-                                        maxlength="18">
-                                </label>
-                            </p>
-
-
-                            <p>
-                                <label>
-                                    Salary Type<br>
-                                    <input type="text" class="design_input" list="salary_type" placeholder="Salary Type"
-                                        id="add_salary_type">
-                                    <datalist id="salary_type">
-                                        <option>Monthly</option>
-                                        <option>Weekly</option>
-                                        <option>Daily</option>
-                                    </datalist>
-                                </label>
-                            </p>
-
-
-                            <p>
-                                <label>
-                                    Phone Number<br>
-                                    <input type="text" class="design_input" placeholder="Phone Number" id="add_number"
-                                        maxlength="12">
-                                </label>
-                            </p>
-
-                            <p>
-                                <label>
-                                    Other Number<br>
-                                    <input type="text" class="design_input" placeholder="Other Number"
-                                        id="add_other_number" maxlength="12">
-                                </label>
-                            </p>
-                            <p>
-                                <label>
-                                    Bank Account NO:<br>
-                                    <input type="text" class="design_input" placeholder="Other Number" id="add_acc_no"
-                                        maxlength="30">
-                                </label>
-                            </p>
-
-                        </div>
-                        <div style="display: flex;justify-content: center;padding-bottom: 20px;">
-                            <!-- Sending Button of Employee -->
-
-
-
-
-
-                            <a href="#" class="boton" id="addEmp">
-                                ADD Employee
-                            </a>
-                            <!-- partial -->
-
-
-
-                        </div>
-                    </form>
-                </div>
-
-                <!-- end of inputer baap right here -->
-            </section>
+                    <!-- end of inputer baap right here -->
+                </section>
+            </div>
         </section>
 
 
@@ -922,7 +878,7 @@
                                 </td>
                                 <td><span class="actions_border">
                                         <i class="far fa-edit" id="action_edit"
-                                            onclick="full_screen({{data.id}}); everyone();"></i>
+                                            onclick="full_screen({{data.id}});"></i>
                                         <i class="fas fa-trash" id="action_delete" onclick="deleting({{data.id}})"></i>
                                     </span></td>
                             </tr>
@@ -940,7 +896,7 @@
     <input type="number" id="qwerty" value="0" style="display:none;" disabled>
 
     <!-- partial:index.partial.html -->
-    <div class="page-wrapper chiller-theme toggled">
+    <div class="page-wrapper chiller-theme">
         <a id="show-sidebar" class="btn btn-sm btn-dark" href="#">
             <i class="fas fa-bars"></i>
         </a>
@@ -954,17 +910,16 @@
                 </div>
                 <div class="sidebar-header">
                     <div class="user-pic">
-                        <img class="img-responsive img-rounded" style="height: 60px;"
-                            src="/media/{{image}}"
+                        <img class="img-responsive img-rounded" style="height: 60px;" src="/media/{{image}}"
                             alt="User picture">
                     </div>
                     <div class="user-info">
                         <span class="user-name capi">{{request.user.first_name}}</span>
                         <span class="user-role">
                             {% if request.user.is_staff == True %}
-                                Admin
+                            Admin
                             {% elif request.user.is_staff == False %}
-                                User
+                            User
                             {% endif%}
                         </span>
                         <span class="user-status">
@@ -992,7 +947,8 @@
                         <li class="header-menu">
                             <span>General</span>
                         </li>
-                        <li class="sidebar-dropdown">
+
+                        <!-- <li class="sidebar-dropdown">
                             <a href="#">
                                 <i class="fa fa-tachometer-alt"></i>
                                 <span>Dashboard</span>
@@ -1013,114 +969,147 @@
                                     </li>
                                 </ul>
                             </div>
-                        </li>
+                        </li> -->
                         <li class="sidebar-dropdown">
                             <a href="#">
-                                <i class="fa fa-shopping-cart"></i>
-                                <span>E-commerce</span>
-                                <span class="badge badge-pill badge-danger">3</span>
+                                <i class="fa fa-tachometer-alt"></i>
+                                <span>Employee</span>
+                                <span class="badge badge-pill badge-warning">New</span>
                             </a>
                             <div class="sidebar-submenu">
                                 <ul>
                                     <li>
-                                        <a href="#">Products
+                                        <a>Search Employee</a>
+                                    </li>
+                                    <li>
+                                        <a>Add Employee</a>
+                                    </li>
+                                    <li>
+                                        <a>Attendance</a>
+                                    </li>
+                                    <li>
+                                        <a>Report Issue</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
 
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Orders</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Credit cart</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>
                         <li class="sidebar-dropdown">
-                            <a href="#">
-                                <i class="far fa-gem"></i>
-                                <span>Components</span>
-                            </a>
-                            <div class="sidebar-submenu">
-                                <ul>
-                                    <li>
-                                        <a href="#">General</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Panels</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Tables</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Icons</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Forms</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>
-                        <li class="sidebar-dropdown">
-                            <a href="#">
-                                <i class="fa fa-chart-line"></i>
-                                <span>Charts</span>
-                            </a>
-                            <div class="sidebar-submenu">
-                                <ul>
-                                    <li>
-                                        <a href="#">Pie chart</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Line chart</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Bar chart</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Histogram</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>
-                        <li class="sidebar-dropdown">
-                            <a href="#">
-                                <i class="fa fa-globe"></i>
-                                <span>Maps</span>
-                            </a>
-                            <div class="sidebar-submenu">
-                                <ul>
-                                    <li>
-                                        <a href="#">Google maps</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Open street map</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>
-                        <li class="header-menu">
-                            <span>Extra</span>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="fa fa-book"></i>
-                                <span>Documentation</span>
-                                <span class="badge badge-pill badge-primary">Beta</span>
+                            <a href="/pass/">
+                                <i class="fa fa-tachometer-alt"></i>
+                                <span>PassWord</span>
+                                <span class="badge badge-pill badge-warning">New</span>
                             </a>
                         </li>
-                        <li>
-                            <a href="#">
-                                <i class="fa fa-calendar"></i>
-                                <span>Calendar</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="fa fa-folder"></i>
-                                <span>Examples</span>
-                            </a>
-                        </li>
+
+                        <div style="background-color: rgba(255, 0, 0, 0.192);">
+                            <li class="sidebar-dropdown">
+                                <a href="#">
+                                    <i class="fa fa-shopping-cart"></i>
+                                    <span>E-commerce</span>
+                                </a>
+                                <div class="sidebar-submenu">
+                                    <ul>
+                                        <li>
+                                            <a href="#">Products
+
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Orders</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Credit cart</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="sidebar-dropdown">
+                                <a href="#">
+                                    <i class="far fa-gem"></i>
+                                    <span>Components</span>
+                                </a>
+                                <div class="sidebar-submenu">
+                                    <ul>
+                                        <li>
+                                            <a href="#">General</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Panels</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Tables</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Icons</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Forms</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="sidebar-dropdown">
+                                <a href="#">
+                                    <i class="fa fa-chart-line"></i>
+                                    <span>Charts</span>
+                                </a>
+                                <div class="sidebar-submenu">
+                                    <ul>
+                                        <li>
+                                            <a href="#">Pie chart</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Line chart</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Bar chart</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Histogram</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="sidebar-dropdown">
+                                <a href="#">
+                                    <i class="fa fa-globe"></i>
+                                    <span>Maps</span>
+                                </a>
+                                <div class="sidebar-submenu">
+                                    <ul>
+                                        <li>
+                                            <a href="#">Google maps</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Open street map</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="header-menu">
+                                <span>Extra</span>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <i class="fa fa-book"></i>
+                                    <span>Documentation</span>
+                                    <span class="badge badge-pill badge-primary">Beta</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <i class="fa fa-calendar"></i>
+                                    <span>Calendar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <i class="fa fa-folder"></i>
+                                    <span>Examples</span>
+                                </a>
+                            </li>
+                        </div>
                     </ul>
                 </div>
                 <!-- sidebar-menu  -->
@@ -1151,41 +1140,32 @@
 
 
     <script>
-        daily_leaves = {}
+
+        att_names = {} 
+        {% for a in list %}
+            att_names["{{a.name}}"] = {{a.id}} 
+        {% endfor %}
+
+        daily_leaves = {} 
         {% for a in list %}
             {% if a.daily_leaves is not none %}
-                daily_leaves[{{a.id}}] = "{{a.daily_leaves}}"
+                daily_leaves[{{a.id}}] = "{{a.daily_leaves}}" 
             {% elif a.daily_leaves is none %}
-                daily_leaves[{{a.id}}] = null
+                daily_leaves[{{a.id}}] = null 
             {% endif %}
         {% endfor %}
 
-        monthly_leaves = {}
+
+        monthly_leaves = {} 
         {% for a in list %}
             {% if a.monthly_leaves is not none %}
-                monthly_leaves[{{a.id}}] = "{{a.monthly_leaves}}"
+                monthly_leaves[{{a.id}}] = "{{a.monthly_leaves}}" 
             {% elif a.monthly_leaves is none %}
-                monthly_leaves[{{a.id}}] = null
-            {% endif %}
+                monthly_leaves[{{a.id}}] = null 
+            {% endif %} 
         {% endfor %}
 
-
-        var preloader = document.getElementById("loading");
         usua = "{{request.user.id}}"
-        function myFunction() {
-            calculate_leaves = Object.keys(daily_leaves);
-            for(i=0; i<calculate_leaves.length; i++){
-                id = calculate_leaves[i];
-                if(daily_leaves[id] == null || daily_leaves[id] == "null"){
-                    document.getElementById("leave"+id).innerHTML = 0;
-                }else{
-                    document.getElementById("leave"+id).innerHTML = daily_leaves[id].split('Nov').length - 1;
-                }
-            }
-            preloader.style.display = 'none';
-        };
-
-        
 
     </script>
 
