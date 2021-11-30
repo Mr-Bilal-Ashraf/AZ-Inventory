@@ -23,6 +23,11 @@ $(".sidebar-dropdown > a").click(function() {
 $("#close-sidebar").click(function() {
     $(".page-wrapper").removeClass("toggled");
 });
+
+function close_sidebar(){
+    $(".page-wrapper").removeClass("toggled");
+}
+
 $("#show-sidebar").click(function() {
     $(".page-wrapper").addClass("toggled");
 });

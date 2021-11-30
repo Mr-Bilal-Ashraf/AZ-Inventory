@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        td {
+            padding: 5px;
+            border: 1px solid black;
+        }
+    </style>
+</head>
+
+<body>
+    <h1 style="margin: 0 40%;">User's Complains</h1><br>
+    <table style="margin: 0 auto; ">
+        {% for a in data%}
+        <tr>
+            <td style="width: 15%;">User-Registered-Name</td>
+            <td style="width: 50%;">{{a.user_id}}</td>
+        </tr>
+        <tr>
+            <td>Given Name</td>
+            <td>{{a.name}}</td>
+        </tr>
+        <tr>
+            <td>Error-Page</td>
+            <td>{{a.page}}</td>
+        </tr>
+        <tr>
+            <td>Issue</td>
+            <td>{{a.complain}}</td>
+        </tr>
+        <tr>
+            <td colspan="2" style="text-align: center;">************************************</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+
+</html>

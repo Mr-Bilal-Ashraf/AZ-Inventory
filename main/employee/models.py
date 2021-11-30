@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models.base import Model
 
 
 class employees(models.Model):
@@ -26,4 +27,12 @@ class employees(models.Model):
     salary_paid = models.IntegerField(blank=True, null=True)
     salary_left = models.IntegerField(blank=True, null=True)
     daily_leaves = models.CharField(max_length= 500 ,blank=True, null=True)
-    monthly_leaves = models.CharField(max_length= 1000 ,blank=True, null=True)
+    monthly_leaves = models.CharField(max_length= 2000 ,blank=True, null=True)
+
+class complains(models.Model):
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE, default=0)
+    name = models.CharField(max_length=70, blank=True, null=True)
+    complain = models.CharField(max_length=500, blank=True, null=True)
+    page = models.CharField(max_length=200)
+    
+    
