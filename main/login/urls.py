@@ -9,5 +9,3 @@ urlpatterns = [
     path('home/', views.home, name="homepage"),
     path('<int:n>', views.b),
 ]
-
-#abcdef
