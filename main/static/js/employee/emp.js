@@ -107,6 +107,10 @@ function close_report() {
     document.querySelector("body").style.overflow = "auto";
 }
 
+function close_profile_detail() {
+    detailed.style.height = "00vh";
+    document.querySelector("body").style.overflow = "auto";
+}
 
 /* Sidebar Opening and closing Script */
 
@@ -131,10 +135,8 @@ $(".sidebar-dropdown > a").click(function () {
             .addClass("active");
     }
 });
-/* Auto click for Closing Sidebar */
-$(".page-wrapper").removeClass("toggled").click();
 
-/* Auto click for Closing Sidebar */
+
 
 $("#close-sidebar").click(function () {
     $(".page-wrapper").removeClass("toggled");
@@ -530,12 +532,18 @@ document.getElementById("clear_attendance").addEventListener("click", () => {
                 if (received.x) {
                     monthly_leaves[id] = at;
                     daily_leaves[id] = daily__leaves;
+                    var ring = document.getElementById("attendance_cleared");
+                    ring.autoplay = true;
+                    ring.load();
                     swal({
                         'title': 'Attendance Cleared!',
                         'type': 'success'
                     })
                     cal_attendance(id);
                 } else {
+                    var ring = document.getElementById("eror");
+                    ring.autoplay = true;
+                    ring.load();
                     swal({
                         'title': 'There is a Server Error!',
                         'type': 'error'
@@ -563,12 +571,18 @@ document.getElementById("clear_attendance").addEventListener("click", () => {
                 if (received.x) {
                     monthly_leaves[id] += at;
                     daily_leaves[id] = daily__leaves;
+                    var ring = document.getElementById("attendance_cleared");
+                    ring.autoplay = true;
+                    ring.load();
                     swal({
                         'title': 'Attendance Cleared!',
                         'type': 'success'
                     })
                     cal_attendance(id);
                 } else {
+                    var ring = document.getElementById("eror");
+                    ring.autoplay = true;
+                    ring.load();
                     swal({
                         'title': 'There is a Server Error!',
                         'type': 'error'
@@ -576,7 +590,6 @@ document.getElementById("clear_attendance").addEventListener("click", () => {
                 }
 
             })
-            console.log(today);
         }
     }
 })
@@ -1204,12 +1217,6 @@ function submit_report() {
         document.getElementById("complain_issue").value = "";
         document.getElementById("complain_password").value = "";
     })
-}
-
-
-function close_profile_detail() {
-    detailed.style.height = "00vh";
-    document.querySelector("body").style.overflow = "auto";
 }
 
 
