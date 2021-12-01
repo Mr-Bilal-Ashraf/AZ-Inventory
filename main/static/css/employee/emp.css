@@ -118,6 +118,7 @@
     display: flex;
     justify-content: space-evenly;
     flex-wrap: wrap;
+    align-items: center;
 }
 
 .employee_btn {
@@ -128,43 +129,16 @@
     cursor: pointer;
 }
 
-#em_btn_1,
-#em_btn_2,
-#em_btn_3,
-#em_btn_4,
-#em_btn_5 {
+.em_botn {
     color: white;
     font-size: 40px;
     float: right;
     margin: 17px 22px 0px 0px;
 }
 
-.em_btn_search,
-.em_btn_add {
-    float: left;
-    margin: 23px 0px 0px 10px;
-}
-
 .em_btn_title {
     margin: 23px 0px 0px 10px;
     float: left;
-}
-
-#search {
-    background-color: #007bff;
-}
-
-#add_new {
-    background-color: #fd7e14;
-}
-
-
-#active {
-    background-color: #28a745;
-}
-
-#not_active {
-    background-color: #dc3545;
 }
 
 .pointer {

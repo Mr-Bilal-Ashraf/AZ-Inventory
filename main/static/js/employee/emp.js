@@ -659,7 +659,7 @@ function data_after_srch(a) {
                     td7.innerHTML = `<div id="leave${received["data"][i].id}" class="leaves" onclick="chckleave(${received["data"][i].id})">${absent}</div>`
 
                     td8 = document.createElement("td");
-                    td8.innerHTML = `<span class="actions_border"><i class="far fa-edit" id="action_edit" onclick="full_screen(${received["data"][i].id});"></i><i class="fas fa-trash" id="action_delete" onclick="deleting(${received["data"][i].id})"></i></span>`;
+                    td8.innerHTML = `<span class="actions_border"><i class="far fa-edit" id="action_edit" onclick="full_screen(${received["data"][i].id});"></i> <i class="fas fa-trash" id="action_delete" onclick="deleting(${received["data"][i].id})"></i></span>`;
                     tr.append(td1, td2, td3, td4, td5, td6, td7, td8);
                     document.getElementById("order_table").append(tr);
                 }
