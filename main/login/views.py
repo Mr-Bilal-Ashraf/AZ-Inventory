@@ -5,7 +5,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.models import User
 from django.contrib import messages, auth
 import sys
-from PIL import Image
+from PIL import Image, ImageOps
 from io import BytesIO
 from django.core.files.uploadedfile import InMemoryUploadedFile
 
@@ -85,6 +85,7 @@ def Userdetails(request):
                 imageTemproary = Image.open(request.FILES["pic"])
                 outputIoStream = BytesIO()
                 imageTemproary = imageTemproary.resize((150,150))
+                imageTemproary = ImageOps.exif_transpose(imageTemproary)
                 imageTemproary.save(outputIoStream , format='webp', quality=90)
                 outputIoStream.seek(0)
                 uploadedImage = InMemoryUploadedFile(outputIoStream,'ImageField', "%s.webp" % request.FILES["pic"].name.split('.')[0], 'image/webp', sys.getsizeof(outputIoStream), None)
