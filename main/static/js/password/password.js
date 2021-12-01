@@ -56,6 +56,9 @@ function save_pass() {
 
             tr.append(td1, td2, td3);
             document.getElementById("password_li").append(tr);
+            ring = document.getElementById("pass_save");
+            ring.autoplay = true;
+            ring.load();
             swal({
                 text: 'Password Saved Successfully!',
                 type: 'success'
@@ -69,6 +72,9 @@ function save_pass() {
             }, 2000);
 
         } else {
+            ring = document.getElementById("fill_fields");
+            ring.autoplay = true;
+            ring.load();
             swal({
                 text: 'Please Fill All Fields!',
                 type: 'error'
@@ -108,12 +114,18 @@ function delete_pass(del_id) {
                     closer();
                     opener("password_shower");
                     document.getElementById("pass_tr_" + del_id).remove();
+                    ring = document.getElementById("pass_del");
+                    ring.autoplay = true;
+                    ring.load();
                     swal(
                         'Deleted!',
                         'Password Removed',
                         'success'
                     );
                 } else {
+                    ring = document.getElementById("eror");
+                    ring.autoplay = true;
+                    ring.load();
                     swal(
                         'Sorry!',
                         'Server Error! Please Try Later!',
@@ -221,6 +233,7 @@ function update_pass(id) {
                     return response.json();
                 }).then(function (received) {
                     if (received.x) {
+
                         if (proceed_to_process) {
                             document.getElementById(`pass_${id}`).value = "1234567890";
                         } else {
@@ -239,6 +252,9 @@ function update_pass(id) {
         allowOutsideClick: true
     }).then((result) => {
         if (result.value) {
+            ring = document.getElementById("pass_up");
+            ring.autoplay = true;
+            ring.load();
             swal({
                 type: 'success',
                 title: 'Password update !',
@@ -320,6 +336,9 @@ function save_con() {
 
                     tr.append(td1, td2, td3, td4);
                     document.getElementById("contacts_li").append(tr);
+                    ring = document.getElementById("con_sav");
+                    ring.autoplay = true;
+                    ring.load();
                     swal({
                         title: "Contact Created Successfully!",
                         type: 'success'
@@ -337,6 +356,9 @@ function save_con() {
                         document.getElementById("con_relationship").value = "";
                     }, 2000);
                 } else {
+                    ring = document.getElementById("eror");
+                    ring.autoplay = true;
+                    ring.load();
                     swal(
                         'Sorry!',
                         'Server Error! Please Try Later!',
@@ -379,12 +401,18 @@ function delete_con(del_id) {
                     blocks_heights["contact_shower"] = blocks_heights["contact_shower"] - 42;
                     closer();
                     opener("contact_shower");
+                    ring = document.getElementById("con_del");
+                    ring.autoplay = true;
+                    ring.load();
                     swal(
                         'Deleted!',
                         'Contact Removed',
                         'success'
                     );
                 } else {
+                    ring = document.getElementById("eror");
+                    ring.autoplay = true;
+                    ring.load();
                     swal(
                         'Sorry!',
                         'Server Error! Please Try Later!',
@@ -486,6 +514,9 @@ function update_con() {
         allowOutsideClick: true
     }).then((result) => {
         if (result.value) {
+            ring = document.getElementById("con_up");
+            ring.autoplay = true;
+            ring.load();
             swal({
                 type: 'success',
                 title: 'Contact Updated Successfully !',
@@ -623,8 +654,11 @@ clipboard.addEventListener('click', () => {
     textarea.select();
     document.execCommand('copy');
     textarea.remove();
+    ring = document.getElementById("pass_copy");
+    ring.autoplay = true;
+    ring.load();
     swal({
-        'text':'Password Copied!',
+        'text': 'Password Copied!',
         'type': 'success'
     })
 });

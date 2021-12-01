@@ -19,178 +19,6 @@
         <link rel="stylesheet" href="{% static 'css/employee/emp.css' %}">
 
     </Section>
-    <style>
-        #loading {
-            position: fixed;
-            width: 100%;
-            height: 100vh;
-            background: #0E111F url("{% static 'images/employee/animation.gif' %}") no-repeat center center;
-            z-index: 99999;
-        }
-
-        .capi {
-            text-transform: capitalize;
-        }
-
-        .att_color {
-            background-color: rgb(163, 163, 163);
-        }
-
-        #fetching_data {
-            cursor: pointer;
-            font-size: 30px;
-            color: #0090e7;
-            float: right;
-            position: absolute;
-            right: 50px;
-            /* top: -5px; */
-            z-index: 0;
-            transition: .01s ease;
-            /* animation: rotating_fetcher 5s infinite; */
-            /* -webkit-animation: rotation 2s infinite linear; */
-        }
-
-        .fetching_data {
-            -webkit-animation: rotation 2s infinite linear;
-        }
-
-        @-webkit-keyframes rotation {
-            from {
-                -webkit-transform: rotate(0deg);
-            }
-
-            to {
-                -webkit-transform: rotate(359deg);
-            }
-        }
-
-        #bt {
-            color: white;
-            display: flex;
-            justify-content: center;
-            font-size: 18px;
-            font-weight: 700;
-        }
-
-        #bt input,
-        textarea {
-            background: none;
-            height: 40px;
-            width: 330px;
-            transition: .3s ease;
-            border: none;
-            border-bottom: 2px solid white;
-            outline: none;
-            color: white;
-        }
-
-        #bt input:focus {
-            width: 400px;
-            border-bottom: 2px solid greenyellow;
-        }
-
-        #bt textarea:focus {
-            width: 400px;
-            border: 2px solid greenyellow;
-        }
-
-        #bt textarea {
-            height: 100px;
-            border-bottom: 2px solid white;
-            border-left: 1.5px solid white;
-            border-right: 1.5px solid white;
-        }
-
-        .report_button {
-            border: 1px solid rgb(182, 179, 179);
-            width: 100px;
-            padding: 7px;
-            text-align: center;
-            margin: 10px auto;
-            cursor: pointer;
-            transition: .1s ease;
-            overflow: hidden;
-        }
-
-        .report_button:hover {
-            padding: 4px;
-            width: 90px;
-            border-color: greenyellow;
-        }
-
-        .report_button:active {
-            background-color: greenyellow;
-            padding: 7px;
-            width: 50px;
-            color: black;
-        }
-
-        @media(max-width:410px) {
-            #bt input:focus {
-                width: 320px;
-                border-bottom: 2px solid greenyellow;
-            }
-
-            #bt textarea:focus {
-                width: 320px;
-                border: 2px solid greenyellow;
-            }
-        }
-
-        #detail {
-            transition: .4s ease;
-            overflow: scroll;
-            background-color: black;
-            height: 00vh;
-            width: 100%;
-            position: fixed;
-            top: 0%;
-            z-index: 2;
-        }
-
-        #attendance {
-            transition: .4s ease;
-            overflow: scroll;
-            background-color: black;
-            height: 00vh;
-            width: 100%;
-            position: fixed;
-            top: 0%;
-            z-index: 2;
-        }
-
-
-        .table input {
-            border: none;
-            outline: none;
-            width: 100%;
-        }
-
-        #heading_shareef {
-            width: 99.3%;
-            background-color: #191C24;
-            margin: 0% auto;
-            border-radius: 7px;
-            color: white;
-        }
-
-
-        #search_expander {
-            color: white;
-            background-color: #191C24;
-        }
-
-        .btn {
-            background-color: #8ca6b641;
-            border: 2px solid rgba(0, 0, 0, 0.125);
-            padding: 10px;
-            font-weight: 600;
-            cursor: pointer;
-            padding: 8px 20px 8px 20px;
-            border-radius: 5px;
-            margin-right: 4px;
-        }
-    </style>
 
 </head>
 
@@ -884,7 +712,7 @@
 
     <!-- partial:index.partial.html -->
     <div class="page-wrapper chiller-theme">
-        <a id="show-sidebar" class="btn btn-sm btn-dark" href="#">
+        <a id="show-sidebar" class="btn btn-sm btn-dark" style="color: white;">
             <i class="fas fa-bars"></i>
         </a>
         <nav id="sidebar" class="sidebar-wrapper">
@@ -966,24 +794,24 @@
                             <div class="sidebar-submenu">
                                 <ul>
                                     <li>
-                                        <a onclick="opener('show_search')">Search Employee</a>
+                                        <a onclick="opener('show_search')" class="pointer">Search Employee</a>
                                     </li>
                                     <li>
-                                        <a onclick="opener('show_adding')">Add Employee</a>
+                                        <a onclick="opener('show_adding')" class="pointer">Add Employee</a>
                                     </li>
                                     <li>
                                         <a
-                                            onclick="show_attendance('Please Select An Employee!'); close_sidebar(); closer();">Attendance</a>
+                                            onclick="show_attendance('Please Select An Employee!'); close_sidebar(); closer();" class="pointer">Attendance</a>
                                     </li>
                                     <li>
-                                        <a onclick="open_report(); close_sidebar(); closer();">Report Issue</a>
+                                        <a onclick="open_report(); close_sidebar(); closer();" class="pointer">Report Issue</a>
                                     </li>
                                 </ul>
                             </div>
                         </li>
 
                         <li class="sidebar-dropdown">
-                            <a href="/pass/">
+                            <a href="/pass/" class="pointer">
                                 <i class="fa fa-tachometer-alt"></i>
                                 <span>PassWord</span>
                                 <span class="badge badge-pill badge-warning">New</span>
@@ -1169,6 +997,7 @@
         <audio src="{% static 'sounds/this feature will be available.mp3'%}" id="feature"></audio>
         <audio src="{% static 'sounds/specify.mp3'%}" id="specify"></audio>
         <audio src="{% static 'sounds/required_fields.mp3'%}" id="require"></audio>
+        <audio src="{% static 'sounds/attendance.mp3'%}" id="attendance_cleared"></audio>
     </section>
 
     <!-- Scripts -->
