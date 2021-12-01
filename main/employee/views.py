@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.contrib.auth import logout
 
 import sys
-from PIL import Image
+from PIL import Image, ImageOps
 from io import BytesIO
 from django.core.files.uploadedfile import InMemoryUploadedFile
 
@@ -61,27 +61,29 @@ class employee(APIView):
 
 
     def post(self, request, format=None):
-        try:
-            request.data._mutable = True
-            for x in request.data:
-                if request.data[x] == "null":
-                    request.data[x] = None
-                if x == "profile" and request.data[x] != None:
-                    imageTemproary = Image.open(request.data[x])
-                    outputIoStream = BytesIO()
-                    imageTemproary = imageTemproary.resize((150,150))
-                    imageTemproary.save(outputIoStream , format='webp', quality=90)
-                    outputIoStream.seek(0)
-                    request.data[x] = InMemoryUploadedFile(outputIoStream,'ImageField', "%s.webp" % request.data[x].name.split('.')[0], 'image/webp', sys.getsizeof(outputIoStream), None)
+        # try:
+        request.data._mutable = True
+        for x in request.data:
+            if request.data[x] == "null":
+                request.data[x] = None
+            if x == "profile" and request.data[x] != None:
+                imageTemproary = Image.open(request.data[x])
+                outputIoStream = BytesIO()
+                imageTemproary = imageTemproary.resize((150,150),Image.ANTIALIAS)
+                imageTemproary = ImageOps.exif_transpose(imageTemproary)
+                imageTemproary.save(outputIoStream , format='webp', quality=90)
+                outputIoStream.seek(0)
+                request.data[x] = InMemoryUploadedFile(outputIoStream,'ImageField', "%s.webp" % request.data[x].name.split('.')[0], 'image/webp', sys.getsizeof(outputIoStream), None)
 
-            ser_emp = SerEmp(data=request.data)
-            if ser_emp.is_valid():
-                obj = ser_emp.save()
-                return Response({"x": True, "id": obj.id})
-            else:
-                return Response({"x": False})
-        except:
+        ser_emp = SerEmp(data=request.data)
+        if ser_emp.is_valid():
+            obj = ser_emp.save()
+            return Response({"x": True, "id": obj.id})
+        else:
+            print(ser_emp.errors)
             return Response({"x": False})
+        # except:
+            # return Response({"x": False})
 
         
     def patch(self, request, pk, format=None):
