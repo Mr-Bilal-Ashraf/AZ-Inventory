@@ -178,6 +178,9 @@ function see_pass(id) {
                             proceed_process()
                             resolve();
                         } else {
+                            ring = document.getElementById("eror");
+                            ring.autoplay = true;
+                            ring.load();
                             swal.showValidationError(
                                 'Your Password is Wrong.'
                             )
@@ -241,6 +244,9 @@ function update_pass(id) {
                         }
                         resolve();
                     } else {
+                        ring = document.getElementById("eror");
+                        ring.autoplay = true;
+                        ring.load();
                         swal.showValidationError(
                             'Your Password is Wrong.'
                         )
@@ -503,6 +509,9 @@ function update_con() {
                         close_con();
                         resolve();
                     } else {
+                        ring = document.getElementById("eror");
+                        ring.autoplay = true;
+                        ring.load();
                         swal.showValidationError(
                             'Your Password is Wrong.'
                         )
