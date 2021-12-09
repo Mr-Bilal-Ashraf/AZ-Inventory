@@ -313,13 +313,13 @@ function show_attendance(text_to_show) {
     th.innerText = text_to_show;
     tr.append(th);
     document.getElementById("mon_attendance").append(tr);
-    document.getElementById("pr_attendance").innerHTML = `<tr style="text-align: center;">
-    <th width="auto">Month</th>
+    document.getElementById("pr_attendance").innerHTML = `<tr style="text-align: center; width:100%;">
+    <th width="auto">Mon</th>
     <td width="2%"> </td>
-    <th width="30%">Absents</th>
-    <th width="auto">Month</th>
+    <th width="">Absents</th>
+    <th width="auto">Mon</th>
     <td width="2%"> </td>
-    <th width="30%">Absents</th>
+    <th width="">Absents</th>
     </tr>`;
     tr1 = document.createElement("tr");
     th1 = document.createElement("th");
@@ -423,13 +423,13 @@ function cal_attendance(id) {
     }
 
     if (monthly_leaves[id] != null) {
-        document.getElementById("pr_attendance").innerHTML = `<tr style="text-align: center;">
-        <th width="auto">Month</th>
+        document.getElementById("pr_attendance").innerHTML = `<tr style="text-align: center; width:100%;">
+        <th width="auto">Mon</th>
         <td width="2%"> </td>
-        <th width="30%">Absents</th>
-        <th width="auto">Month</th>
+        <th>Absents</th>
+        <th width="auto">Mon</th>
         <td width="2%"> </td>
-        <th width="30%">Absents</th>
+        <th>Absents</th>
         </tr>`;
         numb = 0;
         a = (monthly_leaves[id].slice(0, monthly_leaves[id].length - 1)).split(" ");
@@ -469,13 +469,13 @@ function cal_attendance(id) {
             document.getElementById("pr_attendance").append(tr);
         }
     } else {
-        document.getElementById("pr_attendance").innerHTML = `<tr style="text-align: center;">
-    <th width="auto">Month</th>
+        document.getElementById("pr_attendance").innerHTML = `<tr style="text-align: center; width:100%;">
+    <th width="auto">Mon</th>
     <td width="2%"> </td>
-    <th width="30%">Absents</th>
-    <th width="auto">Month</th>
+    <th>Absents</th>
+    <th width="auto">Mon</th>
     <td width="2%"> </td>
-    <th width="30%">Absents</th>
+    <th>Absents</th>
 </tr><tr style="text-align: center;"><th colspan="6">This Employee Has No Previous Record...!</th></tr>`;
     }
 }
